@@ -1,11 +1,7 @@
 <template>
   <div class="code-viewer">
     <div class="number-container">
-      <div
-        class="line_number"
-        v-for="line in lines"
-        :key="line.id"
-      >
+      <div class="line_number" v-for="line in lines" :key="line.id">
         {{ line }}
       </div>
     </div>
@@ -60,16 +56,16 @@ $mainColor: #36cbfa;
   border-radius: 5px;
   padding: 10px;
   overflow: scroll;
-  background-color: #3B3B3B;
+  background-color: #3b3b3b;
   display: flex;
   flex-direction: row;
-  box-shadow: 0px 7px 10px -5px rgba(0,0,0,0.6);
+  box-shadow: 0px 7px 10px -5px rgba(0, 0, 0, 0.6);
   .number-container {
     width: 30px;
     line-height: 23px;
     font-size: 14px;
     color: #858585;
-    .line_number{
+    .line_number {
       border-right: solid 1px #858585;
       padding-right: 7px;
       display: flex;
