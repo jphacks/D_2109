@@ -1,16 +1,19 @@
 <template>
   <div id="app">
+    <header-menu />
     <code-viewer :code_list="disp_code" />
   </div>
 </template>
 
 <script>
 import CodeViewer from "./components/CodeViewer.vue";
+import HeaderMenu from "./components/HeaderMenu.vue";
 
 export default {
   name: "App",
   components: {
     CodeViewer,
+    HeaderMenu,
   },
   data() {
     return {
