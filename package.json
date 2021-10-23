@@ -16,6 +16,8 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "markdown-it-vue": "^1.1.6",
+    "prismjs": "^1.25.0",
     "vue": "^2.6.11"
   },
   "devDependencies": {
