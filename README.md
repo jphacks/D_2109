@@ -1,4 +1,4 @@
-# サンプル（プロダクト名）
+# trim
 
 [![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2021/07/JPHACKS2021_ogp.jpg)](https://www.youtube.com/watch?v=LUPQFB4QyVo)
 
@@ -38,3 +38,42 @@
 #### 製品に取り入れた研究内容（データ・ソフトウェアなど）（※アカデミック部門の場合のみ提出必須）
 * 
 * 
+
+
+# 環境構築
+## Node.jsのインストール
+[Node.js 14.18.1 LTS](https://nodejs.org/dist/v14.18.1/node-v14.18.1.pkg) をダウンロードしてNode.jsをインストールしてください。
+開発時 Vue Version 
+``` bash
+@vue/cli 4.5.14
+```
+
+## VueCLIのインストール
+``` bash
+sudo npm install -g @vue/cli
+```
+## プロジェクトのセットアップ
+```
+yarn install
+```
+### Electronでのテスト
+```
+yarn run electron:serve
+```
+### Electronでのビルド
+#### 使用している機種
+```
+yarn run electron:build
+```
+#### mac
+```
+yarn run electron:build:mac
+```
+#### windows
+```
+yarn run electron:build:win
+```
+### Lintの実行
+```
+yarn lint
+```
