@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import StartPage from "./components/StartPage.vue";
-import TrimSelect from "./components/TrimSelect.vue";
-import DirectCodeEdit from "./components/DirectCodeEdit.vue";
+import StartPage from "./page/StartPage.vue";
+import TrimSelect from "./page/TrimSelect.vue";
+import DirectCodeEdit from "./page/DirectCodeEdit.vue";
 
 export default {
   name: "App",
