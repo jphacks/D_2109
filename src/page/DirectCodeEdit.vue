@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import HeaderMenu from "./HeaderMenu.vue";
-import CodeViewer from "./CodeViewer.vue";
+import HeaderMenu from "../components/HeaderMenu.vue";
+import CodeViewer from "../components/CodeViewer.vue";
 
 export default {
   name: "TrimSelectPage",
