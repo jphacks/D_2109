@@ -34,9 +34,9 @@ export default {
       disp_flag: {
         start_page: false,
         trim_select_page: false,
-        direct_code_edit_page: false,
+        direct_code_edit_page: true,
         loading_page: false,
-        code_gen_complete_page: true,
+        code_gen_complete_page: false,
         code_viewer: false,
       },
     };

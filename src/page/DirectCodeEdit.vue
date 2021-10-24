@@ -1,6 +1,9 @@
 <template>
   <div class="trim-select-page">
     <header-menu />
+    <div class="back-btn-container">
+      <img class="back-btn-image" src="../assets/left_arrow_white.svg" alt="">
+    </div>
     <div class="title-container">
       <img class="daruma_icon" src="../assets/daruma_icon.svg" alt="" />
       <div class="title">
@@ -57,6 +60,23 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .back-btn-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    .back-btn-image{
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background-color: #595959;
+      padding: 10px;
+      &:hover{
+        background-color: #868686;
+      }
+    }
+  }
   .title-container {
     display: flex;
     flex-direction: row;
