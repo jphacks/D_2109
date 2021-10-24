@@ -1,7 +1,7 @@
 <template>
   <div class="header-menu">
     <div class="left-content">
-      <img class="logo" src="../assets/header_logo.png" alt="" />
+      <img class="logo" src="../assets/logo.svg" alt="" />
       <div class="btn_container">
         <img
           class="triangle"
