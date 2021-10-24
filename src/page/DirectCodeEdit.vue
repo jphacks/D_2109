@@ -3,6 +3,7 @@
     <header-menu />
     <div class="back-btn-container">
       <img class="back-btn-image" src="../assets/left_arrow_white.svg" alt="">
+      <span>前のステップへ</span>
     </div>
     <div class="title-container">
       <img class="daruma_icon" src="../assets/daruma_icon.svg" alt="" />
@@ -61,20 +62,33 @@ export default {
   justify-content: center;
   align-items: center;
   .back-btn-container{
+    cursor: pointer;
+    border-radius: 999px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    top: 120px;
+    left: 50px;
+    &:hover > .back-btn-image{
+      background-color: #868686;
+    }
+    &:hover > span{
+      color: #868686;
+    }
     .back-btn-image{
       cursor: pointer;
       width: 20px;
       height: 20px;
       border-radius: 999px;
       background-color: #595959;
-      padding: 10px;
-      &:hover{
-        background-color: #868686;
-      }
+      padding: 7px;
+    }
+    span{
+      margin-left: 10px;
+      font-weight: bold;
+      color: #595959;
     }
   }
   .title-container {
