@@ -2,7 +2,7 @@
   <div class="trim-select-page">
     <header-menu />
     <div class="back-btn-container">
-      <img class="back-btn-image" src="../assets/left_arrow_white.svg" alt="">
+      <img class="back-btn-image" src="../assets/left_arrow_white.svg" alt="" />
       <span>前のステップへ</span>
     </div>
     <div class="title-container">
@@ -13,7 +13,13 @@
     </div>
     <div :style="input_area_height" class="code-editer">
       <code-viewer class="code-viewer" :code_list="input_code" />
-      <textarea :style="input_area_height" cols="20" class="code-input" v-model="input_code" @input="ChangeHeight" />
+      <textarea
+        :style="input_area_height"
+        cols="20"
+        class="code-input"
+        v-model="input_code"
+        @input="ChangeHeight"
+      />
     </div>
     <div class="code-input-compleat-btn">
       <span>コードの入力を完了する</span>
@@ -33,21 +39,21 @@ export default {
   },
   data() {
     return {
-      input_code: "// ここにコードを入力してください",
-      input_area_height:"height:300px;", 
+      input_code: "# ここにコードを入力してください",
+      input_area_height: "height:300px;",
     };
   },
   created() {},
   computed: {},
   methods: {
-    ChangeHeight(){
-      console.log(this.input_area_height)
+    ChangeHeight() {
+      console.log(this.input_area_height);
       let over_line = this.input_code.split(/\r?\n/g).length - 13;
-      console.log(over_line)
-      if(over_line > 0){
-        this.input_area_height = "height:"+(300+over_line*22.95)+"px;"
+      console.log(over_line);
+      if (over_line > 0) {
+        this.input_area_height = "height:" + (300 + over_line * 22.95) + "px;";
       }
-    }
+    },
   },
 };
 </script>
@@ -61,7 +67,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .back-btn-container{
+  .back-btn-container {
     cursor: pointer;
     border-radius: 999px;
     display: flex;
@@ -71,13 +77,13 @@ export default {
     position: absolute;
     top: 120px;
     left: 50px;
-    &:hover > .back-btn-image{
+    &:hover > .back-btn-image {
       background-color: #868686;
     }
-    &:hover > span{
+    &:hover > span {
       color: #868686;
     }
-    .back-btn-image{
+    .back-btn-image {
       cursor: pointer;
       width: 20px;
       height: 20px;
@@ -85,7 +91,7 @@ export default {
       background-color: #595959;
       padding: 7px;
     }
-    span{
+    span {
       margin-left: 10px;
       font-weight: bold;
       color: #595959;

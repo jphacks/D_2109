@@ -1,7 +1,7 @@
 <template>
   <div class="loading-page">
     <header-menu />
-    <img src="../assets/ninja_icon.svg" alt="">
+    <img src="../assets/ninja_icon.svg" alt="" />
     <p>コードを生成中･･･</p>
   </div>
 </template>
@@ -15,14 +15,11 @@ export default {
     HeaderMenu,
   },
   data() {
-    return {
-    };
+    return {};
   },
   created() {},
   computed: {},
-  methods: {
-    
-  },
+  methods: {},
 };
 </script>
 
@@ -35,7 +32,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  p{
+  p {
     margin-top: 30px;
     font-size: 20px;
     font-weight: bold;
