@@ -4,7 +4,7 @@
     <trim-select v-if="disp_flag.trim_select_page" />
     <direct-code-edit v-if="disp_flag.direct_code_edit_page" />
     <loading v-if="disp_flag.loading_page" />
-    <header-menu v-if="disp_flag.header_menu" />
+    <code-gen-complete v-if="disp_flag.code_gen_complete_page" />
   </div>
 </template>
 
@@ -13,6 +13,7 @@ import StartPage from "./page/StartPage.vue";
 import TrimSelect from "./page/TrimSelect.vue";
 import DirectCodeEdit from "./page/DirectCodeEdit.vue";
 import Loading from "./page/Loading.vue";
+import CodeGenComplete from "./page/CodeGenComplete.vue";
 
 export default {
   name: "App",
@@ -21,6 +22,7 @@ export default {
     TrimSelect,
     DirectCodeEdit,
     Loading,
+    CodeGenComplete,
   },
   data() {
     return {
@@ -33,7 +35,8 @@ export default {
         start_page: false,
         trim_select_page: false,
         direct_code_edit_page: false,
-        loading_page: true,
+        loading_page: false,
+        code_gen_complete_page: true,
         code_viewer: false,
       },
     };
