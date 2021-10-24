@@ -7,7 +7,7 @@
     </div>
     <markdown-it-vue
       class="md-body"
-      :content="disp_code.code_start + disp_code.content + disp_code.code_end"
+      :content="disp_code.code_start + code_list + disp_code.code_end"
     />
   </div>
 </template>
@@ -21,27 +21,35 @@ export default {
     MarkdownItVue,
   },
   props: {
-    code_list: Object,
+    code_list: String,
   },
   data() {
     return {
       disp_code: {
-        content: "",
         code_start: "```python\n",
         code_end: "\n```",
       },
       lines: [],
     };
   },
+  watch: {
+    code_list: {
+      handler: function (val_new) {
+        this.lines = [];
+        for (let i = 1; i <= val_new.split(/\r?\n/g).length; i++) {
+          this.lines.push(i);
+        }
+      },
+    },
+  },
   created() {
-    this.ParseCode();
+    this.InitLines();
   },
   computed: {},
   methods: {
-    ParseCode() {
-      for (let key of Object.keys(this.code_list)) {
-        this.lines.push(key);
-        this.disp_code.content += this.code_list[key] + "\n";
+    InitLines() {
+      for (let i = 1; i <= this.code_list.split(/\r?\n/g).length; i++) {
+        this.lines.push(i);
       }
     },
   },
@@ -51,8 +59,6 @@ export default {
 <style lang="scss">
 $mainColor: #36cbfa;
 .code-viewer {
-  width: 300px;
-  height: 300px;
   border-radius: 5px;
   padding: 10px;
   overflow: scroll;

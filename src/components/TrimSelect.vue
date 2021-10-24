@@ -2,31 +2,28 @@
   <div class="trim-select-page">
     <header-menu />
     <div class="title-container">
-      <img class="daruma_icon" src="../assets/daruma_icon.svg" alt="">
+      <img class="daruma_icon" src="../assets/daruma_icon.svg" alt="" />
       <div class="title">
         まずは整えるコードのアップロード法を選択してください
       </div>
     </div>
     <div class="select-container">
       <div class="trim-content text-file">
-        <img src="../assets/textfile_icon.svg" alt="">
-        <span>
-          テキストファイルで
-        </span>
+        <img src="../assets/textfile_icon.svg" alt="" />
+        <span> テキストファイルで </span>
       </div>
       <div class="trim-content direct-code">
-        <img src="../assets/code_icon.svg" alt="">
-        <span>
-          そのままコードで
-        </span>
+        <img src="../assets/code_icon.svg" alt="" />
+        <span> そのままコードで </span>
       </div>
     </div>
     <div class="trim-description">
       <div class="arrow-container">
-        <img src="../assets/red_arrow.svg" alt="">
-        <img src="../assets/green_arrow.svg" alt="">
+        <img src="../assets/red_arrow.svg" alt="" />
+        <img src="../assets/green_arrow.svg" alt="" />
       </div>
-      <span>trim（トリム）</span>は個人間でバラバラになりがちなプログラムを自身や<br>
+      <span>trim（トリム）</span
+      >は個人間でバラバラになりがちなプログラムを自身や<br />
       チームの中で決めたルールに自動で書き換えてくれるアプリケーションです。
     </div>
   </div>
@@ -38,7 +35,7 @@ import HeaderMenu from "./HeaderMenu.vue";
 export default {
   name: "TrimSelectPage",
   components: {
-    HeaderMenu
+    HeaderMenu,
   },
   data() {
     return {};
@@ -50,24 +47,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.trim-select-page{
+.trim-select-page {
   width: 100%;
   height: 100%;
-  background-color: #F7F6E5;
+  background-color: #f7f6e5;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .title-container{
+  .title-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    .daruma_icon{
+    .daruma_icon {
       width: 70px;
       height: 70px;
     }
-    .title{
+    .title {
       min-width: 500px;
       padding: 20px 20px 20px 30px;
       background-image: url("../assets/hukidashi.svg");
@@ -81,33 +78,33 @@ export default {
       align-items: center;
     }
   }
-  .select-container{
+  .select-container {
     margin: 40px 0;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    img{
+    img {
       cursor: pointer;
       width: 125px;
       height: 125px;
-      &:hover{
+      &:hover {
         filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.6));
       }
     }
-    span{
+    span {
       margin-top: 20px;
       font-size: 17px;
       font-weight: bold;
     }
-    .text-file{
+    .text-file {
       margin-right: 35px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
     }
-    .direct-code{
+    .direct-code {
       margin-left: 35px;
       display: flex;
       flex-direction: column;
@@ -115,16 +112,16 @@ export default {
       align-items: center;
     }
   }
-  .trim-description{
+  .trim-description {
     padding: 10px 10px 10px 30px;
     font-size: 16px;
     font-weight: bold;
     line-height: 30px;
-    background-color: #FFFFFF;
-    border: solid 2px #FFC6B4;
+    background-color: #ffffff;
+    border: solid 2px #ffc6b4;
     border-radius: 10px;
     position: relative;
-    .arrow-container{
+    .arrow-container {
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -132,7 +129,7 @@ export default {
       position: absolute;
       left: -15px;
       top: -12px;
-      img{
+      img {
         margin: 0 5px;
       }
     }

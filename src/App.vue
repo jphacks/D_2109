@@ -2,24 +2,22 @@
   <div id="app">
     <start-page v-if="disp_flag.start_page" />
     <trim-select v-if="disp_flag.trim_select_page" />
+    <direct-code-edit v-if="disp_flag.direct_code_edit_page" />
     <header-menu v-if="disp_flag.header_menu" />
-    <code-viewer v-if="disp_flag.code_viewer" :code_list="disp_code" />
   </div>
 </template>
 
 <script>
 import StartPage from "./components/StartPage.vue";
 import TrimSelect from "./components/TrimSelect.vue";
-import CodeViewer from "./components/CodeViewer.vue";
-import HeaderMenu from "./components/HeaderMenu.vue";
+import DirectCodeEdit from "./components/DirectCodeEdit.vue";
 
 export default {
   name: "App",
   components: {
     StartPage,
     TrimSelect,
-    CodeViewer,
-    HeaderMenu,
+    DirectCodeEdit,
   },
   data() {
     return {
@@ -30,7 +28,8 @@ export default {
       },
       disp_flag: {
         start_page: false,
-        trim_select_page: true,
+        trim_select_page: false,
+        direct_code_edit_page: true,
         code_viewer: false,
       },
     };
