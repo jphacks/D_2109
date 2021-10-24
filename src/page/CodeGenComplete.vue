@@ -4,19 +4,15 @@
     <div class="code-viewer-container">
       <div class="left-viewer">
         <div class="daruma_container">
-          <img src="../assets/daruma_red.svg" alt="">
-          <span>
-            変更前
-          </span>
+          <img src="../assets/daruma_red.svg" alt="" />
+          <span> 変更前 </span>
         </div>
         <code-viewer class="code-viewer" :code_list="input_code" />
       </div>
       <div class="right-viewer">
         <div class="daruma_container">
-          <img src="../assets/daruma_blue.svg" alt="">
-          <span>
-            変更後
-          </span>
+          <img src="../assets/daruma_blue.svg" alt="" />
+          <span> 変更後 </span>
         </div>
         <code-viewer class="code-viewer" :code_list="output_code" />
       </div>
@@ -51,14 +47,14 @@ export default {
   created() {},
   computed: {},
   methods: {
-    ChangeHeight(){
-      console.log(this.input_area_height)
+    ChangeHeight() {
+      console.log(this.input_area_height);
       let over_line = this.input_code.split(/\r?\n/g).length - 13;
-      console.log(over_line)
-      if(over_line > 0){
-        this.input_area_height = "height:"+(300+over_line*22.95)+"px;"
+      console.log(over_line);
+      if (over_line > 0) {
+        this.input_area_height = "height:" + (300 + over_line * 22.95) + "px;";
       }
-    }
+    },
   },
 };
 </script>
@@ -82,27 +78,27 @@ export default {
       width: 450px;
       height: 400px;
     }
-    .left-viewer{
+    .left-viewer {
       margin-right: 20px;
     }
-    .right-viewer{
+    .right-viewer {
       margin-left: 20px;
     }
-    .daruma_container{
+    .daruma_container {
       width: 100%;
       margin-bottom: 10px;
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      span{
+      span {
         margin-left: 10px;
         font-size: 15px;
         font-weight: bold;
       }
     }
   }
-  .btn-container{
+  .btn-container {
     width: 950px;
     display: flex;
     flex-direction: row;
@@ -121,14 +117,14 @@ export default {
         background-color: #5297ac;
       }
     }
-    .another-btn{
-      background-color: #E55C6E;
+    .another-btn {
+      background-color: #e55c6e;
       margin-right: 10px;
       &:hover {
-        background-color: #BA3636;
+        background-color: #ba3636;
       }
     }
-    .dl-btn{
+    .dl-btn {
       background-color: #92d4c4;
       margin-left: 10px;
       &:hover {
