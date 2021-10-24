@@ -7,9 +7,9 @@
         下のテキストボックスに整えるコードを入力してください
       </div>
     </div>
-    <div class="code-editer">
+    <div :style="input_area_height" class="code-editer">
       <code-viewer class="code-viewer" :code_list="input_code" />
-      <textarea class="code-input" v-model="input_code"></textarea>
+      <textarea :style="input_area_height" cols="20" class="code-input" v-model="input_code" @input="ChangeHeight" />
     </div>
     <div class="code-input-compleat-btn">
       <span>コードの入力を完了する</span>
@@ -30,12 +30,21 @@ export default {
   data() {
     return {
       input_code: "// ここにコードを入力してください",
-      disp_code: {},
+      input_area_height:"height:300px;", 
     };
   },
   created() {},
   computed: {},
-  methods: {},
+  methods: {
+    ChangeHeight(){
+      console.log(this.input_area_height)
+      let over_line = this.input_code.split(/\r?\n/g).length - 13;
+      console.log(over_line)
+      if(over_line > 0){
+        this.input_area_height = "height:"+(300+over_line*22.95)+"px;"
+      }
+    }
+  },
 };
 </script>
 
@@ -74,20 +83,22 @@ export default {
   .code-editer {
     margin: 50px 0;
     width: 800px;
-    height: 300px;
+    min-height: 300px;
+    max-height: 800px;
     position: relative;
     .code-viewer {
-      width: 100%;
-      height: 100%;
+      width: 800px;
+      min-height: 300px;
+      max-height: 800px;
       position: absolute;
     }
     .code-input {
       background-color: rgba($color: #ffffff, $alpha: 0);
-      color: rgba(255, 255, 255, 0);
+      color: rgba(156, 53, 53, 0);
       caret-color: #ffffff;
-      width: 100%;
-      height: 100%;
-      overflow: scroll;
+      width: 760px;
+      min-height: 300px;
+      max-height: 800px;
       border: none;
       border-radius: 5px;
       padding: 10px 10px 10px 50px;
