@@ -3,6 +3,7 @@
     <start-page v-if="disp_flag.start_page" />
     <trim-select v-if="disp_flag.trim_select_page" />
     <direct-code-edit v-if="disp_flag.direct_code_edit_page" />
+    <loading v-if="disp_flag.loading_page" />
     <header-menu v-if="disp_flag.header_menu" />
   </div>
 </template>
@@ -11,6 +12,7 @@
 import StartPage from "./page/StartPage.vue";
 import TrimSelect from "./page/TrimSelect.vue";
 import DirectCodeEdit from "./page/DirectCodeEdit.vue";
+import Loading from "./page/Loading.vue";
 
 export default {
   name: "App",
@@ -18,6 +20,7 @@ export default {
     StartPage,
     TrimSelect,
     DirectCodeEdit,
+    Loading,
   },
   data() {
     return {
@@ -29,7 +32,8 @@ export default {
       disp_flag: {
         start_page: false,
         trim_select_page: false,
-        direct_code_edit_page: true,
+        direct_code_edit_page: false,
+        loading_page: true,
         code_viewer: false,
       },
     };
