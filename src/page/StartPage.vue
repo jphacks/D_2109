@@ -4,10 +4,16 @@
       <img class="catch-copy" src="../assets/catch-copy.svg" alt="" />
       <img class="logo" src="../assets/logo.svg" alt="" />
       <div class="btn-container">
-        <div class="start-btn rule-make-btn">
+        <div
+          class="start-btn rule-make-btn"
+          @click="ChangePage('trim_select_page')"
+        >
           <span>ルールを作成する</span>
         </div>
-        <div class="start-btn rule-use-btn">
+        <div
+          class="start-btn rule-use-btn"
+          @click="ChangePage('trim_select_page')"
+        >
           <span>ルールを適用する</span>
         </div>
       </div>
@@ -31,7 +37,11 @@ export default {
   },
   created() {},
   computed: {},
-  methods: {},
+  methods: {
+    ChangePage(target) {
+      this.$emit("changePage", { page: target });
+    },
+  },
 };
 </script>
 
@@ -50,7 +60,7 @@ export default {
   align-items: center;
   position: relative;
   .content-container {
-    width: 300px;
+    width: 320px;
     height: 350px;
     padding-left: 20px;
     display: flex;
