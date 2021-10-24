@@ -3,9 +3,14 @@ def add_box () 	:
   print('f')
   def inline():
     def inline2():
-      return 0
-    return ab
+      jff
   return ab
+
+
 
 def brahh(fff):
   return 0
+# a = [2, 3, 5, 1]
+# for idx, i in enumerate(reversed(a)):
+#   print(idx)
+#   print(i)
