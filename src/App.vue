@@ -1,10 +1,20 @@
 <template>
   <div id="app">
-    <start-page v-if="disp_flag.start_page" />
-    <trim-select v-if="disp_flag.trim_select_page" />
-    <direct-code-edit v-if="disp_flag.direct_code_edit_page" />
+    <start-page v-if="disp_flag.start_page" @changePage="ChangePage($event)" />
+    <trim-select
+      v-if="disp_flag.trim_select_page"
+      @changePage="ChangePage($event)"
+    />
+    <direct-code-edit
+      v-if="disp_flag.direct_code_edit_page"
+      @changePage="ChangePage($event)"
+      @codeGen="LoadingWaitTime()"
+    />
     <loading v-if="disp_flag.loading_page" />
-    <code-gen-complete v-if="disp_flag.code_gen_complete_page" />
+    <code-gen-complete
+      v-if="disp_flag.code_gen_complete_page"
+      @changePage="ChangePage($event)"
+    />
   </div>
 </template>
 
@@ -32,13 +42,30 @@ export default {
         direct_code_edit_page: true,
         loading_page: false,
         code_gen_complete_page: false,
-        code_viewer: false,
       },
     };
   },
-  created() {},
+  created() {
+    this.ChangePage({ page: "start_page" });
+  },
   computed: {},
-  methods: {},
+  methods: {
+    ChangePage(target) {
+      console.log(target);
+      this.disp_flag.start_page = false;
+      this.disp_flag.trim_select_page = false;
+      this.disp_flag.direct_code_edit_page = false;
+      this.disp_flag.loading_page = false;
+      this.disp_flag.code_gen_complete_page = false;
+      this.disp_flag[target.page] = true;
+    },
+    LoadingWaitTime() {
+      console.log("start");
+      this.ChangePage({ page: "loading_page" });
+      console.log("end");
+      this.ChangePage({ page: "code_gen_complete_page" });
+    },
+  },
 };
 </script>
 

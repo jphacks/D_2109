@@ -1,6 +1,6 @@
 <template>
   <div class="trim-select-page">
-    <header-menu />
+    <header-menu @changePage="ParentChangePage($event)" />
     <div class="title-container">
       <img class="daruma_icon" src="../assets/daruma_icon.svg" alt="" />
       <div class="title">
@@ -13,7 +13,11 @@
         <span> テキストファイルで </span>
       </div>
       <div class="trim-content direct-code">
-        <img src="../assets/code_icon.svg" alt="" />
+        <img
+          src="../assets/code_icon.svg"
+          alt=""
+          @click="ChangePage('direct_code_edit_page')"
+        />
         <span> そのままコードで </span>
       </div>
     </div>
@@ -42,7 +46,14 @@ export default {
   },
   created() {},
   computed: {},
-  methods: {},
+  methods: {
+    ChangePage(target) {
+      this.$emit("changePage", { page: target });
+    },
+    ParentChangePage(target) {
+      this.$emit("changePage", { page: target.page });
+    },
+  },
 };
 </script>
 

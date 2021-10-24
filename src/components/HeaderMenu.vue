@@ -19,7 +19,7 @@
         <span class="btn-text" style="color: #5ca1e5">trimとは</span>
       </div>
     </div>
-    <div class="rigth_btn">トップに戻る</div>
+    <div class="rigth_btn" @click="ChangePage('start_page')">トップに戻る</div>
   </div>
 </template>
 
@@ -31,7 +31,11 @@ export default {
   },
   created() {},
   computed: {},
-  methods: {},
+  methods: {
+    ChangePage(target) {
+      this.$emit("changePage", { page: target });
+    },
+  },
 };
 </script>
 

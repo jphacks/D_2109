@@ -1,6 +1,6 @@
 <template>
   <div class="code-gen-complete-page">
-    <header-menu />
+    <header-menu @changePage="ParentChangePage($event)" />
     <div class="code-viewer-container">
       <div class="left-viewer">
         <div class="daruma_container">
@@ -18,7 +18,10 @@
       </div>
     </div>
     <div class="btn-container">
-      <div class="code-input-compleat-btn another-btn">
+      <div
+        class="code-input-compleat-btn another-btn"
+        @click="ChangePage('trim_select_page')"
+      >
         <span>別テキストに適用する</span>
       </div>
       <div class="code-input-compleat-btn dl-btn">
@@ -47,6 +50,12 @@ export default {
   created() {},
   computed: {},
   methods: {
+    ChangePage(target) {
+      this.$emit("changePage", { page: target });
+    },
+    ParentChangePage(target) {
+      this.$emit("changePage", { page: target.page });
+    },
     ChangeHeight() {
       console.log(this.input_area_height);
       let over_line = this.input_code.split(/\r?\n/g).length - 13;

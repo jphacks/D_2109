@@ -1,7 +1,7 @@
 <template>
   <div class="trim-select-page">
-    <header-menu />
-    <div class="back-btn-container">
+    <header-menu @changePage="ParentChangePage($event)" />
+    <div class="back-btn-container" @click="ChangePage('trim_select_page')">
       <img class="back-btn-image" src="../assets/left_arrow_white.svg" alt="" />
       <span>前のステップへ</span>
     </div>
@@ -15,13 +15,12 @@
       <code-viewer class="code-viewer" :code_list="input_code" />
       <textarea
         :style="input_area_height"
-        cols="20"
         class="code-input"
         v-model="input_code"
         @input="ChangeHeight"
       />
     </div>
-    <div class="code-input-compleat-btn">
+    <div class="code-input-compleat-btn" @click="CodeSubmit()">
       <span>コードの入力を完了する</span>
     </div>
   </div>
@@ -39,13 +38,22 @@ export default {
   },
   data() {
     return {
-      input_code: "# ここにコードを入力してください",
+      input_code: "",
       input_area_height: "height:300px;",
     };
   },
   created() {},
   computed: {},
   methods: {
+    ChangePage(target) {
+      this.$emit("changePage", { page: target });
+    },
+    ParentChangePage(target) {
+      this.$emit("changePage", { page: target.page });
+    },
+    CodeSubmit() {
+      this.$emit("codeGen");
+    },
     ChangeHeight() {
       console.log(this.input_area_height);
       let over_line = this.input_code.split(/\r?\n/g).length - 13;
@@ -85,8 +93,8 @@ export default {
     }
     .back-btn-image {
       cursor: pointer;
-      width: 20px;
-      height: 20px;
+      width: 25px;
+      height: 25px;
       border-radius: 999px;
       background-color: #595959;
       padding: 7px;
@@ -136,14 +144,16 @@ export default {
       background-color: rgba($color: #ffffff, $alpha: 0);
       color: rgba(156, 53, 53, 0);
       caret-color: #ffffff;
-      width: 760px;
+      width: 800px;
       min-height: 300px;
       max-height: 800px;
       border: none;
       border-radius: 5px;
       padding: 10px 10px 10px 50px;
       line-height: 23px;
-      font-size: 15px;
+      font-weight: bold;
+      font-size: 13px;
+      letter-spacing: 0.2px;
       resize: none;
       outline: none;
       position: absolute;
