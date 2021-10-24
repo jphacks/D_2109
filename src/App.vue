@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <start-page v-if="disp_flag.start_page" />
+    <trim-select v-if="disp_flag.trim_select_page" />
     <header-menu v-if="disp_flag.header_menu" />
     <code-viewer v-if="disp_flag.code_viewer" :code_list="disp_code" />
   </div>
@@ -8,6 +9,7 @@
 
 <script>
 import StartPage from "./components/StartPage.vue";
+import TrimSelect from "./components/TrimSelect.vue";
 import CodeViewer from "./components/CodeViewer.vue";
 import HeaderMenu from "./components/HeaderMenu.vue";
 
@@ -15,6 +17,7 @@ export default {
   name: "App",
   components: {
     StartPage,
+    TrimSelect,
     CodeViewer,
     HeaderMenu,
   },
@@ -26,8 +29,8 @@ export default {
         3: "    return True",
       },
       disp_flag: {
-        start_page: true,
-        header_menu: false,
+        start_page: false,
+        trim_select_page: true,
         code_viewer: false,
       },
     };
@@ -42,6 +45,7 @@ export default {
 #app {
   width: 100vw;
   height: 100vh;
+  color: #212020;
   display: flex;
   flex-direction: column;
   justify-content: center;
