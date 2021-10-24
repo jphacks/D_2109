@@ -1,0 +1,18 @@
+<svg id="textfile" xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <g id="グループ_2009" data-name="グループ 2009" transform="translate(-20 -150)">
+    <rect id="長方形_423" data-name="長方形 423" width="128" height="128" rx="14" transform="translate(20 150)" fill="#92d4c4"/>
+    <path id="パス_25485" data-name="パス 25485" d="M148,213.334l-.245,53.347s-1.3,4.915-4.308,7.715-8.242,3.537-8.242,3.537L66.426,278,47.238,258.813,46.1,257.673V169.187h57.754l.935.934,16.166,16.166.947.947Z" fill="#050404" opacity="0.1"/>
+    <g id="グループ_2008" data-name="グループ 2008">
+      <g id="グループ_2007" data-name="グループ 2007">
+        <path id="パス_25486" data-name="パス 25486" d="M121.9,186.288v72.525H46.1V169.187h58.688Z" fill="#fff"/>
+        <rect id="長方形_429" data-name="長方形 429" width="61.147" height="5.385" transform="translate(53.426 218.667)" fill="#e8e5e1"/>
+        <rect id="長方形_430" data-name="長方形 430" width="61.147" height="5.386" transform="translate(53.426 227.867)" fill="#e8e5e1"/>
+        <rect id="長方形_431" data-name="長方形 431" width="61.147" height="5.385" transform="translate(53.426 237.068)" fill="#e8e5e1"/>
+        <rect id="長方形_432" data-name="長方形 432" width="61.147" height="5.386" transform="translate(53.426 246.268)" fill="#e8e5e1"/>
+        <path id="パス_25487" data-name="パス 25487" d="M121.9,186.293H104.792V169.186Z" fill="#fb4f42"/>
+        <text id="TEXT" transform="translate(57 204)" font-weight="bold" fill="#474747" font-size="18" font-family="MOBO" letter-spacing="0.043em"><tspan x="0" y="0">TEXT</tspan></text>
+      </g>
+      <path id="パス_25488" data-name="パス 25488" d="M121.9,186.288v72.525H84V169.187h20.787Z" fill="#0a0809" opacity="0.1"/>
+    </g>
+  </g>
+</svg>
