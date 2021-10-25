@@ -4,11 +4,12 @@
     <file-code-select-modal
       v-if="disp_flag.file_code_select_modal"
       @changePage="ChangePage($event)"
-      @fileSelect="FileSelect($event)"
+      @fileSelect="RuleFileSelect($event)"
     />
     <trim-select
       v-if="disp_flag.trim_select_page"
       @changePage="ChangePage($event)"
+      @fileSelect="PythonFileSelect($event)"
     />
     <direct-code-edit
       v-if="disp_flag.direct_code_edit_page"
@@ -45,9 +46,10 @@ export default {
     return {
       rule:{
       },
+      input_python:"",
       disp_flag: {
         start_page: false,
-        file_code_select_modal: true,
+        file_code_select_modal: false,
         trim_select_page: true,
         direct_code_edit_page: false,
         loading_page: false,
@@ -60,7 +62,16 @@ export default {
   },
   computed: {},
   methods: {
-    FileSelect(file) {
+    PythonFileSelect(file) {
+      let json_file = file.file;
+      let reader = new FileReader();
+      reader.readAsText(json_file)
+      reader.onload = function() {
+        this.rule = reader.result;
+        console.log(this.rule);
+      };
+    },
+    RuleFileSelect(file) {
       let json_file = file.file;
       let reader = new FileReader();
       reader.readAsText(json_file)
