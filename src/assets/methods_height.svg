@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="148" height="91" viewBox="0 0 148 91">
+  <g id="methods_height" transform="translate(-1024 -200.358)">
+    <rect id="長方形_2274" data-name="長方形 2274" width="148" height="91" rx="10" transform="translate(1024 200.358)" fill="#3b3b3b"/>
+    <rect id="長方形_2275" data-name="長方形 2275" width="79" height="74" rx="3" transform="translate(1039 209.358)" fill="ivory"/>
+    <text id="class" transform="translate(1042 220.358)" fill="#3b3b3b" font-size="10" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.046em"><tspan x="0" y="0">class</tspan></text>
+    <rect id="長方形_2276" data-name="長方形 2276" width="68" height="16" rx="2" transform="translate(1044 225.358)" fill="#92d4c4"/>
+    <text id="def" transform="translate(1069 237.358)" fill="#3b3b3b" font-size="11" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.04em"><tspan x="0" y="0">def</tspan></text>
+    <g id="グループ_2755" data-name="グループ 2755" transform="translate(1105.309 241.111)">
+      <path id="多角形_18" data-name="多角形 18" d="M2.053.894a.5.5,0,0,1,.894,0L4.638,4.276A.5.5,0,0,1,4.191,5H.809a.5.5,0,0,1-.447-.724Z" transform="translate(4.691 19.247) rotate(180)" fill="#70998f"/>
+      <line id="線_31" data-name="線 31" y2="13.704" transform="translate(2.284 3.197)" fill="none" stroke="#70998f" stroke-linecap="round" stroke-width="1.8"/>
+      <path id="多角形_19" data-name="多角形 19" d="M2.076.678a.5.5,0,0,1,.848,0l1.6,2.557A.5.5,0,0,1,4.1,4H.9a.5.5,0,0,1-.424-.765Z" transform="translate(-0.309 0.247)" fill="#70998f"/>
+    </g>
+    <rect id="長方形_2277" data-name="長方形 2277" width="68" height="16" rx="2" transform="translate(1044 260.358)" fill="#92d4c4"/>
+    <text id="def-2" data-name="def" transform="translate(1069 273.358)" fill="#3b3b3b" font-size="11" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.04em"><tspan x="0" y="0">def</tspan></text>
+    <path id="Icon_awesome-question" data-name="Icon awesome-question" d="M14.38,0A13.816,13.816,0,0,0,2.108,6.491a1.713,1.713,0,0,0,.369,2.344l3.076,2.332a1.711,1.711,0,0,0,2.371-.3c1.786-2.238,3.111-3.526,5.9-3.526,2.194,0,4.907,1.412,4.907,3.539,0,1.608-1.328,2.434-3.494,3.648C12.713,15.949,9.37,17.711,9.37,22.12v.7a1.711,1.711,0,0,0,1.711,1.711h5.168a1.711,1.711,0,0,0,1.711-1.711v-.412c0-3.056,8.932-3.183,8.932-11.454C26.893,4.725,20.433,0,14.38,0Zm-.715,26.63A4.939,4.939,0,1,0,18.6,31.57,4.945,4.945,0,0,0,13.665,26.63Z" transform="translate(1130.916 230.165)" fill="#fff"/>
+  </g>
+</svg>

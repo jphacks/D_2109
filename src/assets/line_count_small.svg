@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="115" height="71" viewBox="0 0 115 71">
+  <g id="line_count_small" transform="translate(-1025 -461.716)">
+    <rect id="長方形_2279" data-name="長方形 2279" width="115" height="71" rx="8" transform="translate(1025 461.716)" fill="#3b3b3b"/>
+    <text id="print_Hello_World_" data-name="print(&quot;Hello World&quot;)" transform="translate(1041 477.716)" fill="#f5f397" font-size="7" font-family="Meiryo-Bold, Meiryo" font-weight="700" letter-spacing="0.025em"><tspan x="0" y="0">print</tspan><tspan y="0" fill="#fff">(</tspan><tspan y="0" fill="#fc9f81">&quot;Hello World&quot;</tspan><tspan y="0" fill="#fff">)</tspan></text>
+    <text id="str_hello_world_print_str_" data-name="str = &quot;hello world&quot;
+print(str)" transform="translate(1041 489.716)" fill="#fff" font-size="7" font-family="Meiryo-Bold, Meiryo" font-weight="700" letter-spacing="0.025em"><tspan x="0" y="0">str =</tspan><tspan y="0" xml:space="preserve" fill="#fc9f81"> &quot;hello world&quot;</tspan><tspan fill="#f5f397"><tspan x="0" y="10">print</tspan><tspan y="10" fill="#fff">(str)</tspan></tspan></text>
+    <rect id="長方形_2280" data-name="長方形 2280" width="1" height="3" transform="translate(1040 505.716)" fill="#fc9f81"/>
+    <rect id="長方形_2281" data-name="長方形 2281" width="1" height="3" transform="translate(1123 505.716)" fill="#fc9f81"/>
+    <rect id="長方形_2282" data-name="長方形 2282" width="1" height="84" transform="translate(1124 507.716) rotate(90)" fill="#fc9f81"/>
+    <path id="Icon_awesome-question" data-name="Icon awesome-question" d="M6.748,0A5.434,5.434,0,0,0,1.921,2.553a.674.674,0,0,0,.145.922l1.21.917a.673.673,0,0,0,.933-.116A2.721,2.721,0,0,1,6.529,2.889c.863,0,1.93.555,1.93,1.392,0,.632-.522.957-1.374,1.435-.993.557-2.308,1.25-2.308,2.984v.275a.673.673,0,0,0,.673.673H7.483a.673.673,0,0,0,.673-.673V8.812c0-1.2,3.513-1.252,3.513-4.5C11.669,1.858,9.128,0,6.748,0ZM6.467,10.474a1.943,1.943,0,1,0,1.943,1.943A1.945,1.945,0,0,0,6.467,10.474Z" transform="translate(1075.48 511.565)" fill="#fff"/>
+  </g>
+</svg>

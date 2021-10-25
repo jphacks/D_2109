@@ -21,6 +21,7 @@
       v-if="disp_flag.code_gen_complete_page"
       @changePage="ChangePage($event)"
     />
+    <rule-edit v-if="disp_flag.rule_edit_page" />
   </div>
 </template>
 
@@ -31,6 +32,7 @@ import TrimSelect from "./page/TrimSelect.vue";
 import DirectCodeEdit from "./page/DirectCodeEdit.vue";
 import Loading from "./page/Loading.vue";
 import CodeGenComplete from "./page/CodeGenComplete.vue";
+import RuleEdit from "./page/RuleEdit.vue";
 
 export default {
   name: "App",
@@ -41,19 +43,21 @@ export default {
     DirectCodeEdit,
     Loading,
     CodeGenComplete,
+    RuleEdit,
   },
   data() {
     return {
-      rule:{
-      },
-      input_python:"",
+      rule: {},
+      input_python: "",
+      output_python: "",
       disp_flag: {
         start_page: false,
         file_code_select_modal: false,
-        trim_select_page: true,
+        trim_select_page: false,
         direct_code_edit_page: false,
         loading_page: false,
         code_gen_complete_page: false,
+        rule_edit_page: true,
       },
     };
   },
@@ -65,8 +69,8 @@ export default {
     PythonFileSelect(file) {
       let json_file = file.file;
       let reader = new FileReader();
-      reader.readAsText(json_file)
-      reader.onload = function() {
+      reader.readAsText(json_file);
+      reader.onload = function () {
         this.rule = reader.result;
         console.log(this.rule);
       };
@@ -74,8 +78,8 @@ export default {
     RuleFileSelect(file) {
       let json_file = file.file;
       let reader = new FileReader();
-      reader.readAsText(json_file)
-      reader.onload = function() {
+      reader.readAsText(json_file);
+      reader.onload = function () {
         this.rule = reader.result;
         console.log(this.rule);
       };

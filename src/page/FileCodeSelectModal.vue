@@ -20,7 +20,7 @@
       <div class="btn-container pc-btn">
         <img src="../assets/pc_file.svg" alt="" />
         <label class="pc-text btn-text">
-          <input type="file" @change="FileSelect" accept=".json"/>
+          <input type="file" @change="FileSelect" accept=".json" />
           ファイルを選択する
         </label>
       </div>
@@ -44,7 +44,7 @@ export default {
   methods: {
     FileSelect(target) {
       target.preventDefault();
-      let files = target.target.files
+      let files = target.target.files;
       this.$emit("fileSelect", { file: files[0] });
     },
     ChangePage(target) {

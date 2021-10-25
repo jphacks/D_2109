@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="148" height="91" viewBox="0 0 148 91">
+  <g id="line_count" transform="translate(-1020 -464.358)">
+    <rect id="長方形_2279" data-name="長方形 2279" width="148" height="91" rx="10" transform="translate(1020 464.358)" fill="#3b3b3b"/>
+    <g id="グループ_2778" data-name="グループ 2778" transform="translate(-6 1)">
+      <text id="print_Hello_World_" data-name="print(&quot;Hello World&quot;)" transform="translate(1047 481.358)" fill="#f5f397" font-size="9" font-family="Meiryo-Bold, Meiryo" font-weight="700" letter-spacing="0.025em"><tspan x="0" y="0">print</tspan><tspan y="0" fill="#fff">(</tspan><tspan y="0" fill="#fc9f81">&quot;Hello World&quot;</tspan><tspan y="0" fill="#fff">)</tspan></text>
+      <text id="str_hello_world_print_str_" data-name="str = &quot;hello world&quot;
+print(str)" transform="translate(1047 497.358)" fill="#fff" font-size="9" font-family="Meiryo-Bold, Meiryo" font-weight="700" letter-spacing="0.025em"><tspan x="0" y="0">str =</tspan><tspan y="0" xml:space="preserve" fill="#fc9f81"> &quot;hello world&quot;</tspan><tspan fill="#f5f397"><tspan x="0" y="14">print</tspan><tspan y="14" fill="#fff">(str)</tspan></tspan></text>
+      <rect id="長方形_2280" data-name="長方形 2280" width="1" height="5" transform="translate(1046 517.358)" fill="#fc9f81"/>
+      <rect id="長方形_2281" data-name="長方形 2281" width="2" height="5" transform="translate(1152 517.358)" fill="#fc9f81"/>
+      <rect id="長方形_2282" data-name="長方形 2282" width="2" height="108" transform="translate(1154 520.358) rotate(90)" fill="#fc9f81"/>
+      <path id="Icon_awesome-question" data-name="Icon awesome-question" d="M8.192,0A7.02,7.02,0,0,0,1.956,3.3a.87.87,0,0,0,.188,1.191L3.707,5.674a.87.87,0,0,0,1.2-.15c.908-1.137,1.581-1.792,3-1.792,1.115,0,2.493.717,2.493,1.8,0,.817-.675,1.237-1.775,1.854C7.345,8.1,5.646,9,5.646,11.239v.355a.87.87,0,0,0,.87.87H9.142a.87.87,0,0,0,.87-.87v-.209c0-1.553,4.539-1.618,4.539-5.82C14.55,2.4,11.267,0,8.192,0ZM7.829,13.531a2.51,2.51,0,1,0,2.51,2.51A2.513,2.513,0,0,0,7.829,13.531Z" transform="translate(1092.2 526.741)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

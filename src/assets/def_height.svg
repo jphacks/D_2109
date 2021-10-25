@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="148" height="91" viewBox="0 0 148 91">
+  <g id="def_height" transform="translate(-855 -437.378)">
+    <rect id="長方形_598" data-name="長方形 598" width="148" height="91" rx="10" transform="translate(855 437.378)" fill="#3b3b3b"/>
+    <rect id="長方形_2272" data-name="長方形 2272" width="79" height="24" rx="2" transform="translate(870 447.378)" fill="ivory"/>
+    <text id="def" transform="translate(898 463.378)" fill="#3b3b3b" font-size="12" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.085em"><tspan x="0" y="0">def</tspan></text>
+    <g id="グループ_2750" data-name="グループ 2750" transform="translate(943.637 471.724)">
+      <path id="多角形_18" data-name="多角形 18" d="M2.053.894a.5.5,0,0,1,.894,0L4.638,4.276A.5.5,0,0,1,4.191,5H.809a.5.5,0,0,1-.447-.724Z" transform="translate(5.363 22.655) rotate(180)" fill="#fc9f81"/>
+      <line id="線_31" data-name="線 31" y2="13.679" transform="translate(2.741 3.683)" fill="none" stroke="#fc9f81" stroke-linecap="round" stroke-width="1.5"/>
+      <path id="多角形_19" data-name="多角形 19" d="M2.038,1.108a.5.5,0,0,1,.923,0l1.75,4.2A.5.5,0,0,1,4.25,6H.75a.5.5,0,0,1-.462-.692Z" transform="translate(0.363 -0.345)" fill="#fc9f81"/>
+    </g>
+    <rect id="長方形_2273" data-name="長方形 2273" width="79" height="25" rx="2" transform="translate(870 494.378)" fill="ivory"/>
+    <text id="def-2" data-name="def" transform="translate(898 511.378)" fill="#3b3b3b" font-size="12" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.085em"><tspan x="0" y="0">def</tspan></text>
+    <path id="Icon_awesome-question" data-name="Icon awesome-question" d="M14.383,0A13.819,13.819,0,0,0,2.108,6.492a1.714,1.714,0,0,0,.369,2.345L5.554,11.17a1.712,1.712,0,0,0,2.372-.3c1.787-2.238,3.112-3.527,5.9-3.527,2.194,0,4.908,1.412,4.908,3.54,0,1.608-1.328,2.435-3.494,3.649-2.526,1.416-5.87,3.179-5.87,7.589v.7a1.712,1.712,0,0,0,1.712,1.712h5.169a1.712,1.712,0,0,0,1.712-1.712v-.412c0-3.057,8.934-3.184,8.934-11.456C26.9,4.726,20.437,0,14.383,0Zm-.715,26.636a4.941,4.941,0,1,0,4.941,4.941A4.946,4.946,0,0,0,13.668,26.636Z" transform="translate(961.94 464.431)" fill="#fff"/>
+  </g>
+</svg>

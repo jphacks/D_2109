@@ -11,7 +11,7 @@
       <div class="trim-content text-file">
         <label>
           <img src="../assets/textfile_icon.svg" alt="" />
-          <input type="file" @change="FileSelect" accept=".py"/>
+          <input type="file" @change="FileSelect" accept=".py" />
         </label>
         <span> テキストファイルで </span>
       </div>
@@ -52,7 +52,7 @@ export default {
   methods: {
     FileSelect(target) {
       target.preventDefault();
-      let files = target.target.files
+      let files = target.target.files;
       this.$emit("fileSelect", { file: files[0] });
     },
     ChangePage(target) {

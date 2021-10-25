@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="115" height="71" viewBox="0 0 115 71">
+  <g id="grouping_small" transform="translate(-839 -327.011)">
+    <g id="グループ_2223" data-name="グループ 2223" transform="translate(839 327)">
+      <rect id="長方形_588" data-name="長方形 588" width="115" height="71" rx="8" transform="translate(0 0.011)" fill="#3b3b3b"/>
+    </g>
+    <rect id="長方形_589" data-name="長方形 589" width="14.912" height="14.912" rx="1" transform="translate(851.072 355.226)" fill="#92d4c4"/>
+    <path id="多角形_15" data-name="多角形 15" d="M2.361,1.264a1,1,0,0,1,1.669,0L5.367,3.289A1,1,0,0,1,4.532,4.84H1.859a1,1,0,0,1-.835-1.551Z" transform="translate(905.43 359.487) rotate(90)" fill="#fff"/>
+    <line id="線_24" data-name="線 24" x2="10.656" transform="translate(890.31 342.191)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2.3"/>
+    <line id="線_25" data-name="線 25" x2="10.656" transform="translate(890.31 383.173)" fill="none" stroke="#92d4c4" stroke-linecap="round" stroke-width="2.3"/>
+    <path id="多角形_16" data-name="多角形 16" d="M2.361,1.264a1,1,0,0,1,1.669,0L5.367,3.289A1,1,0,0,1,4.532,4.84H1.859a1,1,0,0,1-.835-1.551Z" transform="translate(905.43 379.967) rotate(90)" fill="#92d4c4"/>
+    <path id="多角形_17" data-name="多角形 17" d="M2.361,1.264a1,1,0,0,1,1.669,0L5.367,3.289A1,1,0,0,1,4.532,4.84H1.859a1,1,0,0,1-.835-1.551Z" transform="translate(905.43 339.006) rotate(90)" fill="#fff"/>
+    <line id="線_26" data-name="線 26" x2="10.89" transform="translate(890.076 362.682)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2.3"/>
+    <line id="線_27" data-name="線 27" y1="20.593" transform="translate(890.076 342.197)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2.3"/>
+    <line id="線_28" data-name="線 28" x2="21.176" transform="translate(868.601 362.682)" fill="none" stroke="#92d4c4" stroke-linecap="round" stroke-width="2.3"/>
+    <line id="線_29" data-name="線 29" y1="20.343" transform="translate(890.076 362.718)" fill="none" stroke="#92d4c4" stroke-linecap="round" stroke-width="2.3"/>
+    <rect id="長方形_590" data-name="長方形 590" width="35.101" height="16.333" rx="1" transform="translate(908.56 334.101)" fill="#fc9f81"/>
+    <rect id="長方形_591" data-name="長方形 591" width="35.101" height="16.333" rx="1" transform="translate(908.56 354.516)" fill="#c47ebc"/>
+    <rect id="長方形_592" data-name="長方形 592" width="35.101" height="16.333" rx="1" transform="translate(908.56 374.933)" fill="#92d4c4"/>
+  </g>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="115" height="71" viewBox="0 0 115 71">
+  <g id="tab_indent" transform="translate(-4642 -2667.058)">
+    <rect id="長方形_593" data-name="長方形 593" width="115" height="71" rx="8" transform="translate(4642 2667.058)" fill="#3b3b3b"/>
+    <g id="グループ_2793" data-name="グループ 2793" transform="translate(4654.044 2673.826)">
+      <text id="def_a_:" data-name="def a():" transform="translate(-0.044 13.232)" fill="#fff" font-size="12" font-family="Meiryo-Bold, Meiryo" font-weight="700" letter-spacing="0.025em"><tspan x="0" y="0">def a():</tspan></text>
+      <text id="_a_3" data-name=" a = 3" transform="translate(21.956 31.232)" fill="#f5f397" font-size="12" font-family="Meiryo-Bold, Meiryo" font-weight="700" letter-spacing="0.025em"><tspan x="0" y="0"> </tspan><tspan y="0" fill="#fff">a = 3</tspan></text>
+      <g id="長方形_2302" data-name="長方形 2302" transform="translate(0.956 20.232)" fill="none" stroke="#f5f397" stroke-linecap="round" stroke-width="1.7" stroke-dasharray="3 4">
+        <rect width="21" height="14" rx="1" stroke="none"/>
+        <rect x="0.85" y="0.85" width="19.3" height="12.3" rx="0.15" fill="none"/>
+      </g>
+    </g>
+    <text id="Tab" transform="translate(4712 2727.058)" fill="#f5f397" font-size="16" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.085em"><tspan x="0" y="0">Tab</tspan></text>
+    <line id="線_33" data-name="線 33" y2="7.816" transform="translate(4665.804 2714.675)" fill="none" stroke="#f5f397" stroke-linecap="round" stroke-width="2"/>
+    <line id="線_34" data-name="線 34" x2="40.503" transform="translate(4665.804 2722.491)" fill="none" stroke="#f5f397" stroke-linecap="round" stroke-width="2"/>
+    <path id="多角形_20" data-name="多角形 20" d="M2.865,1.264a1,1,0,0,1,1.669,0L6.376,4.053A1,1,0,0,1,5.541,5.6H1.859a1,1,0,0,1-.835-1.551Z" transform="translate(4662.104 2710.832)" fill="#f5f397"/>
+  </g>
+</svg>
