@@ -1,6 +1,11 @@
 <template>
   <div id="app">
     <start-page v-if="disp_flag.start_page" @changePage="ChangePage($event)" />
+    <file-code-select-modal
+      v-if="disp_flag.file_code_select_modal"
+      @changePage="ChangePage($event)"
+      @fileSelect="FileSelect($event)"
+    />
     <trim-select
       v-if="disp_flag.trim_select_page"
       @changePage="ChangePage($event)"
@@ -20,6 +25,7 @@
 
 <script>
 import StartPage from "./page/StartPage.vue";
+import FileCodeSelectModal from "./page/FileCodeSelectModal.vue";
 import TrimSelect from "./page/TrimSelect.vue";
 import DirectCodeEdit from "./page/DirectCodeEdit.vue";
 import Loading from "./page/Loading.vue";
@@ -30,29 +36,43 @@ export default {
   components: {
     StartPage,
     TrimSelect,
+    FileCodeSelectModal,
     DirectCodeEdit,
     Loading,
     CodeGenComplete,
   },
   data() {
     return {
+      rule:{
+      },
       disp_flag: {
         start_page: false,
-        trim_select_page: false,
-        direct_code_edit_page: true,
+        file_code_select_modal: true,
+        trim_select_page: true,
+        direct_code_edit_page: false,
         loading_page: false,
         code_gen_complete_page: false,
       },
     };
   },
   created() {
-    this.ChangePage({ page: "start_page" });
+    // this.ChangePage({ page: "start_page" });
   },
   computed: {},
   methods: {
+    FileSelect(file) {
+      let json_file = file.file;
+      let reader = new FileReader();
+      reader.readAsText(json_file)
+      reader.onload = function() {
+        this.rule = reader.result;
+        console.log(this.rule);
+      };
+    },
     ChangePage(target) {
       console.log(target);
       this.disp_flag.start_page = false;
+      this.disp_flag.file_code_select_modal = false;
       this.disp_flag.trim_select_page = false;
       this.disp_flag.direct_code_edit_page = false;
       this.disp_flag.loading_page = false;
