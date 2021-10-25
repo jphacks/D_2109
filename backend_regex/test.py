@@ -5,6 +5,15 @@ REJEX_METHOD_NAME = "def( |\t)+(\w+)( |\t)*\((.*)\)( |\t)*:"
 REJEX_METHOD_NAME_BACK = "def( |\t)+(\w+)( |\t)*\((.*)\)( |\t)*->( |\t)*(\w+)( |\t)*:"
 REJEX_CLASS_NAME = "class( |\t)+(\w+)( |\t)*(\((.*)\))*( |\t)*:"
 
+TRIM_WARNING_NAMING_METHOD_ALL = "# [trim] 警告: 関数名に大文字とアンダーバーを同時に含められません."
+TRIM_WARNING_NAMING_METHOD_SNAKE = "# [trim] 警告: 関数名に大文字は含められません."
+TRIM_WARNING_NAMING_METHOD_CAPWORDS = "# [trim] 警告: 関数名にアンダーバーは含められません."
+
+TRIM_WARNING_NAMING_CLASS_ALL = "# [trim] 警告: クラス名に大文字とアンダーバーを同時に含められません."
+TRIM_WARNING_NAMING_CLASS_SNAKE = "# [trim] 警告: クラス名に大文字は含められません."
+TRIM_WARNING_NAMING_CLASS_CAPWORDS = "# [trim] 警告: クラス名にアンダーバーは含められません."
+
+
 # 括弧の中を整形
 def make_args(s_lst):
   print(s_lst)
@@ -153,6 +162,122 @@ def scan_format_method_class(lst):
     lst_cp.append(str)
   return lst_cp
 
+
+# 命名規則クラス
+class Naming():
+  def __init__(self, op_naming_case) -> None:
+      self.snake_flag = op_naming_case['snake']
+      self.capwords_flag = op_naming_case['CapWords']
+  
+  def get_snake_flag(self):
+    return self.snake_flag
+  
+  def get_capwords_flag(self):
+    return self.capwords_flag
+
+
+class ClassNaming(Naming):
+  def __init__(self, op_naming) -> None:
+    super().__init__(op_naming['class_case'])
+  
+  def check_lst(self, lst):
+    # 命名規則のlintがOFFの場合
+    if not self.get_capwords_flag and not self.get_snake_flag:
+      return lst
+    
+    lst_cp = []
+    for line in lst:
+      # 関数: 1行づつ正規表現にかける
+      sub_paterns = re.findall(REJEX_CLASS_NAME, line)
+      if sub_paterns:
+        hit_class = sub_paterns[0][1]
+        # 行頭のインデントを取得
+        starts_blank = re.match(r" *", line).end() * ' '
+        
+        if self.get_capwords_flag() and self.get_snake_flag():
+          # '_'と大文字が両方入っていたらおかしい
+          if '_' in hit_class and re.search(r'[A-Z]+', hit_class):
+            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_ALL)
+        elif self.get_capwords_flag():
+          # '_'が入っていたらおかしい
+          if '_' in hit_class:
+            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_CAPWORDS)
+        elif self.get_snake_flag():
+          # 大文字が入っていたらおかしい
+          if re.search(r'[A-Z]+', hit_class):
+            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_SNAKE)
+
+      lst_cp.append(line)
+    return lst_cp
+
+class MethodNaming(Naming):
+  def __init__(self, op_naming) -> None:
+    super().__init__(op_naming['method_case'])
+  
+  def check_lst(self, lst):
+    # 命名規則のlintがOFFの場合
+    if not self.get_capwords_flag and not self.get_snake_flag:
+      return lst
+  
+    lst_cp = []
+    for line in lst:
+      # 関数: 1行づつ正規表現にかける
+      sub_paterns = re.findall(REJEX_METHOD_NAME, line)
+      if sub_paterns:
+        method = sub_paterns[0][1]
+        # 行頭のインデントを取得
+        starts_blank = re.match(r" *", line).end() * ' '
+        
+        if self.get_capwords_flag() and self.get_snake_flag():
+          # '_'と大文字が両方入っていたらおかしい
+          if '_' in method and re.search(r'[A-Z]+', method):
+            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_ALL)
+        elif self.get_capwords_flag():
+          # '_'が入っていたらおかしい
+          if '_' in method:
+            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_CAPWORDS)
+        elif self.get_snake_flag():
+          # 大文字が入っていたらおかしい
+          if re.search(r'[A-Z]+', method):
+            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_SNAKE)
+
+      lst_cp.append(line)
+    return lst_cp
+
+   
+
+# 走査: 関数とクラスの命名規則チェック
+def scan_naming_method_class(lst, op_naming):
+  class_naming = ClassNaming(op_naming)
+  method_naming = MethodNaming(op_naming)
+
+  # 関数に関して
+  lst = method_naming.check_lst(lst)
+
+  # クラスに関して
+  lst = class_naming.check_lst(lst)
+  
+  """
+    # class
+    sub_paterns_class = re.findall(REJEX_CLASS_NAME, line)
+    if sub_paterns_class:
+      #print(sub_paterns_class[0])
+      if not sub_paterns_class[0][3].startswith('('):
+        # ()がないパターン
+        str = blank_str + "class " + sub_paterns_class[0][1] + ":"
+      else:
+        args = make_args(sub_paterns_class[0][4])
+        str = blank_str + "class " + sub_paterns_class[0][1] + "(" + args + "):"
+    """
+    
+  return lst
+
+
+  
+
+##def naming_check():
+#  lst, op_indent
+
 def lambda_handler(event, context):
     #body_dict = json.loads(event['body'])
     body_dict = event['body']
@@ -160,7 +285,8 @@ def lambda_handler(event, context):
     print(body_dict)
     lst_cp = scan_indent_config(body_dict['code_lst'], op['style_check']['indent'])
     lst_cp = scan_format_method_class(lst_cp)
-    
+    lst_cp = scan_naming_method_class(lst_cp, op['naming_check'])
+
     # 空行をきれいにする
     lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, lst_cp))
     # 改行コードを追加
@@ -186,7 +312,7 @@ def lambda_handler(event, context):
 
 json = {
     "body": {
-      "code_lst": [' a=3\n', 'v=2\n', '\n', 'def a():\n', '\tpass\n', '\n', '\n', 'def  \tadd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  a = 3\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) -> None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__(self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
+      "code_lst": [' a=3\n', 'v=2\n', '\n', 'def a():\n', '\tpass\n', '\n', '\n', 'def  \tAdd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  a = 3\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) ->                       None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__(self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
       "op": {
         'style_check': {
           # classや関数、演算子前後のフォーマット
@@ -223,11 +349,11 @@ json = {
         'naming_check': {
           'class_case': {
             'snake': True,
-            'CapWords': True
+            'CapWords': False
           },
           'method_case': {
             'snake': True,
-            'CapWords': True
+            'CapWords': False
           },
           'value_case': {
             'snake': True,
