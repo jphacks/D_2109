@@ -9,7 +9,10 @@
     </div>
     <div class="select-container">
       <div class="trim-content text-file">
-        <img src="../assets/textfile_icon.svg" alt="" />
+        <label>
+          <img src="../assets/textfile_icon.svg" alt="" />
+          <input type="file" @change="FileSelect" accept=".py"/>
+        </label>
         <span> テキストファイルで </span>
       </div>
       <div class="trim-content direct-code">
@@ -47,6 +50,11 @@ export default {
   created() {},
   computed: {},
   methods: {
+    FileSelect(target) {
+      target.preventDefault();
+      let files = target.target.files
+      this.$emit("fileSelect", { file: files[0] });
+    },
     ChangePage(target) {
       this.$emit("changePage", { page: target });
     },
@@ -114,6 +122,9 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      input[type="file"] {
+        display: none;
+      }
     }
     .direct-code {
       margin-left: 35px;
