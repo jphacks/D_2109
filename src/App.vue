@@ -16,13 +16,14 @@
       @changePage="ChangePage($event)"
       @codeGen="LoadingWaitTime()"
     />
-    <loading v-if="disp_flag.loading_page" />
+    <loading v-show="disp_flag.loading_page" />
     <code-gen-complete
       v-if="disp_flag.code_gen_complete_page"
       @changePage="ChangePage($event)"
     />
-    <rule-edit v-if="disp_flag.rule_edit_page" />
-    <rule-gen-complete v-if="disp_flag.rule_gen_complete" />
+    <rule-edit v-if="disp_flag.rule_edit_page" @changePage="ChangePage($event)"/>
+    <rule-make-loading v-if="disp_flag.rule_make_loading" @changePage="ChangePage($event)"/>
+    <rule-gen-complete v-if="disp_flag.rule_gen_complete" @changePage="ChangePage($event)"/>
   </div>
 </template>
 
@@ -34,6 +35,7 @@ import DirectCodeEdit from "./page/DirectCodeEdit.vue";
 import Loading from "./page/Loading.vue";
 import CodeGenComplete from "./page/CodeGenComplete.vue";
 import RuleEdit from "./page/RuleEdit.vue";
+import RuleMakeLoading from "./page/RuleMakeLoading.vue";
 import RuleGenComplete from "./page/RuleGenComplete.vue";
 
 export default {
@@ -46,6 +48,7 @@ export default {
     Loading,
     CodeGenComplete,
     RuleEdit,
+    RuleMakeLoading,
     RuleGenComplete,
   },
   data() {
@@ -61,7 +64,8 @@ export default {
         loading_page: false,
         code_gen_complete_page: false,
         rule_edit_page: false,
-        rule_gen_complete: true
+        rule_make_loading:true,
+        rule_gen_complete: false
       },
     };
   },
@@ -96,13 +100,26 @@ export default {
       this.disp_flag.direct_code_edit_page = false;
       this.disp_flag.loading_page = false;
       this.disp_flag.code_gen_complete_page = false;
+      this.disp_flag.rule_edit_page = false;
+      this.disp_flag.rule_gen_complete = false;
+      this.disp_flag.rule_make_loading = false
       this.disp_flag[target.page] = true;
     },
     LoadingWaitTime() {
       console.log("start");
       this.ChangePage({ page: "loading_page" });
+      this.sleep(4000).then( (result) =>  {
+        console.log(result)
+        this.ChangePage({ page: "code_gen_complete_page" });
+      });
       console.log("end");
-      this.ChangePage({ page: "code_gen_complete_page" });
+    },
+    // 処理を変えるときはここをAPI用の関数に変更
+    sleep (time) {
+      return new Promise(function (resolve, reject) {
+        console.log(reject)
+        window.setTimeout(resolve, time);
+      });
     },
   },
 };
