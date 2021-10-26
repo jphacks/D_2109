@@ -23,7 +23,11 @@
     />
     <rule-edit v-if="disp_flag.rule_edit_page" @changePage="ChangePage($event)"/>
     <rule-make-loading v-if="disp_flag.rule_make_loading" @changePage="ChangePage($event)"/>
-    <rule-gen-complete v-if="disp_flag.rule_gen_complete" @changePage="ChangePage($event)"/>
+    <rule-gen-complete
+      v-if="disp_flag.rule_gen_complete"
+      @changePage="ChangePage($event)"
+      @downloadItem="RuleFileDownload($event)"
+    />
   </div>
 </template>
 
@@ -37,6 +41,8 @@ import CodeGenComplete from "./page/CodeGenComplete.vue";
 import RuleEdit from "./page/RuleEdit.vue";
 import RuleMakeLoading from "./page/RuleMakeLoading.vue";
 import RuleGenComplete from "./page/RuleGenComplete.vue";
+
+// import axios from "axios";
 
 export default {
   name: "App",
@@ -53,7 +59,9 @@ export default {
   },
   data() {
     return {
-      rule: {},
+      rule: {
+        test: "test",
+      },
       input_python: "",
       output_python: "",
       disp_flag: {
@@ -74,6 +82,25 @@ export default {
   },
   computed: {},
   methods: {
+    PythonFileDownload() {
+      const blob = new Blob([this.output_python], {
+        type: "text/plain",
+        endings: "native",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "test.py";
+      link.click();
+    },
+    RuleFileDownload() {
+      const blob = new Blob([JSON.stringify(this.rule, null, "\t")], {
+        type: "application/json",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "rule.json";
+      link.click();
+    },
     PythonFileSelect(file) {
       let json_file = file.file;
       let reader = new FileReader();
