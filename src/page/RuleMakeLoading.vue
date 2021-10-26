@@ -1,10 +1,10 @@
 <template>
   <div class="rule-make-loading-page">
-    <header-menu @changePage="ParentChangePage($event)"/>
+    <header-menu @changePage="ParentChangePage($event)" />
     <div class="daruma-container">
-      <img src="../assets/daruma_blue_load.svg" alt="">
-      <img src="../assets/daruma_red_load.svg" alt="">
-      <img src="../assets/daruma_green_load.svg" alt="">
+      <img src="../assets/daruma_blue_load.svg" alt="" />
+      <img src="../assets/daruma_red_load.svg" alt="" />
+      <img src="../assets/daruma_green_load.svg" alt="" />
     </div>
     <p>ルールファイルを作成中･･･</p>
   </div>
@@ -40,13 +40,13 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .daruma-container{
+  .daruma-container {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    img{
+    img {
       margin: 5px 15px;
     }
   }

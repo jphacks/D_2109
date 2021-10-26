@@ -14,7 +14,10 @@
       >
         <span>ファイルをダウンロード</span>
       </div>
-      <div class="rule-make-compleat-btn attach-rule-btn">
+      <div
+        class="rule-make-compleat-btn attach-rule-btn"
+        @click="ChangePage('trim_select_page')"
+      >
         <span>ルール適用ページへ</span>
       </div>
     </div>

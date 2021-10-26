@@ -14,15 +14,22 @@
     <direct-code-edit
       v-if="disp_flag.direct_code_edit_page"
       @changePage="ChangePage($event)"
-      @codeGen="LoadingWaitTime()"
+      @codeGen="CodeGenLoading()"
     />
     <loading v-show="disp_flag.loading_page" />
     <code-gen-complete
       v-if="disp_flag.code_gen_complete_page"
       @changePage="ChangePage($event)"
     />
-    <rule-edit v-if="disp_flag.rule_edit_page" @changePage="ChangePage($event)"/>
-    <rule-make-loading v-if="disp_flag.rule_make_loading" @changePage="ChangePage($event)"/>
+    <rule-edit
+      v-if="disp_flag.rule_edit_page"
+      @changePage="ChangePage($event)"
+      @ruleGen="RuleGenLoading($event)"
+    />
+    <rule-make-loading
+      v-if="disp_flag.rule_make_loading"
+      @changePage="ChangePage($event)"
+    />
     <rule-gen-complete
       v-if="disp_flag.rule_gen_complete"
       @changePage="ChangePage($event)"
@@ -59,9 +66,9 @@ export default {
   },
   data() {
     return {
-      rule: {
-        test: "test",
-      },
+      rule_flag: false,
+      rule_file: {},
+      input_rule: {},
       input_python: "",
       output_python: "",
       disp_flag: {
@@ -72,13 +79,13 @@ export default {
         loading_page: false,
         code_gen_complete_page: false,
         rule_edit_page: false,
-        rule_make_loading:true,
-        rule_gen_complete: false
+        rule_make_loading: true,
+        rule_gen_complete: false,
       },
     };
   },
   created() {
-    // this.ChangePage({ page: "start_page" });
+    this.ChangePage({ page: "start_page" });
   },
   computed: {},
   methods: {
@@ -93,7 +100,7 @@ export default {
       link.click();
     },
     RuleFileDownload() {
-      const blob = new Blob([JSON.stringify(this.rule, null, "\t")], {
+      const blob = new Blob([JSON.stringify(this.rule_file, null, "\t")], {
         type: "application/json",
       });
       const link = document.createElement("a");
@@ -106,8 +113,8 @@ export default {
       let reader = new FileReader();
       reader.readAsText(json_file);
       reader.onload = function () {
-        this.rule = reader.result;
-        console.log(this.rule);
+        this.output_python = reader.result;
+        console.log(this.output_python);
       };
     },
     RuleFileSelect(file) {
@@ -115,9 +122,10 @@ export default {
       let reader = new FileReader();
       reader.readAsText(json_file);
       reader.onload = function () {
-        this.rule = reader.result;
-        console.log(this.rule);
+        this.input_rule = JSON.parse(reader.result);
       };
+      this.rule_flag = true;
+      this.ChangePage({ page: "trim_select_page" });
     },
     ChangePage(target) {
       console.log(target);
@@ -129,22 +137,39 @@ export default {
       this.disp_flag.code_gen_complete_page = false;
       this.disp_flag.rule_edit_page = false;
       this.disp_flag.rule_gen_complete = false;
-      this.disp_flag.rule_make_loading = false
+      this.disp_flag.rule_make_loading = false;
       this.disp_flag[target.page] = true;
+      // trim_select_pageを開こうとしているかつ入力ruleが空の場合にModal表示
+      if (target.page === "trim_select_page" && this.rule_flag !== true) {
+        this.disp_flag.file_code_select_modal = true;
+      }
+      // タイトルに戻ったらルール適用状態を解除する
+      if (target.page === "start_page") {
+        this.rule_flag = false;
+      }
     },
-    LoadingWaitTime() {
+    CodeGenLoading() {
       console.log("start");
       this.ChangePage({ page: "loading_page" });
-      this.sleep(4000).then( (result) =>  {
-        console.log(result)
+      this.sleep(4000).then((result) => {
+        console.log(result);
         this.ChangePage({ page: "code_gen_complete_page" });
       });
       console.log("end");
     },
+    RuleGenLoading(target) {
+      this.ChangePage({ page: "loading_page" });
+      this.rule = target.rule;
+      // 1秒間待機後にページ遷移
+      new Promise(function (resolve) {
+        window.setTimeout(resolve, 1000);
+      }).then(() => {
+        this.ChangePage({ page: "rule_gen_complete" });
+      });
+    },
     // 処理を変えるときはここをAPI用の関数に変更
-    sleep (time) {
-      return new Promise(function (resolve, reject) {
-        console.log(reject)
+    sleep(time) {
+      return new Promise(function (resolve) {
         window.setTimeout(resolve, time);
       });
     },

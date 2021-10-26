@@ -406,7 +406,7 @@ export default {
       this.$emit("changePage", { page: target.page });
     },
     CodeSubmit() {
-      this.$emit("codeGen");
+      this.$emit("ruleGen", { rule: this.rule_json });
     },
   },
 };
