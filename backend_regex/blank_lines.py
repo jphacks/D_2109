@@ -101,36 +101,40 @@ for idx_def, blank_def in enumerate(reversed(stack_blank.stack)):
 		else:
 			b = 0
 
-print(line_local)
-print(line_glob)
-
-sys.exit()
+print("line_local ", line_local)
+print("line_glob", line_glob)
 
 ### 空白行の挿入・削除 ###
-# 消す行番号を保存するリスト
+# 消す行のインデックスを保存するリスト
 del_lines = []
-# 空白行を追加したい行間の内、より大きい行番号を保存するリスト
+# 空白行を追加したい行間の内、より大きい行のインデックスを保存するリスト
 add_lines = []
 # Undone->True, Done->False
-# flag_local = np.full_like(line_local, True)
-# flag_glob = np.full_like(line_glob, True)
+flag_local = np.full_like(line_local, True)
+flag_glob = np.full_like(line_glob, True)
 # ファイルの読込
 with open(FILE_PATH) as f:
 	txt = f.readlines()
 	print("txt: ", txt)
 	# ローカル関数
 	for block in line_local:
-		print(block)
+		print("<block>", block)
 		# ブロック開始行の1つ上の行のインデックス(ひとつ上なので-1, インデックスなのでさらに-1)
 		above_b = block[0] - 2
+		print("above_b: ", above_b)
 		# ブロック開始行の1つ下の行のインデックス
 		below_b = block[1]
+		print("below_b: ", below_b)
+		# ブロック開始行の1つ上にコメント行がある場合
+		if re.fullmatch(r'\s*#.*', txt[above_b]) is not None:
+			above_b -= 1
 		# ブロック開始行の1つ上に空行がある場合
 		if re.fullmatch(r'\s+', txt[above_b]) is not None:
 			i = 1
 			while True:
 				# 注目している行が空行でない場合
 				if re.fullmatch(r'\s+', txt[above_b - i]) is None:
+					print("above_b - i + 1: ", above_b - i + 1)
 					# ローカル関数ブロックの末行だった場合 -> あとまわし
 					if above_b - i + 1 in [col[1] for col in line_local]:
 						break
@@ -139,19 +143,64 @@ with open(FILE_PATH) as f:
 						break
 					# 通常の行の場合
 					else:
-						del_lines = del_lines + [above_b - j + 1 for j in range(1, i)]		
+						del_lines += [above_b - j for j in range(1, i)]	
+						print("del_lines: ", del_lines)	
 						break		
 				i += 1
+		# ブロック開始行の1つ上に空行でない行がある場合
+		elif re.fullmatch(r'\s+', txt[above_b]) is None:
+			print("not blank")
+			add_lines.append(above_b + 1)
 
-print("del_lines", del_lines)
-# 		# ブロック開始行の1つ上に空行でない行がある場合
-# 		elif re.fullmatch(r'\S+', txt[above_b]) is not None:
+		# ブロック終了行の1つ下に空行がある場合
+		if re.fullmatch(r'\s+', txt[below_b]) is not None:
+			print("blank found")
+			i = 1
+			while True:
+				# 注目している行が空行でない場合
+				if re.fullmatch(r'\s+', txt[below_b + i]) is None:
+					# 空白でなかった行の行番号を表示
+					print("below_b + i + 1: ", below_b + i + 1)
+					# グローバル関数ブロックの開始行だった場合
+					if below_b + i + 1 in [col[0] for col in line_glob]:
+						break
+					# ブロックの下の空行が1行のみだった場合 -> 何もしない
+					elif i == 1:
+						break
+					# それ以外
+					else:
+						del_lines += [below_b + j for j in range(1, i) if below_b + j not in del_lines]
+						print("del_lines: ", del_lines)
+						break
+				i += 1
+		# ブロック終了行の1つ下に空行でない行がある場合
+		else:
+			print("not blank")
+			# グローバル関数ブロックの開始行だった場合
+			if below_b + 1 in [col[0] for col in line_glob]:
+				break
+			else:
+				if below_b + 1 not in del_lines:
+					del_lines.append(below_b + 1)
+				print("del_lines: ", del_lines)
+				break
 
-# 		# ブロック終了行の1つ下に空行がある場合
-# 		if
-# 		# ブロック終了行の1つ下に空行でない行がある場合
-	
+
+
+
+
+		# ブロック終了行の1つ下に空行でない行がある場合
+
 # 	# グローバル関数
+
+		# グローバル関数ブロックの開始行だった場合
+		# if below_b + i + 1 in [col[0] for col in line_glob]:
+		# 	if i == 2:
+		# 		break
+		# 	del_lines += [above_b - j + 1 for j in range(1, i)]	
+		# 	# print("del_lines: ", del_lines)
+		# 	break
+	
 # 					# ページ1行目だった場合
 # 					elif above_b - i + 1 == 1:
 # 						del
@@ -162,7 +211,8 @@ print("del_lines", del_lines)
 # 					break
 # 				elif above_b - i == 0:
 # 				i += 1
-
+print("del_lines: ", del_lines)
+print("add_lines: ", add_lines)
 # # コメント行の場合
 # if re.fullmatch(r'\s*#.*', txt[above_b - i]) is not None:
 

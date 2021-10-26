@@ -2,10 +2,8 @@ def add_box () 	:
 	ab = 2
 	print('f')
 
+	a = 2
 	def inline():
-
-
-
 		def inline2():
 			print("fff")	
 
@@ -18,7 +16,7 @@ def add_box () 	:
 
 def brahh(fff):
 
-	
+
   return 0
 
 
