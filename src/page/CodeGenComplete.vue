@@ -7,14 +7,14 @@
           <img src="../assets/daruma_red.svg" alt="" />
           <span> 変更前 </span>
         </div>
-        <code-viewer class="code-viewer" :code_list="input_code" />
+        <code-viewer class="code-viewer" :code_list="input_python" />
       </div>
       <div class="right-viewer">
         <div class="daruma_container">
           <img src="../assets/daruma_blue.svg" alt="" />
           <span> 変更後 </span>
         </div>
-        <code-viewer class="code-viewer" :code_list="output_code" />
+        <code-viewer class="code-viewer" :code_list="output_python" />
       </div>
     </div>
     <div class="btn-container">
@@ -24,7 +24,10 @@
       >
         <span>別テキストに適用する</span>
       </div>
-      <div class="code-input-compleat-btn dl-btn">
+      <div
+        class="code-input-compleat-btn dl-btn"
+        @click.prevent="downloadItem()"
+      >
         <span>ファイルをダウンロード</span>
       </div>
     </div>
@@ -37,6 +40,10 @@ import CodeViewer from "../components/CodeViewer.vue";
 
 export default {
   name: "TrimSelectPage",
+  props: {
+    input_python: String,
+    output_python: String,
+  },
   components: {
     HeaderMenu,
     CodeViewer,
@@ -50,6 +57,9 @@ export default {
   created() {},
   computed: {},
   methods: {
+    downloadItem() {
+      this.$emit("downloadItem");
+    },
     ChangePage(target) {
       this.$emit("changePage", { page: target });
     },

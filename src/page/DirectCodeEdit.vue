@@ -52,7 +52,7 @@ export default {
       this.$emit("changePage", { page: target.page });
     },
     CodeSubmit() {
-      this.$emit("codeGen");
+      this.$emit("codeGen", { code: this.input_code });
     },
     ChangeHeight() {
       console.log(this.input_area_height);

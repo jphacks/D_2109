@@ -26,7 +26,11 @@
       </div>
       <div class="btn-container rule-make-btn">
         <img src="../assets/rule_make.svg" alt="" />
-        <span class="rule-make-text btn-text">ルールを作成する</span>
+        <span
+          class="rule-make-text btn-text"
+          @click="ChangePage('rule_edit_page')"
+          >ルールを作成する</span
+        >
       </div>
     </div>
   </div>

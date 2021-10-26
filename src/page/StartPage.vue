@@ -6,7 +6,7 @@
       <div class="btn-container">
         <div
           class="start-btn rule-make-btn"
-          @click="ChangePage('trim_select_page')"
+          @click="ChangePage('rule_edit_page')"
         >
           <span>ルールを作成する</span>
         </div>
