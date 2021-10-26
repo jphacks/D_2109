@@ -22,6 +22,7 @@
       @changePage="ChangePage($event)"
     />
     <rule-edit v-if="disp_flag.rule_edit_page" />
+    <rule-gen-complete v-if="disp_flag.rule_gen_complete" />
   </div>
 </template>
 
@@ -33,6 +34,7 @@ import DirectCodeEdit from "./page/DirectCodeEdit.vue";
 import Loading from "./page/Loading.vue";
 import CodeGenComplete from "./page/CodeGenComplete.vue";
 import RuleEdit from "./page/RuleEdit.vue";
+import RuleGenComplete from "./page/RuleGenComplete.vue";
 
 export default {
   name: "App",
@@ -44,6 +46,7 @@ export default {
     Loading,
     CodeGenComplete,
     RuleEdit,
+    RuleGenComplete,
   },
   data() {
     return {
@@ -57,7 +60,8 @@ export default {
         direct_code_edit_page: false,
         loading_page: false,
         code_gen_complete_page: false,
-        rule_edit_page: true,
+        rule_edit_page: false,
+        rule_gen_complete: true
       },
     };
   },
