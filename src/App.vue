@@ -70,6 +70,7 @@ export default {
       rule_flag: false,
       rule_file: {},
       input_rule: {},
+      python_name: "",
       input_python: "",
       output_python: "",
       disp_flag: {
@@ -125,7 +126,7 @@ export default {
       });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "test.py";
+      link.download = "trimed" + this.python_name + ".py";
       link.click();
     },
     RuleFileDownload() {
@@ -140,11 +141,12 @@ export default {
     PythonFileSelect(file) {
       this.ChangePage({ page: "loading_page" });
       let json_file = file.file;
+      console.log(json_file.name);
+      this.python_name = "_" + json_file.name.slice(0, -3);
       let python_reader = new FileReader();
       python_reader.readAsText(json_file);
       python_reader.addEventListener("load", () => {
         this.input_python = python_reader.result;
-        console.log(this.input_rule);
         this.GetAPIResult();
       });
     },
@@ -174,6 +176,10 @@ export default {
       // trim_select_pageを開こうとしているかつ入力ruleが空の場合にModal表示
       if (target.page === "trim_select_page" && this.rule_flag !== true) {
         this.disp_flag.file_code_select_modal = true;
+      }
+      // trim_select_pageを開いたらファイル名を削除
+      if (target.page === "trim_select_page") {
+        this.python_name = "";
       }
       // タイトルに戻ったらルール適用状態を解除する
       if (target.page === "start_page") {

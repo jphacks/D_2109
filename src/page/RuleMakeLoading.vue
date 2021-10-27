@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      progress_bar_style:"width:0%;"
+      progress_bar_style: "width:0%;",
     };
   },
   created() {},
@@ -47,7 +47,7 @@ export default {
 .rule-make-loading-page {
   width: 100%;
   height: 100%;
-  background-color: #E5EEEB;
+  background-color: #e5eeeb;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -67,17 +67,17 @@ export default {
     font-size: 20px;
     font-weight: bold;
   }
-  .progress-bar-container{
+  .progress-bar-container {
     width: 300px;
     height: 10px;
     margin-top: 30px;
     border-radius: 5px;
-    background-color: #A1A1A1;
+    background-color: #a1a1a1;
   }
-  .progress-bar{
+  .progress-bar {
     height: 100%;
     border-radius: 5px;
-    background-color: #70998F;
+    background-color: #70998f;
     transition: 1s;
   }
 }
