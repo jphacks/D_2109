@@ -25,9 +25,12 @@
 #### 1. **フォーマットルール**の作成は初心者向けなわかりやすいGUIを提供
 熟練のエンジニアがよく使用する命名規則やインデント数などをカスタマイズ可能で **CapWords** や **Snake** 表現を選択できます。
 また、初心者向けにはデフォルトの値を設定しているため、迷うことがなくなります。
-![IMAGE ALT TEXT HERE](https://github.com/jphacks/D_2109/wiki/images/rule_make_menu.gif)
+<img src="https://github.com/jphacks/D_2109/wiki/images/rule_make_menu.gif" />
 
-#### 2. 特長2
+#### 2. 修正対象のコードは直接入力とファイルアップロードの双方が可能
+事前に作成した **Python** のファイルを修正することが可能です。
+また、アプリケーション内で直接 **Python** のコードを書くことも可能です。
+<img src="https://github.com/jphacks/D_2109/wiki/images/input_python_select.png" />
 
 #### 3. 特長3
 
