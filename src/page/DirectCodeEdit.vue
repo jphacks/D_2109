@@ -129,7 +129,7 @@ export default {
     }
   }
   .code-editer {
-    margin: 50px 0;
+    margin: 20px 0;
     width: 800px;
     min-height: 300px;
     max-height: 800px;
@@ -143,6 +143,7 @@ export default {
     .code-input {
       background-color: rgba($color: #ffffff, $alpha: 0);
       color: rgba(156, 53, 53, 0);
+      opacity: 0;
       caret-color: #ffffff;
       width: 800px;
       min-height: 300px;
