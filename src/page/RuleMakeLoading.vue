@@ -7,6 +7,9 @@
       <img src="../assets/daruma_green_load.svg" alt="" />
     </div>
     <p>ルールファイルを作成中･･･</p>
+    <div class="progress-bar-container">
+      <div :style="progress_bar_style" class="progress-bar" />
+    </div>
   </div>
 </template>
 
@@ -19,10 +22,19 @@ export default {
     HeaderMenu,
   },
   data() {
-    return {};
+    return {
+      progress_bar_style:"width:0%;"
+    };
   },
   created() {},
   computed: {},
+  mounted() {
+    new Promise(function (resolve) {
+      window.setTimeout(resolve, 10);
+    }).then(() => {
+      this.progress_bar_style = "width:100%;";
+    });
+  },
   methods: {
     ParentChangePage(target) {
       this.$emit("changePage", { page: target.page });
@@ -35,7 +47,7 @@ export default {
 .rule-make-loading-page {
   width: 100%;
   height: 100%;
-  background-color: #f7f6e5;
+  background-color: #E5EEEB;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -54,6 +66,19 @@ export default {
     margin-top: 30px;
     font-size: 20px;
     font-weight: bold;
+  }
+  .progress-bar-container{
+    width: 300px;
+    height: 10px;
+    margin-top: 30px;
+    border-radius: 5px;
+    background-color: #A1A1A1;
+  }
+  .progress-bar{
+    height: 100%;
+    border-radius: 5px;
+    background-color: #70998F;
+    transition: 1s;
   }
 }
 </style>
