@@ -115,7 +115,7 @@ export default {
       height: 70px;
     }
     .title {
-      min-width: 500px;
+      width: 500px;
       padding: 20px 20px 20px 30px;
       background-image: url("../assets/hukidashi.svg");
       background-repeat: no-repeat;

@@ -16,7 +16,7 @@
       @changePage="ChangePage($event)"
       @codeGen="CodeGenLoading($event)"
     />
-    <loading v-show="disp_flag.loading_page" />
+    <loading v-if="disp_flag.loading_page" @changePage="ChangePage($event)" />
     <code-gen-complete
       v-if="disp_flag.code_gen_complete_page"
       @changePage="ChangePage($event)"
@@ -52,8 +52,6 @@ import RuleEdit from "./page/RuleEdit.vue";
 import RuleMakeLoading from "./page/RuleMakeLoading.vue";
 import RuleGenComplete from "./page/RuleGenComplete.vue";
 
-// import axios from "axios";
-
 export default {
   name: "App",
   components: {
@@ -82,7 +80,7 @@ export default {
         loading_page: false,
         code_gen_complete_page: false,
         rule_edit_page: false,
-        rule_make_loading: true,
+        rule_make_loading: false,
         rule_gen_complete: false,
       },
     };
@@ -92,6 +90,34 @@ export default {
   },
   computed: {},
   methods: {
+    GetAPIResult() {
+      this.axios
+        .post(
+          process.env.VUE_APP_API_URL,
+          {
+            code_lst: this.input_python.split(/\r?\n/g),
+            op: this.input_rule,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          let python_array = response.data.code_lst;
+          let response_python = "";
+          python_array.forEach((element) => {
+            response_python += element;
+          });
+          this.output_python = response_python;
+          this.ChangePage({ page: "code_gen_complete_page" });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
     PythonFileDownload() {
       const blob = new Blob([this.output_python], {
         type: "text/plain",
@@ -114,26 +140,22 @@ export default {
     PythonFileSelect(file) {
       this.ChangePage({ page: "loading_page" });
       let json_file = file.file;
-      let reader = new FileReader();
-      reader.readAsText(json_file);
-      reader.addEventListener("load", () => {
-        this.input_python = reader.result;
-        console.log(this.input_python);
-        new Promise(function (resolve) {
-          window.setTimeout(resolve, 1000);
-        }).then(() => {
-          this.ChangePage({ page: "code_gen_complete_page" });
-          console.log(this.input_python);
-        });
+      let python_reader = new FileReader();
+      python_reader.readAsText(json_file);
+      python_reader.addEventListener("load", () => {
+        this.input_python = python_reader.result;
+        console.log(this.input_rule);
+        this.GetAPIResult();
       });
     },
     RuleFileSelect(file) {
       let json_file = file.file;
-      let reader = new FileReader();
-      reader.readAsText(json_file);
-      reader.onload = function () {
-        this.input_rule = JSON.parse(reader.result);
-      };
+      let rule_reader = new FileReader();
+      rule_reader.readAsText(json_file);
+      rule_reader.addEventListener("load", () => {
+        this.input_rule = JSON.parse(rule_reader.result);
+        console.log(this.input_rule);
+      });
       this.rule_flag = true;
       this.ChangePage({ page: "trim_select_page" });
     },
@@ -161,18 +183,11 @@ export default {
     CodeGenLoading(target) {
       this.input_python = target.code;
       this.ChangePage({ page: "loading_page" });
-      // 1秒間待機後にページ遷移
-      new Promise(function (resolve) {
-        window.setTimeout(resolve, 1000);
-      }).then(() => {
-        console.log(this.input_python);
-        this.ChangePage({ page: "code_gen_complete_page" });
-      });
-      console.log("end");
+      this.GetAPIResult();
     },
     RuleGenLoading(target) {
       this.ChangePage({ page: "rule_make_loading" });
-      this.rule = target.rule;
+      this.rule_file = target.rule;
       // 1秒間待機後にページ遷移
       new Promise(function (resolve) {
         window.setTimeout(resolve, 1000);
