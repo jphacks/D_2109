@@ -1,18 +1,30 @@
 import json
 import re
 
-REJEX_METHOD_NAME = "def( |\t)+(\w+)( |\t)*\((.*)\)( |\t)*:"
-REJEX_METHOD_NAME_BACK = "def( |\t)+(\w+)( |\t)*\((.*)\)( |\t)*->( |\t)*(\w+)( |\t)*:"
-REJEX_CLASS_NAME = "class( |\t)+(\w+)( |\t)*(\((.*)\))*( |\t)*:"
+import keyword
 
-TRIM_WARNING_NAMING_METHOD_ALL = "# [trim] 警告: 関数名に大文字とアンダーバーを同時に含められません."
-TRIM_WARNING_NAMING_METHOD_SNAKE = "# [trim] 警告: 関数名に大文字は含められません."
-TRIM_WARNING_NAMING_METHOD_CAPWORDS = "# [trim] 警告: 関数名にアンダーバーは含められません."
+# ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
+#  'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for',
+#  'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not',
+#  'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
 
-TRIM_WARNING_NAMING_CLASS_ALL = "# [trim] 警告: クラス名に大文字とアンダーバーを同時に含められません."
-TRIM_WARNING_NAMING_CLASS_SNAKE = "# [trim] 警告: クラス名に大文字は含められません."
-TRIM_WARNING_NAMING_CLASS_CAPWORDS = "# [trim] 警告: クラス名にアンダーバーは含められません."
+REJEX_METHOD_NAME = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*):"
+REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*)->([ |\t]*)(\w+)([ |\t]*):"
+REJEX_CLASS_NAME = "class([ |\t]*)(\w+)([ |\t]*)(\((.*)\))*([ |\t]*):"
 
+REJEX_COMMENT = "^\s*\".*\"\s*$"
+
+TRIM_WARNING_NAMING_METHOD_ALL = "# [trim] Warning: 関数名に大文字とアンダーバーを同時に含められません."
+TRIM_WARNING_NAMING_METHOD_SNAKE = "# [trim] Warning: 関数名に大文字は含められません."
+TRIM_WARNING_NAMING_METHOD_CAPWORDS = "# [trim] Warning: 関数名にアンダーバーは含められません."
+
+TRIM_WARNING_NAMING_CLASS_ALL = "# [trim] Warning: クラス名に大文字とアンダーバーを同時に含められません."
+TRIM_WARNING_NAMING_CLASS_SNAKE = "# [trim] Warning: クラス名に大文字は含められません."
+TRIM_WARNING_NAMING_CLASS_CAPWORDS = "# [trim] Warning: クラス名にアンダーバーは含められません."
+
+TRIM_INFO_STYLE_BLANK_FALSE = "Info: PEP8に基づく、空白の整形設定を行う事を推奨します."
+
+RESERVED_WORDS = keyword.kwlist
 
 # 括弧の中を整形
 def make_args(s_lst):
@@ -125,7 +137,16 @@ def scan_indent_config(lst, op_indent):
 
 
 # 走査: 関数とクラスの整形
-def scan_format_method_class(lst):
+def scan_format_method_class(lst, op_format):
+  def_blank_num = 0
+  class_blank_num = 0
+
+  if not op_format['action']:
+    return {
+      'lst': lst,
+      'def-blank': def_blank_num,
+      'class-blank': class_blank_num
+    }
   lst_cp = []
   for row_no, line in enumerate(lst, 1):
     str = line
@@ -139,6 +160,13 @@ def scan_format_method_class(lst):
     sub_paterns_back = re.findall(REJEX_METHOD_NAME_BACK, line)
     if sub_paterns_back:
       # 括弧の中の考慮
+      #print(str)
+      #print(sub_paterns_back[0])
+      for i, elem in enumerate(sub_paterns_back[0]):
+        if (i == 0 or i == 4 or i == 5) and elem != ' ':
+          def_blank_num += 1
+        elif (i == 2 or i == 7) and elem != '':
+          def_blank_num += 1
       args = make_args(sub_paterns_back[0][3])
       str = blank_str + "def " + sub_paterns_back[0][1] + "(" + args + ") -> "\
             + sub_paterns_back[0][6] + ":"
@@ -146,6 +174,11 @@ def scan_format_method_class(lst):
       sub_paterns = re.findall(REJEX_METHOD_NAME, line)
       # 括弧の中の考慮
       if sub_paterns:
+        for i, elem in enumerate(sub_paterns[0]):
+          if i == 0 and elem != ' ':
+            def_blank_num += 1
+          elif (i == 2 or i == 4) and elem != '':
+            def_blank_num += 1
         args = make_args(sub_paterns[0][3])
         str = blank_str + "def " + sub_paterns[0][1] + "(" + args + "):"
 
@@ -155,13 +188,28 @@ def scan_format_method_class(lst):
       #print(sub_paterns_class[0])
       if not sub_paterns_class[0][3].startswith('('):
         # ()がないパターン
+        for i, elem in enumerate(sub_paterns_class[0]):
+          if i == 0 and elem != ' ':
+            class_blank_num += 1
+          elif i == 2 and elem != '':
+            class_blank_num += 1
         str = blank_str + "class " + sub_paterns_class[0][1] + ":"
       else:
+        for i, elem in enumerate(sub_paterns_class[0]):
+          if i == 0 and elem != ' ':
+            class_blank_num += 1
+          elif (i == 2 or i == 5) and elem != '':
+            class_blank_num += 1
         args = make_args(sub_paterns_class[0][4])
         str = blank_str + "class " + sub_paterns_class[0][1] + "(" + args + "):"
     lst_cp.append(str)
-  return lst_cp
-
+  print(f"def-blank:{def_blank_num}箇所")
+  print(f"class-blank:{class_blank_num}箇所")
+  return {
+    'lst': lst_cp,
+    'def-blank': def_blank_num,
+    'class-blank': class_blank_num
+  }
 
 # 命名規則クラス
 class Naming():
@@ -244,7 +292,29 @@ class MethodNaming(Naming):
       lst_cp.append(line)
     return lst_cp
 
-   
+class ValueNaming(Naming):
+  value_lst = []
+
+  def __init__(self, op_naming) -> None:
+    super().__init__(op_naming['method_case'])
+  
+  def check_lst(self, lst):
+    # 命名規則のlintがOFFの場合
+    if not self.get_capwords_flag and not self.get_snake_flag:
+      return lst
+  
+    lst_cp = []
+    words_lst = []
+    print("---------------------------")
+    str_all = ''.join(lst)
+    print(str_all)
+    # 文字列を消去
+    print(re.sub(REJEX_COMMENT, '', str_all))
+    
+      #self.value_lst.append
+      #lst_cp.append(line)
+    return lst
+
 
 # 走査: 関数とクラスの命名規則チェック
 def scan_naming_method_class(lst, op_naming):
@@ -256,45 +326,128 @@ def scan_naming_method_class(lst, op_naming):
 
   # クラスに関して
   lst = class_naming.check_lst(lst)
-  
-  """
-    # class
-    sub_paterns_class = re.findall(REJEX_CLASS_NAME, line)
-    if sub_paterns_class:
-      #print(sub_paterns_class[0])
-      if not sub_paterns_class[0][3].startswith('('):
-        # ()がないパターン
-        str = blank_str + "class " + sub_paterns_class[0][1] + ":"
-      else:
-        args = make_args(sub_paterns_class[0][4])
-        str = blank_str + "class " + sub_paterns_class[0][1] + "(" + args + "):"
-    """
     
   return lst
 
 
+# 1行ごとに 文字数カウント
+def scan_style_count_word(lst, op_count_word):
+  s_warn_count = 0
+  if not op_count_word['action']:
+    return lst
+  lst_cp = []
+  print("#######################")
+  pattern = re.compile(r'^[^\\]*\\$')
   
+  buffer = []
+  for line in lst:
+    print(buffer)
+    print(line)
+    match_flag = bool(pattern.match(line))
+    # 行頭のインデントを取得
+    starts_blank = re.match(r" *", line).end() * ' '
+    # もし'/'で終わってたら状態を保存
+    if match_flag:
+      print("match!!")
+      buffer.append({'blank': starts_blank, 'mes': line})
+    if len(line)>=81 and (not match_flag):
+      blank = starts_blank if len(buffer) == 0 else buffer[0]['blank']
+      TRIM_WARNING_STYLE_COUNT_WARD = f'# [trim]Warning: 1行あたりの行数は最大{op_count_word["length"]}文字です.適切な位置で折り返してください.'
+      lst_cp.append(blank + TRIM_WARNING_STYLE_COUNT_WARD)
+      s_warn_count += 1
+      for dic in buffer:
+        lst_cp.append(dic['mes'])
+      lst_cp.append(line)
+      buffer = []
+    # 状態の初期化
+    if not match_flag and len(line)<81:
+      buffer = []
+      lst_cp.append(line)
+  return {
+    'lst': lst_cp,
+    's_warn_count': s_warn_count
+  }
 
-##def naming_check():
-#  lst, op_indent
+# 1行ごと変数の解析
+def scan_naming_value(lst, op_naming):
+  value_naming = ValueNaming(op_naming)
+
+  # 変数に関して
+  lst = value_naming.check_lst(lst)
+    
+  return lst
+
+
 
 def lambda_handler(event, context):
     #body_dict = json.loads(event['body'])
     body_dict = event['body']
     op = body_dict['op']
     print(body_dict)
+    
     lst_cp = scan_indent_config(body_dict['code_lst'], op['style_check']['indent'])
-    lst_cp = scan_format_method_class(lst_cp)
+    lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
+    lst_cp = lst_dic['lst']
+    def_blank_num = lst_dic['def-blank']
+    class_blank_num = lst_dic['class-blank']
     lst_cp = scan_naming_method_class(lst_cp, op['naming_check'])
 
     # 空行をきれいにする
     lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, lst_cp))
+    # 文字数警告
+    lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
+    lst_cp = lst_dic['lst']
+    s_warn_count = lst_dic['s_warn_count']
+    # 変数の解析
+    lst_cp = scan_naming_value(lst_cp, op['naming_check'])
+
     # 改行コードを追加
     lst_cp = list(map(lambda x: x + '\n', lst_cp))
+    # インデント文字
+    indent = '\t' if op['style_check']['indent']['type'] == '\t' else ' '*op['style_check']['indent']['num']
+    
+    INFO_MES_LIST = [
+      '"""©trim 整形実行後ファイル\n',
+      indent + '・空白整形の文字数設定 - ',
+      indent * 2 + f'関数: {def_blank_num}箇所\n',
+      indent * 2 + f'クラス: {class_blank_num}箇所\n',
+      indent + '・行あたりの文字数設定 - ',
+      indent * 2 + f'[警告] {s_warn_count}箇所\n',
+      '"""\n\n',
+    ]
+    # 上からopに応じて変形し、=> INFO_MES_LIST_CPへ => lst_cpに戻す
+    INFO_MES_LIST_CP = []
+    i = 0
+    while True:
+      elem = INFO_MES_LIST[i]
+      print(elem)
+      if elem.startswith(indent + '・空白整形'):
+        flag = op['style_check']['blank_format']['action']
+        elem += f"{flag}\n"
+        INFO_MES_LIST_CP.append(elem)
+        i+=1
+        if not flag:
+          INFO_MES_LIST_CP.append(indent * 2 + TRIM_INFO_STYLE_BLANK_FALSE + '\n')
+          i+=2
+        continue
+      if elem.startswith(indent + '・行あたりの文字数設定'):
+        flag = op['style_check']['count_word']['action']
+        elem += f"{flag}\n"
+        INFO_MES_LIST_CP.append(elem)
+        i+=1
+        continue
+      INFO_MES_LIST_CP.append(elem)
+      i += 1
+      if i == len(INFO_MES_LIST):
+        break
+  
+    INFO_MES_LIST_CP.extend(lst_cp)
+    lst_cp = INFO_MES_LIST_CP
+    
     # タブ文字設定の場合は半角X個をタブ文字に変換
     if op['style_check']['indent']['type'] == '\t':
       lst_cp = list(map(lambda x: re.sub(' '*op['style_check']['indent']['tab_num'], '\t', x), lst_cp))
-    
+        
     print(lst_cp)
     
     f = open('myfile.py', 'w') 
@@ -312,7 +465,7 @@ def lambda_handler(event, context):
 
 json = {
     "body": {
-      "code_lst": [' a=3\n', 'v=2\n', '\n', 'def a():\n', '\tpass\n', '\n', '\n', 'def  \tAdd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  a = 3\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) ->                       None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__(self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
+      "code_lst": [' a=3\n', 'v=2\n', '\n', 'def a(a,b, c   = 2)     ->  int:\n', '\tCustomer.\\\n', '\tobjects.\\\n', "\tfilter(delete_flag=False).order_by('id')[:10].values('id', 'name', 'name_furigana', 'phone', 'mail', 'gender', 'customer_type__name', 'withdrawal_date', 'status', 'birth_date', 'active_flag', 'category_name',)\n", '\tpass\n', '\n', 'def  \tadd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  a = 3\n', '  method = a(ab,a)\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) -> None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__  (self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
       "op": {
         'style_check': {
           # classや関数、演算子前後のフォーマット
@@ -321,8 +474,8 @@ json = {
           },
           # indent設定
           'indent': {
-            'action': True,
-            'type': '\t',
+            'type': ' ', 
+            'num': 4,
             'tab_num': 4
           },
           # 1行あたりの文字数
