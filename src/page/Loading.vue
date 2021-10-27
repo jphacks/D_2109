@@ -1,6 +1,6 @@
 <template>
   <div class="loading-page">
-    <header-menu />
+    <header-menu @changePage="ParentChangePage($event)" />
     <img src="../assets/ninja_icon.svg" alt="" />
     <p>コードを生成中･･･</p>
   </div>
@@ -19,7 +19,11 @@ export default {
   },
   created() {},
   computed: {},
-  methods: {},
+  methods: {
+    ParentChangePage(target) {
+      this.$emit("changePage", { page: target.page });
+    },
+  },
 };
 </script>
 
