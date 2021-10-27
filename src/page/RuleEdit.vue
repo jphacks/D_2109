@@ -406,7 +406,16 @@ export default {
       this.$emit("changePage", { page: target.page });
     },
     CodeSubmit() {
+      this.JsonValidation();
       this.$emit("ruleGen", { rule: this.rule_json });
+    },
+    JsonValidation() {
+      this.rule_json.naming_check.class_case.CapWords =
+        !this.rule_json.naming_check.class_case.snake;
+      this.rule_json.naming_check.method_case.CapWords =
+        !this.rule_json.naming_check.method_case.snake;
+      this.rule_json.naming_check.value_case.CapWords =
+        !this.rule_json.naming_check.value_case.snake;
     },
   },
 };
