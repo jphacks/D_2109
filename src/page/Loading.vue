@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      progress_bar_style:"width:0%;"
+      progress_bar_style: "width:0%;",
     };
   },
   created() {},
@@ -53,17 +53,17 @@ export default {
     font-size: 20px;
     font-weight: bold;
   }
-  .progress-bar-container{
+  .progress-bar-container {
     width: 300px;
     height: 10px;
     margin-top: 30px;
     border-radius: 5px;
-    background-color: #A1A1A1;
+    background-color: #a1a1a1;
   }
-  .progress-bar{
+  .progress-bar {
     height: 100%;
     border-radius: 5px;
-    background-color: #E55C6E;
+    background-color: #e55c6e;
     transition: 2s;
   }
 }
