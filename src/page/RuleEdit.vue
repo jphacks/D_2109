@@ -112,8 +112,10 @@
             <img class="card-image" src="../assets/class_height.svg" alt="" />
           </div>
           <div class="description-container">
-            <p class="title">クラス間の行間隔</p>
-            <p class="description">クラス間の行間隔を決めます。</p>
+            <p class="title">クラス・グローバル関数間の行間隔</p>
+            <p class="description">
+              クラス・グローバル関数間の行間隔を決めます。
+            </p>
           </div>
           <div class="input-container">
             <input
