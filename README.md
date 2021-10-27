@@ -1,14 +1,35 @@
-# trim
+# <img style="width:20px" src="./public/favicon.png"> trim</dvi>
 
-[![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2021/07/JPHACKS2021_ogp.jpg)](https://www.youtube.com/watch?v=LUPQFB4QyVo)
+[![IMAGE ALT TEXT HERE](https://github.com/jphacks/D_2109/wiki/images/lp.png)](https://www.youtube.com/watch?v=LUPQFB4QyVo)
 
 ## 製品概要
+<span style="font-weight:bold">ディベロッパー × Tech</span>
+
 ### 背景(製品開発のきっかけ、課題等）
+エンジニアがプログラムを書く際には **「キャメルケース」** **「スネークケース」** **「ケバブケース」** などの **「命名規則」** や **「1行のに記述する文字数の制限」** などの守らなければいけない **暗黙的なルール** が数多く存在する。
+
+これらのルールを初心者が意識しながらプログラムを書くことは難しいという課題がある。
+また、オンライン化が進む中、チーム開発をしている場合でも随時ルールを考慮して開発を進める必要がある。
+
+私たちはこれらの課題を解決するサービスを作成する。
+
 ### 製品説明（具体的な製品の説明）
+本製品は **ルールベースソースコードフォーマッター** のデスクトップ/ウェブ アプリです。
+
+- 使用率が高いプログラミング言語である **Python** をフォーマットするアプリケーション
+- プログラミング初心者でも綺麗なコードを作成することが可能
+- チーム開発においても作成したルールをもとに統一されたコードフォーマットを提供
+
 ### 特長
-####1. 特長1
-####2. 特長2
-####3. 特長3
+
+#### 1. **フォーマットルール**の作成は初心者向けなわかりやすいGUIを提供
+熟練のエンジニアがよく使用する命名規則やインデント数などをカスタマイズ可能で **CapWords** や **Snake** 表現を選択できます。
+また、初心者向けにはデフォルトの値を設定しているため、迷うことがなくなります。
+![IMAGE ALT TEXT HERE](https://github.com/jphacks/D_2109/wiki/images/rule_make_menu.gif)
+
+#### 2. 特長2
+
+#### 3. 特長3
 
 ### 解決出来ること
 ### 今後の展望
@@ -40,40 +61,5 @@
 * 
 
 
-# 環境構築
-## Node.jsのインストール
-[Node.js 14.18.1 LTS](https://nodejs.org/dist/v14.18.1/node-v14.18.1.pkg) をダウンロードしてNode.jsをインストールしてください。
-開発時 Vue Version 
-``` bash
-@vue/cli 4.5.14
-```
-
-## VueCLIのインストール
-``` bash
-sudo npm install -g @vue/cli
-```
-## プロジェクトのセットアップ
-```
-yarn install
-```
-### Electronでのテスト
-```
-yarn run electron:serve
-```
-### Electronでのビルド
-#### 使用している機種
-```
-yarn run electron:build
-```
-#### mac
-```
-yarn run electron:build:mac
-```
-#### windows
-```
-yarn run electron:build:win
-```
-### Lintの実行
-```
-yarn lint
-```
+# 使用方法
+使用方法については[Wiki](https://github.com/jphacks/D_2109/wiki)をご覧ください。
