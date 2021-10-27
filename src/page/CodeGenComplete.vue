@@ -88,7 +88,7 @@ export default {
   justify-content: center;
   align-items: center;
   .code-viewer-container {
-    margin: 40px 0;
+    margin: 20px 0;
     display: flex;
     flex-direction: row;
     justify-content: center;
