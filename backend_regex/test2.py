@@ -459,7 +459,8 @@ def blank_lines(lst, opt):
 
 	row_no = 0
 
-	rejex_method_name = "(^[ \t]*)def[ \t]+(\w+)[ \t]*\(.*\)[ \t]*:"
+	# rejex_method_name = "(^[ \t]*)def[ \t]+(\w+)[ \t]*\(.*\)[ \t]*:"
+	rejex_method_name = "(^[ \t]*)def[ \t]+(\w+)[ \t]*\(.*\).*"
 	rejex_class_name = "(^[ \t]*)class\s+.*"
 	all_line_re = "(^[ \t\n]*)"
 
@@ -832,8 +833,6 @@ def lambda_handler(event, context):
     # 前後の空白を調整
     #lst_cp = scan_operators_space(lst_cp)
 
-    # 行間の調整
-    lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
 
     # 改行コードを追加
     lst_cp = list(map(lambda x: x + '\n', lst_cp))
@@ -885,7 +884,10 @@ def lambda_handler(event, context):
     if op['style_check']['indent']['type'] == '\t':
       lst_cp = list(map(lambda x: re.sub(' '*op['style_check']['indent']['tab_num'], '\t', x), lst_cp))
         
-    #print(lst_cp)
+    # 行間の調整
+    lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
+
+    print(lst_cp)
     
     f = open('myfile.py', 'w') 
     f.writelines(lst_cp)
