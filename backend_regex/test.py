@@ -1,6 +1,6 @@
 import json
 import re
-
+import traceback
 import keyword
 
 # ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
@@ -55,6 +55,19 @@ class MyStack:
         del self.stack[-1]  # リストから要素を削除する
         return result  # リスト末尾から取り出したデータを返送する
 
+# コンパイルが通るかどうかを確認
+def is_comile_to_dic(lst):
+  try:
+    line = ''.join(lst)
+    compile(line, '', 'exec')
+    return {
+      'flag': True,
+    }
+  except Exception as e:
+      return {
+        'flag': False,
+        'error': str(traceback.print_exc())
+      }
 
 # indent設定に合わせて\t=>' '*X文字にする
 def scan_indent_config(lst, op_indent):
@@ -408,7 +421,19 @@ def lambda_handler(event, context):
     #body_dict = json.loads(event['body'])
     body_dict = event['body']
     op = body_dict['op']
-    print(body_dict)
+    #print(body_dict)
+
+    # compileが通るか確認
+    compile_dic = is_comile_to_dic(body_dict['code_lst'])
+    if not compile_dic['flag']:
+      print(compile_dic['error'])
+      #return {
+      #  'statusCode': 400,
+      #  'body': json.dumps({
+      #      'error': compile_dic['error']
+      #    })
+      #}
+      return
     
     lst_cp = scan_indent_config(body_dict['code_lst'], op['style_check']['indent'])
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
@@ -416,6 +441,7 @@ def lambda_handler(event, context):
     def_blank_num = lst_dic['def-blank']
     class_blank_num = lst_dic['class-blank']
     lst_cp = scan_naming_method_class(lst_cp, op['naming_check'])
+    
 
     # 空行をきれいにする
     lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, lst_cp))
@@ -489,7 +515,7 @@ def lambda_handler(event, context):
 
 json = {
     "body": {
-      "code_lst": [' a=3\n', 'v=2\n', '\n', 'def a(a,b, c   = 2)     ->  int:\n', '\tCustomer.\\\n', '\tobjects.\\\n', "\tfilter(delete_flag=False).order_by('id')[:10].values('id', 'name', 'name_furigana', 'phone', 'mail', 'gender', 'customer_type__name', 'withdrawal_date', 'status', 'birth_date', 'active_flag', 'category_name',)\n", '\tpass\n', '\n', 'def  \tadd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  a = 3\n', '  method = a(ab,a)\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) -> None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__  (self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
+      "code_lst": ['a=3\n', 'v=2\n', '\n', 'def a(a,b, c   = 2)     ->  int:\n', '\tCustomer.\\\n', '\tobjects.\\\n', "\tfilter(delete_flag=False).order_by('id')[:10].values('id', 'name', 'name_furigana', 'phone', 'mail', 'gender', 'customer_type__name', 'withdrawal_date', 'status', 'birth_date', 'active_flag', 'category_name',)\n", '\tpass\n', '\n', 'def  \tadd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  a = 3\n', '  method = a(ab,a)\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) -> None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__  (self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
       "op": {
         'style_check': {
           # classや関数、演算子前後のフォーマット
