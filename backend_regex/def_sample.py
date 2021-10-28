@@ -11,26 +11,22 @@ def add_box () 	:
 
 	return ab
 
-	  
 
 
+
+class Net():
+	def fefe():
+		return
+
+print("")
 def brahh(fff):
 
 
   return 0
-
-
-
-
-# a = [2, 3, 5, 1]
-# for idx, i in enumerate(reversed(a)):
-#   print(idx)
-#   print(i)
-
-l = [[0, 1], [2, 3], [4, 5]]
-row = [col[1] for col in l]
-print(row)
+# l = [1, 2, 3, 56, 5]
+# l = [el + 1 for el in l]
+# print(l)
 
 l = []
-l1 = l + [3, 5, 8]
-print(l1)
+for i in l:
+	print(i)
