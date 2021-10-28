@@ -95,15 +95,19 @@
             <img class="card-image" src="../assets/methods_height.svg" alt="" />
           </div>
           <div class="description-container">
-            <p class="title">メソッド間の行間隔</p>
-            <p class="description">メソッド間の行間隔を決めます。</p>
+            <p class="title">クラス・グローバル関数間の間隔</p>
+            <p class="description">
+              クラス・グローバル関数ブロックの上下を2行空けるかを決めます。
+            </p>
           </div>
           <div class="input-container">
             <input
-              type="number"
-              v-model="rule_json.style_check.line_space.class_method.len"
+              type="checkbox"
+              v-model="
+                rule_json.style_check.line_space.class_or_global_func.action
+              "
             />
-            <p>行</p>
+            <p></p>
           </div>
         </div>
         <div class="card-container">
@@ -112,34 +116,17 @@
             <img class="card-image" src="../assets/class_height.svg" alt="" />
           </div>
           <div class="description-container">
-            <p class="title">クラス・グローバル関数間の行間隔</p>
+            <p class="title">メソッドブロック間の間隔</p>
             <p class="description">
-              クラス・グローバル関数間の行間隔を決めます。
+              メソッドブロックの上下を1行空けるかを決めます。
             </p>
           </div>
           <div class="input-container">
             <input
-              type="number"
-              v-model="rule_json.style_check.line_space.class.len"
+              type="checkbox"
+              v-model="rule_json.style_check.line_space.method.action"
             />
-            <p>行</p>
-          </div>
-        </div>
-        <div class="card-container">
-          <div class="image-container">
-            <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
-            <img class="card-image" src="../assets/def_height.svg" alt="" />
-          </div>
-          <div class="description-container">
-            <p class="title">関数間の行間隔</p>
-            <p class="description">関数間の行間隔を決めます。</p>
-          </div>
-          <div class="input-container">
-            <input
-              type="number"
-              v-model="rule_json.style_check.line_space.global_method.len"
-            />
-            <p>行</p>
+            <p></p>
           </div>
         </div>
         <!-- タイトル -->
@@ -281,17 +268,11 @@ export default {
             length: 80,
           },
           line_space: {
-            class: {
+            class_or_global_func: {
               action: true,
-              len: 2,
             },
-            global_method: {
+            method: {
               action: true,
-              len: 2,
-            },
-            class_method: {
-              action: true,
-              len: 1,
             },
           },
         },
@@ -674,9 +655,8 @@ export default {
     cursor: pointer;
     border-radius: 999px;
     padding: 10px 30px;
-    margin-right: 7px;
     position: absolute;
-    bottom: 100px;
+    bottom: 90px;
     background-color: #92d4c4;
     span {
       color: #ffffff;
