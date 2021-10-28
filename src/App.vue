@@ -215,7 +215,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
+img {
+  pointer-events: none; 
+}
 /* A Modern CSS Reset */
 *,
 *::before,

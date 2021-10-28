@@ -3,7 +3,7 @@
     <div class="content-container">
       <img class="catch-copy" src="../assets/catch-copy.svg" alt="" />
       <img class="logo" src="../assets/logo.svg" alt="" />
-      <div class="btn-container">
+      <div style="margin-bottom:45px;" class="btn-container">
         <div
           class="start-btn rule-make-btn"
           @click="ChangePage('rule_edit_page')"
@@ -17,14 +17,14 @@
           <span>ルールを適用する</span>
         </div>
       </div>
-      <div class="triangle_container">
+      <!-- <div class="triangle_container">
         <img
           class="triangle"
           src="../assets/rounded-triangle-pink.svg"
           alt=""
         />
         <span class="btn-text" style="color: #e55c6e">使いかたはこちら</span>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
