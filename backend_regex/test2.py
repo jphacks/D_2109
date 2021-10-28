@@ -65,7 +65,7 @@ def is_comile_to_dic(lst):
     compile(line, '', 'exec')
     return {'flag': True}
   except Exception as e:
-      return {'flag': False, 'error': str(traceback.print_exc())}
+      return {'flag': False, 'error': str(traceback.format_exc())}
 
 # indent設定に合わせて\t=>' '*X文字にする
 def scan_indent_config(lst, op_indent):
@@ -307,11 +307,11 @@ class ValueNaming(Naming):
     STR_REJEX = REJEX_METHOD_NAME + '|' + REJEX_CLASS_NAME + '|' + REJEX_METHOD_NAME_BACK + '|'
     # 文字列を消去する正規表現
     STR_REJEX += REJEX_STRING_SINGLE + '|' + REJEX_STRING_DOUBLE + '|' + REJEX_COMMENT
-    split_word = '\+|-|\*|\/|%|\*\*|=|\+=|-=|\*=|\/=|%=|\*\*=|==|!=|>|<|>=|<=|\\\\|\s|,'
+    split_word = '\+|-|\*|\/|%|\*\*|=|\+=|-=|\*=|\/=|%=|\*\*=|==|!=|>|<|>=|<=|\\\\|\s|,|\[|\]|\{|\}|:'
     lst_cp = []
     already_lst = []
     for line in lst:
-      print(line)
+      #print(line)
       s = re.sub(STR_REJEX, '', line)
       words_lst = re.split(split_word, s)
       #print(words_lst)
@@ -333,7 +333,7 @@ class ValueNaming(Naming):
           pass
         # 命名規則のチェック
         elif word:
-          #print(word)
+          print(word)
           TRIM_WARNING_NAMING_VALUE_ALL = f"#[trim] Warning: 変数{word}: 大文字とアンダーバーを同時に含められません.\n"
           TRIM_WARNING_NAMING_VALUE_CAPWORDS = f"#[trim] Warning: 変数{word}: アンダーバーを含められません.\n"
           TRIM_WARNING_NAMING_VALUE_SNAKE = f"#[trim] Warning: 変数{word}: 大文字を含められません.\n"
@@ -419,6 +419,27 @@ def scan_naming_value(lst, op_naming):
   return lst
 
 
+# 前後の空白を調整(1行分)
+def check_operators_space(line: str):
+      if not (re.findall(REJEX_METHOD_NAME_BACK, line)
+         and re.findall(REJEX_METHOD_NAME_BACK, line) 
+         and re.findall(REJEX_CLASS_NAME, line)):
+         
+        # スライス内の演算子の前後にはスペースを追加しない
+        if(not re.findall('\\[.*:.*\\]', line)):
+            line = re.sub(
+                '([a-zA-Z0-9]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([a-zA-Z0-9]*)',
+                '\\1\\2\\3',
+                line)
+            line = line.replace("  ", " ")
+      return line
+
+# 前後の空白を調整(走査)
+def scan_operators_space(lst):
+  lst_cp = []
+  for line in lst:
+    lst_cp.append(check_operators_space(line))
+  return lst_cp
 
 def lambda_handler(event, context):
     #body_dict = json.loads(event['body'])
@@ -427,16 +448,15 @@ def lambda_handler(event, context):
     #print(body_dict)
 
     # compileが通るか確認
-    compile_dic = is_comile_to_dic(body_dict['code_lst'])
-    if not compile_dic['flag']:
-      #print(compile_dic['error'])
+    #compile_dic = is_comile_to_dic(body_dict['code_lst'])
+    #if not compile_dic['flag']:
+    #  print(compile_dic['error'])
       #return {
       #  'statusCode': 400,
       #  'body': json.dumps({
       #      'error': compile_dic['error']
       #    })
       #}
-      return
     
     # 空行をきれいにする
     lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
@@ -451,6 +471,8 @@ def lambda_handler(event, context):
     lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
     lst_cp = lst_dic['lst']
     s_warn_count = lst_dic['s_warn_count']
+    # 前後の空白を調整
+    lst_cp = scan_operators_space(lst_cp)
     # 改行コードを追加
     lst_cp = list(map(lambda x: x + '\n', lst_cp))
     print(lst_cp)
@@ -517,7 +539,7 @@ def lambda_handler(event, context):
     return lst_cp
 
 
-fileobj = open("def_sample.py", "r", encoding="utf_8")
+fileobj = open("def_sample_success.py", "r", encoding="utf_8")
 lst = []
 while True:
   line = fileobj.readline()
@@ -544,28 +566,22 @@ json = {
           # 1行あたりの文字数
           'count_word': {
             'action': True,
-            'length': 120
+            'length': 90
           },
           # 行間
           'line_space': {
-            'class': {
+            'class_or_global_func': {
               'action': True,
-              'len': 2
             },
-            'global_method': {
+            'method': {
               'action': True,
-              'len': 2
-            },
-            'class_method': {
-              'action': True,
-              'len': 1
             }
           }
         },
         'naming_check': {
           'class_case': {
-            'snake': True,
-            'CapWords': False
+            'snake': False,
+            'CapWords': True
           },
           'method_case': {
             'snake': True,
