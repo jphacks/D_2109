@@ -3,7 +3,7 @@
     <div class="content-container">
       <img class="catch-copy" src="../assets/catch-copy.svg" alt="" />
       <img class="logo" src="../assets/logo.svg" alt="" />
-      <div style="margin-bottom:45px;" class="btn-container">
+      <div style="margin-bottom: 45px" class="btn-container">
         <div
           class="start-btn rule-make-btn"
           @click="ChangePage('rule_edit_page')"

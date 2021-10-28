@@ -106,12 +106,17 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
-          let python_array = response.data.code_lst;
           let response_python = "";
-          python_array.forEach((element) => {
-            response_python += element;
-          });
+          console.log(response);
+          // Pythonのコンパイルが失敗していた時の処理
+          if (response.statusCode === 400) {
+            response_python = response.body.error;
+          } else {
+            let python_array = response.data.code_lst;
+            python_array.forEach((element) => {
+              response_python += element;
+            });
+          }
           this.output_python = response_python;
           this.ChangePage({ page: "code_gen_complete_page" });
         })
@@ -216,7 +221,7 @@ export default {
   align-items: center;
 }
 img {
-  pointer-events: none; 
+  pointer-events: none;
 }
 /* A Modern CSS Reset */
 *,

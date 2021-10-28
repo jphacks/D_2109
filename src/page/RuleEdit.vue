@@ -96,12 +96,16 @@
           </div>
           <div class="description-container">
             <p class="title">クラス・グローバル関数間の間隔</p>
-            <p class="description">クラス・グローバル関数ブロックの上下を2行空けるかを決めます。</p>
+            <p class="description">
+              クラス・グローバル関数ブロックの上下を2行空けるかを決めます。
+            </p>
           </div>
           <div class="input-container">
             <input
               type="checkbox"
-              v-model="rule_json.style_check.line_space.class_or_global_func.action"
+              v-model="
+                rule_json.style_check.line_space.class_or_global_func.action
+              "
             />
             <p></p>
           </div>
@@ -269,7 +273,7 @@ export default {
             },
             method: {
               action: true,
-            }
+            },
           },
         },
         naming_check: {
