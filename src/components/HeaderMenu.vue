@@ -2,7 +2,7 @@
   <div class="header-menu">
     <div class="left-content">
       <img class="logo" src="../assets/logo.svg" alt="" />
-      <div class="btn_container">
+      <!-- <div class="btn_container">
         <img
           class="triangle"
           src="../assets/rounded-triangle-pink.svg"
@@ -17,7 +17,7 @@
           alt=""
         />
         <span class="btn-text" style="color: #5ca1e5">trimとは</span>
-      </div>
+      </div> -->
     </div>
     <div class="rigth_btn" @click="ChangePage('start_page')">トップに戻る</div>
   </div>
