@@ -27,10 +27,11 @@ TRIM_WARNING_NAMING_CLASS_CAPWORDS = "# [trim] Warning: クラス名にアンダ
 TRIM_INFO_STYLE_BLANK_FALSE = "Info: PEP8に基づく、空白の整形設定を行う事を推奨します."
 
 RESERVED_WORDS = keyword.kwlist
+OTHER_WORDS = ['Exception']
 
 # 括弧の中を整形
 def make_args(s_lst):
-  print(s_lst)
+  #print(s_lst)
   s_lst = re.sub('[\s]', '', s_lst)
   lst = re.split(',', s_lst)
   args = ''
@@ -60,14 +61,9 @@ def is_comile_to_dic(lst):
   try:
     line = ''.join(lst)
     compile(line, '', 'exec')
-    return {
-      'flag': True,
-    }
+    return {'flag': True}
   except Exception as e:
-      return {
-        'flag': False,
-        'error': str(traceback.print_exc())
-      }
+      return {'flag': False, 'error': str(traceback.print_exc())}
 
 # indent設定に合わせて\t=>' '*X文字にする
 def scan_indent_config(lst, op_indent):
@@ -82,11 +78,6 @@ def scan_indent_config(lst, op_indent):
 
   # タブ文字を' '*INDENT_TAB_NUMに置き換え
   lst_cp = list(map(lambda x: re.sub('\t', ' '*INDENT_TAB_NUM, x), lst_cp))
-  #print(lst_cp)
-  # indent typeの判定
-  #if op_indent['type'] == ' ':
-    # 
-  #elif op_indent['type'] == '\t':
 
   
   stack = MyStack(0)
@@ -106,8 +97,8 @@ def scan_indent_config(lst, op_indent):
       top_strip_nums.append(top_strip_nums[-1])
     else:
       top_strip_nums.append(re.match(' *', line).end())
-    print(line)
-    print(f"indent: {top_strip_nums[-1]}")
+    #print(line)
+    #print(f"indent: {top_strip_nums[-1]}")
 
     # blockのindentをstackに格納
     if flag:
@@ -115,25 +106,25 @@ def scan_indent_config(lst, op_indent):
       block_indent_stack.push(block_indent)
       flag = False
     # ブロックの終わりを検知
-    print(f"前: {top_strip_nums[-2]}")
-    print(f"今回: {top_strip_nums[-1]}")
+    #print(f"前: {top_strip_nums[-2]}")
+    #print(f"今回: {top_strip_nums[-1]}")
     
     if row_no != 1 and top_strip_nums[-1] < top_strip_nums[-2] and line.strip()  != '':
       # indent数の差に合わせてpop(indent数の差/INDENT_NUM)
-      print(f"indent差分: {top_strip_nums[-2] - top_strip_nums[-1]}")
-      print(block_indent_stack.get_top())
+      #print(f"indent差分: {top_strip_nums[-2] - top_strip_nums[-1]}")
+      #print(block_indent_stack.get_top())
       #print(f"INDENT_NUM: {INDENT_NUM}")
-      print(((top_strip_nums[-2] - top_strip_nums[-1])-block_indent_stack.get_top())//INDENT_NUM+1)
+      #print(((top_strip_nums[-2] - top_strip_nums[-1])-block_indent_stack.get_top())//INDENT_NUM+1)
 
       for i in range(((top_strip_nums[-2] - top_strip_nums[-1])-block_indent_stack.get_top())//INDENT_NUM+1):
         stack.pop()
         block_indent_stack.pop()
-        print("stack_pop")
-        print(stack.stack)
+        #print("stack_pop")
+        #print(stack.stack)
     # ブロックの空白行頭数と比較
     if stack.get_top() != top_strip_nums[-1]:
-        print(f"正: {stack.get_top()}")
-        print(line)
+        #print(f"正: {stack.get_top()}")
+        #print(line)
         str = ' ' * stack.get_top() + line.strip()
         lst_after.append(str)
     else:
@@ -142,12 +133,12 @@ def scan_indent_config(lst, op_indent):
     if line.endswith(':'):
       flag = True
       stack.push(stack.get_top()+INDENT_NUM)
-      print("stack_push")
-      print("str:\n")
-      print(lst_after[-1])
-      print(stack.stack)
+      #print("stack_push")
+      #print("str:\n")
+      #print(lst_after[-1])
+      #print(stack.stack)
     
-  print(lst_after)
+  #print(lst_after)
   return lst_after
 
 
@@ -218,8 +209,8 @@ def scan_format_method_class(lst, op_format):
         args = make_args(sub_paterns_class[0][4])
         str = blank_str + "class " + sub_paterns_class[0][1] + "(" + args + "):"
     lst_cp.append(str)
-  print(f"def-blank:{def_blank_num}箇所")
-  print(f"class-blank:{class_blank_num}箇所")
+  #print(f"def-blank:{def_blank_num}箇所")
+  #print(f"class-blank:{class_blank_num}箇所")
   return {
     'lst': lst_cp,
     'def-blank': def_blank_num,
@@ -330,10 +321,13 @@ class ValueNaming(Naming):
       words_lst = re.split(split_word, s)
       # 行頭のインデントを取得
       starts_blank = re.match(r" *", line).end() * ' '
+      #print(words_lst)
       for word in words_lst:
         if word == '':
           pass
         elif word in RESERVED_WORDS:
+          pass
+        elif word in OTHER_WORDS:
           pass
         elif '(' in word or ')' in word or '.' in word:
           pass
@@ -343,10 +337,15 @@ class ValueNaming(Naming):
           pass
         # 命名規則のチェック
         elif word:
+          print(word)
           TRIM_WARNING_NAMING_VALUE_ALL = f"#[trim] Warning: 変数{word}: 大文字とアンダーバーを同時に含められません.\n"
           TRIM_WARNING_NAMING_VALUE_CAPWORDS = f"#[trim] Warning: 変数{word}: アンダーバーを含められません.\n"
           TRIM_WARNING_NAMING_VALUE_SNAKE = f"#[trim] Warning: 変数{word}: 大文字を含められません.\n"
-          if self.get_capwords_flag() and self.get_snake_flag():
+          # 定数は例外
+          if re.search('^[A-Z_]+$', word):
+            print("aaaa")
+            pass
+          elif self.get_capwords_flag() and self.get_snake_flag():
             # '_'と大文字が両方入っていたらおかしい
             if '_' in word and re.search(r'[A-Z]+', word):
               lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_ALL)
@@ -384,21 +383,21 @@ def scan_style_count_word(lst, op_count_word):
   if not op_count_word['action']:
     return lst
   lst_cp = []
-  print("#######################")
+  #print("#######################")
   pattern = re.compile(r'^[^\\]*\\$')
   
   buffer = []
   for line in lst:
-    print(buffer)
-    print(line)
+    #print(buffer)
+    #print(line)
     match_flag = bool(pattern.match(line))
     # 行頭のインデントを取得
     starts_blank = re.match(r" *", line).end() * ' '
     # もし'/'で終わってたら状態を保存
     if match_flag:
-      print("match!!")
+      #print("match!!")
       buffer.append({'blank': starts_blank, 'mes': line})
-    if len(line)>=81 and (not match_flag):
+    if len(line)>= op_count_word["length"] + 1 and (not match_flag):
       blank = starts_blank if len(buffer) == 0 else buffer[0]['blank']
       TRIM_WARNING_STYLE_COUNT_WARD = f'# [trim] Warning: 1行あたりの行数は最大{op_count_word["length"]}文字です.適切な位置で折り返してください.'
       lst_cp.append(blank + TRIM_WARNING_STYLE_COUNT_WARD)
@@ -436,7 +435,7 @@ def lambda_handler(event, context):
     # compileが通るか確認
     compile_dic = is_comile_to_dic(body_dict['code_lst'])
     if not compile_dic['flag']:
-      print(compile_dic['error'])
+      #print(compile_dic['error'])
       #return {
       #  'statusCode': 400,
       #  'body': json.dumps({
@@ -480,7 +479,7 @@ def lambda_handler(event, context):
     i = 0
     while True:
       elem = INFO_MES_LIST[i]
-      print(elem)
+      #print(elem)
       if elem.startswith(indent + '・空白整形'):
         flag = op['style_check']['blank_format']['action']
         elem += f"{flag}\n"
@@ -508,7 +507,7 @@ def lambda_handler(event, context):
     if op['style_check']['indent']['type'] == '\t':
       lst_cp = list(map(lambda x: re.sub(' '*op['style_check']['indent']['tab_num'], '\t', x), lst_cp))
         
-    print(lst_cp)
+    #print(lst_cp)
     
     f = open('myfile.py', 'w') 
     f.writelines(lst_cp)
@@ -523,9 +522,19 @@ def lambda_handler(event, context):
     #}
     return lst_cp
 
+
+fileobj = open("def_sample.py", "r", encoding="utf_8")
+lst = []
+while True:
+  line = fileobj.readline()
+  if line:
+      lst.append(line)
+  else:
+      break
+
 json = {
     "body": {
-      "code_lst": ['a=C=3\n', 'v, d =2, a\n', '\n', 'def a(a,b, c   = 2)     ->  int:\n', '\tCustomer.\\\n', '\tobjects.\\\n', "\tfilter(delete_flag=False).order_by('id')[:10].values('id', 'name', 'name_furigana', 'phone', 'mail', 'gender', 'customer_type__name', 'withdrawal_date', 'status', 'birth_date', 'active_flag', 'category_name',)\n", '\tpass\n', '\n', 'def  \tadd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  C = 3\n', '  method = a(ab,a)\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) -> None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__  (self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
+      "code_lst": lst,
       "op": {
         'style_check': {
           # classや関数、演算子前後のフォーマット
@@ -541,7 +550,7 @@ json = {
           # 1行あたりの文字数
           'count_word': {
             'action': True,
-            'length': 80
+            'length': 120
           },
           # 行間
           'line_space': {

@@ -63,9 +63,7 @@ def is_comile_to_dic(lst):
   try:
     line = ''.join(lst)
     compile(line, '', 'exec')
-    return {
-		'flag': True
-	}
+    return {'flag': True}
   except Exception as e:
       return {'flag': False, 'error': str(traceback.print_exc())}
 
@@ -381,13 +379,11 @@ def scan_style_count_word(lst, op_count_word):
   if not op_count_word['action']:
     return lst
   lst_cp = []
-  #print("#######################")
   pattern = re.compile(r'^[^\\]*\\$')
   
   buffer = []
+  length = op_count_word["length"] + 1
   for line in lst:
-    #print(buffer)
-    #print(line)
     match_flag = bool(pattern.match(line))
     # 行頭のインデントを取得
     starts_blank = re.match(r" *", line).end() * ' '
@@ -395,7 +391,7 @@ def scan_style_count_word(lst, op_count_word):
     if match_flag:
       #print("match!!")
       buffer.append({'blank': starts_blank, 'mes': line})
-    if len(line)>= op_count_word["length"] + 1 and (not match_flag):
+    if len(line)>= length and (not match_flag):
       blank = starts_blank if len(buffer) == 0 else buffer[0]['blank']
       TRIM_WARNING_STYLE_COUNT_WARD = f'# [trim] Warning: 1行あたりの行数は最大{op_count_word["length"]}文字です.適切な位置で折り返してください.'
       lst_cp.append(blank + TRIM_WARNING_STYLE_COUNT_WARD)
@@ -405,7 +401,7 @@ def scan_style_count_word(lst, op_count_word):
       lst_cp.append(line)
       buffer = []
     # 状態の初期化
-    if not match_flag and len(line)<81:
+    if not match_flag and len(line)<length:
       buffer = []
       lst_cp.append(line)
   return {
