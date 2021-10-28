@@ -63,7 +63,8 @@ while True:
 	else:
 		break
 
-for idx_def, blank_def in enumerate(reversed(stack_blank.stack)):
+for blank_def in reversed(stack_blank.stack):
+	print("ブランクデフ" , type(blank_def))
 	# print("def", idx_def)
 	# print(f"blank_def: '{blank_def}'")
 	# print("len(blank_def)", len(blank_def))
@@ -73,6 +74,7 @@ for idx_def, blank_def in enumerate(reversed(stack_blank.stack)):
 	b = 0
 	# sys.exit()
 	for idx_all, blank_all in enumerate(head_blank_all):
+		print("ブランクオール", type(blank_all))
 		# if idx_all + 1 <= stack_start_line.stack[-1]:
 		# 関数より上の行は飛ばす
 		if idx_all + 1 <= start_line:

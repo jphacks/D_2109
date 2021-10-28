@@ -13,17 +13,24 @@ class MyStack:
         del self.stack[-1]  # リストから要素を削除する
         return result  # リスト末尾から取り出したデータを返送する
 
-with open("output.py") as f:
-	lst = f.readlines()
+# with open("output.py") as f:
+# 	lst = f.readlines()
 
-opt =  {
-	'class_or_global_func': {
-		'action': True,
-	},
-	'method': {
-		'action': False,
-	},
-}
+# lst = ["a=3\n", "v=2\n", "def a(a,b, c   = 2)     ->  int:\n", "    pass\n", "def     add_box         (a      , b, c =    3)              :           \n", "  ab=2\n", "  a=3\n", "  method=      a(ab,a)\n", "  def aaaa():\n", "    return ab\n", "  return  ab\n", "class       PermissionMixin   :\n", "      def __init__(self) -> None:\n", "          pass\n", "      def a(self):\n", "          pass\n", "class BaseUser  ()  :\n", "    def __init__(self) -> None:\n", "        pass\n", "    pass\n", "class User  (      BaseUser,  PermissionMixin   ):\n", "    name = 'aaaa'\n", "    def __init__  (self) -> None:\n", "        super().__init__()\n", "    def getName(self):\n", "        return self.name\n"]
+
+# w_path = "testtttt.py"
+
+# with open(w_path, mode='w') as f:
+#     f.writelines(lst)
+
+# opt =  {
+# 	'class_or_global_func': {
+# 		'action': True,
+# 	},
+# 	'method': {
+# 		'action': False,
+# 	},
+# }
 
 def blank_lines(lst, opt):
 	# 番兵
@@ -336,12 +343,15 @@ def blank_lines(lst, opt):
 					i += 1
 			# ブロック終了行の下が空行でない場合
 			else:
+				print("lst[below_b]", lst[below_b])
 				print("not blank, insert")
-				add_lines += [below_b, below_b]
+				if below_b not in add_lines:
+					add_lines += [below_b, below_b]
 				print("add_lines: ", add_lines)		
 
 	del_lines.sort()
 	add_lines.sort()
+
 	del_lines.append(SENTINEL)
 	add_lines.append(SENTINEL)
 	i = 0
@@ -369,10 +379,10 @@ def blank_lines(lst, opt):
 
 	return lst
 
-txt = blank_lines(lst, opt)
+# txt = blank_lines(lst, opt)
 
-w_path = "output2.py"
+# w_path = "output2.py"
 
-with open(w_path, mode='w') as f:
-    f.writelines(txt)
+# with open(w_path, mode='w') as f:
+#     f.writelines(txt)
 

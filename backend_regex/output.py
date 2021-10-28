@@ -9,7 +9,8 @@ SENTINEL = 1000000
 
 
 
-
+def fef():
+    return 
 
 # スタックの定義
 class MyStack:
