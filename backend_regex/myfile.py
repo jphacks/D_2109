@@ -6,11 +6,12 @@
         [警告] 1箇所
 """
 
-a=3
-v=2
+#[trim] Warning: 変数C: 大文字を含められません.
+a=C=3
+v, d =2, a
 
 def a(a, b, c=2) -> int:
-    # [trim]Warning: 1行あたりの行数は最大80文字です.適切な位置で折り返してください.
+    # [trim] Warning: 1行あたりの行数は最大80文字です.適切な位置で折り返してください.
     Customer.\
     objects.\
     filter(delete_flag=False).order_by('id')[:10].values('id', 'name', 'name_furigana', 'phone', 'mail', 'gender', 'customer_type__name', 'withdrawal_date', 'status', 'birth_date', 'active_flag', 'category_name',)
@@ -18,7 +19,7 @@ def a(a, b, c=2) -> int:
 
 def add_box(a, b, c=3):
     ab = 2
-    a = 3
+    C = 3
     method = a(ab,a)
     def aaaa():
         return ab

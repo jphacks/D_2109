@@ -27,7 +27,7 @@ class BaseUser	()  :
 	pass
 
 class User  (	   BaseUser,  PermissionMixin	):
-	name = "aaaa"
+	C = "aaaa"
 
 	def __init__  (self) -> None:
 		super().__init__()

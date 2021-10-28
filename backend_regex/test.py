@@ -311,47 +311,57 @@ class ValueNaming(Naming):
   value_lst = []
 
   def __init__(self, op_naming) -> None:
-    super().__init__(op_naming['method_case'])
+    super().__init__(op_naming['value_case'])
   
   def check_lst(self, lst):
     # 命名規則のlintがOFFの場合
     if not self.get_capwords_flag and not self.get_snake_flag:
       return lst
-  
-    lst_cp = []
-    words_lst = []
-    print("---------------------------")
-    str_all = ''.join(lst)
-    #print(str_all)
-    #print("\n")
+    
     # 関数とクラスを削除する正規表現
     STR_REJEX = REJEX_METHOD_NAME + '|' + REJEX_CLASS_NAME + '|' + REJEX_METHOD_NAME_BACK + '|'
     # 文字列を消去する正規表現
     STR_REJEX += REJEX_STRING_SINGLE + '|' + REJEX_STRING_DOUBLE + '|' + REJEX_COMMENT
-
-    s = re.sub(STR_REJEX, '', str_all)
-    print(lst)
-    
-    split_word = '\+|-|\*|\/|%|\*\*|=|\+=|-=|\*=|\/=|%=|\*\*=|==|!=|>|<|>=|<=|\\\\|\s'
-    words_lst = re.split(split_word, s)
-
-    # 括弧や.を含むものを削除、予約語の削除
-    words = []
-    for word in words_lst:
-      if word == '':
-        continue
-      if word in RESERVED_WORDS:
-        continue
-      if '(' in word or ')' in word or '.' in word:
-        continue
-      if word.isdigit():
-        continue
-      words.append(word)
-    
-    words = sorted(set(words), key=words.index)
-    print(words)
-      #lst_cp.append(line)
-    return lst
+    split_word = '\+|-|\*|\/|%|\*\*|=|\+=|-=|\*=|\/=|%=|\*\*=|==|!=|>|<|>=|<=|\\\\|\s|,'
+    lst_cp = []
+    already_lst = []
+    for line in lst:
+      s = re.sub(STR_REJEX, '', line)
+      words_lst = re.split(split_word, s)
+      # 行頭のインデントを取得
+      starts_blank = re.match(r" *", line).end() * ' '
+      for word in words_lst:
+        if word == '':
+          pass
+        elif word in RESERVED_WORDS:
+          pass
+        elif '(' in word or ')' in word or '.' in word:
+          pass
+        elif word.isdigit():
+          pass
+        elif word in already_lst:
+          pass
+        # 命名規則のチェック
+        elif word:
+          TRIM_WARNING_NAMING_VALUE_ALL = f"#[trim] Warning: 変数{word}: 大文字とアンダーバーを同時に含められません.\n"
+          TRIM_WARNING_NAMING_VALUE_CAPWORDS = f"#[trim] Warning: 変数{word}: アンダーバーを含められません.\n"
+          TRIM_WARNING_NAMING_VALUE_SNAKE = f"#[trim] Warning: 変数{word}: 大文字を含められません.\n"
+          if self.get_capwords_flag() and self.get_snake_flag():
+            # '_'と大文字が両方入っていたらおかしい
+            if '_' in word and re.search(r'[A-Z]+', word):
+              lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_ALL)
+          elif self.get_capwords_flag():
+            # '_'が入っていたらおかしい
+            if '_' in word:
+              lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_CAPWORDS)
+          elif self.get_snake_flag():
+            # 大文字が入っていたらおかしい
+            if re.search(r'[A-Z]+', word):
+              lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_SNAKE)
+          already_lst.append(word)
+      lst_cp.append(line)
+      
+    return lst_cp
 
 
 # 走査: 関数とクラスの命名規則チェック
@@ -390,7 +400,7 @@ def scan_style_count_word(lst, op_count_word):
       buffer.append({'blank': starts_blank, 'mes': line})
     if len(line)>=81 and (not match_flag):
       blank = starts_blank if len(buffer) == 0 else buffer[0]['blank']
-      TRIM_WARNING_STYLE_COUNT_WARD = f'# [trim]Warning: 1行あたりの行数は最大{op_count_word["length"]}文字です.適切な位置で折り返してください.'
+      TRIM_WARNING_STYLE_COUNT_WARD = f'# [trim] Warning: 1行あたりの行数は最大{op_count_word["length"]}文字です.適切な位置で折り返してください.'
       lst_cp.append(blank + TRIM_WARNING_STYLE_COUNT_WARD)
       s_warn_count += 1
       for dic in buffer:
@@ -515,7 +525,7 @@ def lambda_handler(event, context):
 
 json = {
     "body": {
-      "code_lst": ['a=3\n', 'v=2\n', '\n', 'def a(a,b, c   = 2)     ->  int:\n', '\tCustomer.\\\n', '\tobjects.\\\n', "\tfilter(delete_flag=False).order_by('id')[:10].values('id', 'name', 'name_furigana', 'phone', 'mail', 'gender', 'customer_type__name', 'withdrawal_date', 'status', 'birth_date', 'active_flag', 'category_name',)\n", '\tpass\n', '\n', 'def  \tadd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  a = 3\n', '  method = a(ab,a)\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) -> None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__  (self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
+      "code_lst": ['a=C=3\n', 'v, d =2, a\n', '\n', 'def a(a,b, c   = 2)     ->  int:\n', '\tCustomer.\\\n', '\tobjects.\\\n', "\tfilter(delete_flag=False).order_by('id')[:10].values('id', 'name', 'name_furigana', 'phone', 'mail', 'gender', 'customer_type__name', 'withdrawal_date', 'status', 'birth_date', 'active_flag', 'category_name',)\n", '\tpass\n', '\n', 'def  \tadd_box        \t(a  \t, b, c = \t3) \t\t\t\t:       \t\n', '  ab = 2\n', '  C = 3\n', '  method = a(ab,a)\n', '  def aaaa():\n', '    return ab\n', '  return  ab\n', '\n', '\n', '\n', 'class     \tPermissionMixin   :\n', '\t  def __init__(self) -> None:\n', '\t\t  pass\n', '\t  def a(self):\n', '\t\t  pass\n', '\n', 'class BaseUser\t()  :\n', '\tdef __init__(self) -> None:\n', '\t\tpass\n', '\tpass\n', '\n', 'class User  (\t   BaseUser,  PermissionMixin\t):\n', '\tname = "aaaa"\n', '\n', '\tdef __init__  (self) -> None:\n', '\t\tsuper().__init__()\n', '\n', '\tdef getName(self):\n', '\t\treturn self.name'],
       "op": {
         'style_check': {
           # classや関数、演算子前後のフォーマット
@@ -560,7 +570,7 @@ json = {
           },
           'value_case': {
             'snake': True,
-            'CapWords': True
+            'CapWords': False
           }
         },
         'import_check': {
