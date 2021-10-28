@@ -108,20 +108,20 @@ export default {
         .then((response) => {
           let response_python = "";
           console.log(response);
-          // Pythonのコンパイルが失敗していた時の処理
-          if (response.status === 400) {
-            response_python = response.body.error;
-          } else {
-            let python_array = response.data.code_lst;
-            python_array.forEach((element) => {
-              response_python += element;
-            });
-          }
+          let python_array = response.data.code_lst;
+          python_array.forEach((element) => {
+            response_python += element;
+          });
           this.output_python = response_python;
           this.ChangePage({ page: "code_gen_complete_page" });
         })
-        .catch(function (error) {
-          console.log(error);
+        .catch((error) => {
+          for(let key of Object.keys(error)) {
+            console.log(key);
+            console.log(error[key]);
+          }
+          this.output_python = "入力されたソースコードにエラーがあります。";
+          this.ChangePage({ page: "code_gen_complete_page" });
         });
     },
     PythonFileDownload() {
