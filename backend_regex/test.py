@@ -12,7 +12,9 @@ REJEX_METHOD_NAME = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*):"
 REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*)->([ |\t]*)(\w+)([ |\t]*):"
 REJEX_CLASS_NAME = "class([ |\t]*)(\w+)([ |\t]*)(\((.*)\))*([ |\t]*):"
 
-REJEX_COMMENT = "^\s*\".*\"\s*$"
+REJEX_STRING_DOUBLE = "\s*\".*\"\s*"
+REJEX_STRING_SINGLE = "\s*\'.*\'\s*"
+REJEX_COMMENT = "\s*#.*\s*\n\s*"
 
 TRIM_WARNING_NAMING_METHOD_ALL = "# [trim] Warning: 関数名に大文字とアンダーバーを同時に含められません."
 TRIM_WARNING_NAMING_METHOD_SNAKE = "# [trim] Warning: 関数名に大文字は含められません."
@@ -307,11 +309,34 @@ class ValueNaming(Naming):
     words_lst = []
     print("---------------------------")
     str_all = ''.join(lst)
-    print(str_all)
-    # 文字列を消去
-    print(re.sub(REJEX_COMMENT, '', str_all))
+    #print(str_all)
+    #print("\n")
+    # 関数とクラスを削除する正規表現
+    STR_REJEX = REJEX_METHOD_NAME + '|' + REJEX_CLASS_NAME + '|' + REJEX_METHOD_NAME_BACK + '|'
+    # 文字列を消去する正規表現
+    STR_REJEX += REJEX_STRING_SINGLE + '|' + REJEX_STRING_DOUBLE + '|' + REJEX_COMMENT
+
+    s = re.sub(STR_REJEX, '', str_all)
+    print(lst)
     
-      #self.value_lst.append
+    split_word = '\+|-|\*|\/|%|\*\*|=|\+=|-=|\*=|\/=|%=|\*\*=|==|!=|>|<|>=|<=|\\\\|\s'
+    words_lst = re.split(split_word, s)
+
+    # 括弧や.を含むものを削除、予約語の削除
+    words = []
+    for word in words_lst:
+      if word == '':
+        continue
+      if word in RESERVED_WORDS:
+        continue
+      if '(' in word or ')' in word or '.' in word:
+        continue
+      if word.isdigit():
+        continue
+      words.append(word)
+    
+    words = sorted(set(words), key=words.index)
+    print(words)
       #lst_cp.append(line)
     return lst
 
@@ -398,11 +423,10 @@ def lambda_handler(event, context):
     lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
     lst_cp = lst_dic['lst']
     s_warn_count = lst_dic['s_warn_count']
-    # 変数の解析
-    lst_cp = scan_naming_value(lst_cp, op['naming_check'])
-
     # 改行コードを追加
     lst_cp = list(map(lambda x: x + '\n', lst_cp))
+    # 変数の解析
+    lst_cp = scan_naming_value(lst_cp, op['naming_check'])
     # インデント文字
     indent = '\t' if op['style_check']['indent']['type'] == '\t' else ' '*op['style_check']['indent']['num']
     
