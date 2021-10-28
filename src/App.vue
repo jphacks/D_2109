@@ -109,7 +109,7 @@ export default {
           let response_python = "";
           console.log(response);
           // Pythonのコンパイルが失敗していた時の処理
-          if (response.statusCode === 400) {
+          if (response.status === 400) {
             response_python = response.body.error;
           } else {
             let python_array = response.data.code_lst;
