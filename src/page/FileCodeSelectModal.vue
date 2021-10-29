@@ -101,7 +101,6 @@ export default {
       p {
         margin: 3px 0;
         font-size: 19px;
-        font-weight: bold;
       }
     }
   }
@@ -120,12 +119,14 @@ export default {
       align-items: center;
       border-radius: 30px;
       .btn-text {
+        font-family: noto-sans-cjk-jp, sans-serif;
+        font-weight: 700;
+        font-style: normal;
         cursor: pointer;
         color: #ffffff;
         margin: 20px 0 10px 0;
         padding: 5px 20px;
         font-size: 16px;
-        font-weight: bold;
         border-radius: 999px;
       }
     }

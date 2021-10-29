@@ -65,7 +65,6 @@ export default {
   p {
     margin-top: 30px;
     font-size: 20px;
-    font-weight: bold;
   }
   .progress-bar-container {
     width: 300px;

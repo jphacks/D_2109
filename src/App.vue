@@ -116,7 +116,7 @@ export default {
           this.ChangePage({ page: "code_gen_complete_page" });
         })
         .catch((error) => {
-          for(let key of Object.keys(error)) {
+          for (let key of Object.keys(error)) {
             console.log(key);
             console.log(error[key]);
           }
@@ -212,6 +212,9 @@ export default {
 
 <style lang="scss">
 #app {
+  font-family: heisei-maru-gothic-std, sans-serif;
+  font-weight: 800;
+  font-style: normal;
   width: 100vw;
   height: 100vh;
   color: #212020;

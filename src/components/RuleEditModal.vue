@@ -107,7 +107,6 @@ export default {
       padding-left: 40px;
       color: #7c5510;
       font-size: 15px;
-      font-weight: bold;
       background-image: url("../assets/husen.svg");
       background-repeat: no-repeat;
       background-position: center;
@@ -148,7 +147,6 @@ export default {
         border-radius: 999px;
         color: #ffffff;
         font-size: 14px;
-        font-weight: bold;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -164,7 +162,6 @@ export default {
         border-radius: 999px;
         color: #ffffff;
         font-size: 14px;
-        font-weight: bold;
         display: flex;
         justify-content: center;
         align-items: center;

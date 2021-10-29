@@ -90,7 +90,7 @@ export default {
       background-repeat: no-repeat;
       background-position: center;
       background-size: 100% 100%;
-      font-weight: bold;
+
       font-size: 16px;
       display: flex;
       justify-content: center;
@@ -114,7 +114,6 @@ export default {
     span {
       margin-top: 20px;
       font-size: 17px;
-      font-weight: bold;
     }
     .text-file {
       margin-right: 35px;
@@ -137,7 +136,7 @@ export default {
   .trim-description {
     padding: 10px 10px 10px 30px;
     font-size: 16px;
-    font-weight: bold;
+
     line-height: 30px;
     background-color: #ffffff;
     border: solid 2px #ffc6b4;

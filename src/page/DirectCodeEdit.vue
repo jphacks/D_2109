@@ -101,7 +101,6 @@ export default {
     }
     span {
       margin-left: 10px;
-      font-weight: bold;
       color: #595959;
     }
   }
@@ -121,7 +120,6 @@ export default {
       background-repeat: no-repeat;
       background-position: center;
       background-size: 100% 100%;
-      font-weight: bold;
       font-size: 16px;
       display: flex;
       justify-content: center;
@@ -152,7 +150,6 @@ export default {
       border-radius: 5px;
       padding: 10px 10px 10px 50px;
       line-height: 23px;
-      font-weight: bold;
       font-size: 13px;
       letter-spacing: 0.2px;
       resize: none;
@@ -169,7 +166,6 @@ export default {
     span {
       color: #ffffff;
       font-size: 14px;
-      font-weight: bold;
     }
     &:hover {
       background-color: #5297ac;

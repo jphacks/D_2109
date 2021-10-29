@@ -113,7 +113,6 @@ export default {
       span {
         margin-left: 10px;
         font-size: 15px;
-        font-weight: bold;
       }
     }
   }
@@ -124,13 +123,15 @@ export default {
     justify-content: flex-end;
     align-items: center;
     .code-input-compleat-btn {
+      font-family: noto-sans-cjk-jp, sans-serif;
+      font-weight: 700;
+      font-style: normal;
       cursor: pointer;
       border-radius: 999px;
       padding: 10px 30px;
       span {
         color: #ffffff;
         font-size: 14px;
-        font-weight: bold;
       }
       &:hover {
         background-color: #5297ac;
