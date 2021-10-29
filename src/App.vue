@@ -94,7 +94,7 @@ export default {
     GetAPIResult() {
       this.axios
         .post(
-          process.env.VUE_APP_API_URL,
+          process.env.VUE_APP_API_URL + process.env.VUE_APP_API_URL_KEY,
           {
             code_lst: this.input_python.split(/\r?\n/g),
             op: this.input_rule,
