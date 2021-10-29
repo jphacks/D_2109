@@ -97,19 +97,19 @@ def scan_indent_config(lst, op_indent):
   lst_after = []
   for row_no, line in enumerate(lst_cp, 1):
       print(line)
-      str = line
+      str_line = line
       # もし空行ならindentをstack_indentのheadに合わせる
-      if re.match(r"$ *^", str):
-          str = stack_indent.get_top() * ' '
-      aft = re.match(r" *", str).end()
+      if re.match(r"$ *^", str_line):
+          str_line = stack_indent.get_top() * ' '
+      aft = re.match(r" *", str_line).end()
       
       
       print(f"bef: {bef}")
       print(f"aft: {aft}")
       
       # コメント行は無視
-      if str.startswith("#"):
-          lst_after.append(str)
+      if str_line.startswith("#"):
+          lst_after.append(str_line)
           continue
       if bef > aft:
         for i, elem in enumerate(stack.get_reverse_lst()):
@@ -125,10 +125,10 @@ def scan_indent_config(lst, op_indent):
           print(f"head: {head}")
           blank = head * ' '
           # 適切な行頭空白文字を付加
-          str = blank+str.strip()
+          str_line = blank+str_line.strip()
       
-      if str.endswith(':'):
-          print(f"先読み:{str}")
+      if str_line.endswith(':'):
+          print(f"先読み:{str_line}")
           print(lst_cp[row_no])
           stack_indent.push(head + INDENT_NUM)
           # 1つ先読み
@@ -138,7 +138,7 @@ def scan_indent_config(lst, op_indent):
             pass
       #print(stack_indent.stack)
       #print(stack.stack)
-      lst_after.append(str)
+      lst_after.append(str_line)
       bef = aft
   #print(lst_after)
   return lst_after
@@ -157,7 +157,7 @@ def scan_format_method_class(lst, op_format):
     }
   lst_cp = []
   for row_no, line in enumerate(lst, 1):
-    str = line
+    str_line = line
 
     # 先頭の空白文字を取得
     blank_str = re.match(r" *", line).end() * ' '
@@ -168,7 +168,6 @@ def scan_format_method_class(lst, op_format):
     sub_paterns_back = re.findall(REJEX_METHOD_NAME_BACK, line)
     if sub_paterns_back:
       # 括弧の中の考慮
-      #print(str)
       #print(sub_paterns_back[0])
       for i, elem in enumerate(sub_paterns_back[0]):
         if (i == 0 or i == 4 or i == 5) and elem != ' ':
@@ -176,7 +175,7 @@ def scan_format_method_class(lst, op_format):
         elif (i == 2 or i == 7) and elem != '':
           def_blank_num += 1
       args = make_args(sub_paterns_back[0][3])
-      str = blank_str + "def " + sub_paterns_back[0][1] + "(" + args + ") -> "\
+      str_line = blank_str + "def " + sub_paterns_back[0][1] + "(" + args + ") -> "\
             + sub_paterns_back[0][6] + ":"
     else:
       sub_paterns = re.findall(REJEX_METHOD_NAME, line)
@@ -188,7 +187,7 @@ def scan_format_method_class(lst, op_format):
           elif (i == 2 or i == 4) and elem != '':
             def_blank_num += 1
         args = make_args(sub_paterns[0][3])
-        str = blank_str + "def " + sub_paterns[0][1] + "(" + args + "):"
+        str_line = blank_str + "def " + sub_paterns[0][1] + "(" + args + "):"
 
     # class
     sub_paterns_class = re.findall(REJEX_CLASS_NAME, line)
@@ -201,7 +200,7 @@ def scan_format_method_class(lst, op_format):
             class_blank_num += 1
           elif i == 2 and elem != '':
             class_blank_num += 1
-        str = blank_str + "class " + sub_paterns_class[0][1] + ":"
+        str_line = blank_str + "class " + sub_paterns_class[0][1] + ":"
       else:
         for i, elem in enumerate(sub_paterns_class[0]):
           if i == 0 and elem != ' ':
@@ -209,8 +208,8 @@ def scan_format_method_class(lst, op_format):
           elif (i == 2 or i == 5) and elem != '':
             class_blank_num += 1
         args = make_args(sub_paterns_class[0][4])
-        str = blank_str + "class " + sub_paterns_class[0][1] + "(" + args + "):"
-    lst_cp.append(str)
+        str_line = blank_str + "class " + sub_paterns_class[0][1] + "(" + args + "):"
+    lst_cp.append(str_line)
   #print(f"def-blank:{def_blank_num}箇所")
   #print(f"class-blank:{class_blank_num}箇所")
   return {
@@ -439,8 +438,8 @@ def scan_naming_value(lst, op_naming):
 
 # 前後の空白を調整(1行分)
 def check_operators_space(line: str, method_naming, class_naming):
-    print(f"met:{method_naming.method_lst}")
-    print(class_naming.class_lst)
+    #print(f"met:{method_naming.method_lst}")
+    #print(class_naming.class_lst)
     strip_str = line.strip()
     # コメント行や空文字のみの行はpass
     if strip_str.startswith('#') or strip_str == '':
@@ -466,9 +465,9 @@ def check_operators_space(line: str, method_naming, class_naming):
 
         # 行のword内に' 'が2つ以上入っていたら' '1つにする
         strip_str_lst = [s for s in re.split('\s', strip_str) if s != '']
-        print(strip_str_lst)
+        #print(strip_str_lst)
         n = len(strip_str_lst)
-        print(n)
+        #print(n)
         #REJEX = "([\w=]+( {2,}))" * n
         # 行頭のインデントを取得
         s = re.match(r" *", line).end() * ' '
@@ -478,15 +477,18 @@ def check_operators_space(line: str, method_naming, class_naming):
           else:
             s += st
         line = s
-        print("###########")
-        print(line)
+        #print("###########")
+        #print(line)
 
         # スライス内の演算子の前後にはスペースを追加しない
         if(not re.findall('\\[.*:.*\\]', line)):
-            line = re.sub(
-                '([a-zA-Z0-9]*)([\\s]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([\\s]*)([a-zA-Z0-9]*)',
-                '\\1 \\3 \\5',
-                line)
+            if(not re.findall('([a-zA-Z0-9]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([a-zA-Z0-9]*)',line)):
+                line = re.sub(
+                    '([a-zA-Z0-9]*)([\s]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([\s]*)([a-zA-Z0-9]*)',
+                    '\\1 \\3 \\5',
+                    line)
+        # lineの末尾を確認
+
     return line
 
 
@@ -873,17 +875,17 @@ def lambda_handler(event, context):
     lst_cp = lst_dic['lst']
     method_naming = lst_dic['method_naming']
     class_naming = lst_dic['class_naming']
-    # 前後の空白を調整
-    lst_cp = scan_operators_space(lst_cp, method_naming, class_naming)
     # 文字数警告
     lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
     lst_cp = lst_dic['lst']
+    #print(lst_cp)
     s_warn_count = lst_dic['s_warn_count']
+    # 前後の空白を調整
+    lst_cp = scan_operators_space(lst_cp, method_naming, class_naming)
     
-
     # 改行コードを追加
     lst_cp = list(map(lambda x: x + '\n', lst_cp))
-    print(lst_cp)
+    #print(lst_cp)
     # 変数の解析
     lst_cp = scan_naming_value(lst_cp, op['naming_check'])
     # インデント文字
@@ -934,7 +936,7 @@ def lambda_handler(event, context):
     # 行間の調整
     lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
 
-    print(lst_cp)
+    #print(lst_cp)
     
     f = open('myfile.py', 'w') 
     f.writelines(lst_cp)
