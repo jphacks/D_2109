@@ -83,13 +83,15 @@ export default {
       align-items: center;
       position: relative;
       .start-btn {
+        font-family: noto-sans-cjk-jp, sans-serif;
+        font-weight: 700;
+        font-style: normal;
         cursor: pointer;
         border-radius: 999px;
         padding: 10px 15px;
         span {
           color: #ffffff;
           font-size: 14px;
-          font-weight: bold;
         }
       }
       .rule-make-btn {
@@ -126,7 +128,6 @@ export default {
       }
       .btn-text {
         font-size: 17px;
-        font-weight: bold;
       }
     }
   }

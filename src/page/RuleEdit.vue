@@ -113,7 +113,7 @@
         <div class="card-container">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
-            <img class="card-image" src="../assets/class_height.svg" alt="" />
+            <img class="card-image" src="../assets/def_height.svg" alt="" />
           </div>
           <div class="description-container">
             <p class="title">メソッドブロック間の間隔</p>
@@ -187,12 +187,12 @@
         <div class="card-container">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
-            <img class="card-image" src="../assets/capwords.svg" alt="" />
+            <img class="card-image" src="../assets/cap_snake.svg" alt="" />
           </div>
           <div class="description-container">
             <p class="title">classの命名規則</p>
             <p class="description">classの命名規則を決めます。</p>
-            <p class="description">チェック：CapWords | 未チェック：Snake</p>
+            <p class="description">チェック時：CapWords | 未チェック時：Snake</p>
           </div>
           <div class="input-container">
             <input
@@ -204,12 +204,12 @@
         <div class="card-container">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
-            <img class="card-image" src="../assets/capwords.svg" alt="" />
+            <img class="card-image" src="../assets/cap_snake.svg" alt="" />
           </div>
           <div class="description-container">
             <p class="title">関数の命名規則</p>
             <p class="description">関数の命名規則を決めます。</p>
-            <p class="description">チェック：CapWords | 未チェック：Snake</p>
+            <p class="description">チェック時：CapWords | 未チェック時：Snake</p>
           </div>
           <div class="input-container">
             <input
@@ -221,12 +221,12 @@
         <div class="card-container">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
-            <img class="card-image" src="../assets/snake_case.svg" alt="" />
+            <img class="card-image" src="../assets/cap_snake.svg" alt="" />
           </div>
           <div class="description-container">
             <p class="title">変数の命名規則</p>
             <p class="description">変数の命名規則を決めます。</p>
-            <p class="description">チェック：CapWords | 未チェック：Snake</p>
+            <p class="description">チェック時：CapWords | 未チェック時：Snake</p>
           </div>
           <div class="input-container">
             <input
@@ -431,7 +431,7 @@ export default {
       background-repeat: no-repeat;
       background-position: center;
       background-size: 100% 100%;
-      font-weight: bold;
+
       font-size: 16px;
       display: flex;
       justify-content: center;
@@ -518,7 +518,6 @@ export default {
             color: #7c5510;
             margin-top: 10px;
             font-size: 15px;
-            font-weight: bold;
           }
           .description-img-container {
             width: 100%;
@@ -538,7 +537,6 @@ export default {
                 color: #313131;
                 margin-top: 5px;
                 font-size: 15px;
-                font-weight: bold;
               }
             }
           }
@@ -548,7 +546,7 @@ export default {
             color: #7c5510;
             font-size: 15px;
             padding-right: 20px;
-            font-weight: bold;
+
             display: flex;
             justify-content: flex-end;
             align-items: center;
@@ -568,7 +566,6 @@ export default {
         color: #7c5510;
         font-size: 15px;
         padding: 25px 0 10px 0;
-        font-weight: bold;
       }
       .card-container {
         width: 90%;
@@ -609,11 +606,9 @@ export default {
           .title {
             font-size: 17px;
             margin: 15px 0;
-            font-weight: bold;
           }
           .description {
             font-size: 15px;
-            font-weight: bold;
           }
         }
         .input-container {
@@ -645,13 +640,15 @@ export default {
           p {
             font-size: 15px;
             margin-left: 10px;
-            font-weight: bold;
           }
         }
       }
     }
   }
   .rule-input-compleat-btn {
+    font-family: noto-sans-cjk-jp, sans-serif;
+    font-weight: 700;
+    font-style: normal;
     cursor: pointer;
     border-radius: 999px;
     padding: 10px 30px;
@@ -661,7 +658,6 @@ export default {
     span {
       color: #ffffff;
       font-size: 14px;
-      font-weight: bold;
     }
     &:hover {
       background-color: #5297ac;

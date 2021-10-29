@@ -84,7 +84,7 @@ export default {
   .complete-text {
     color: #313131;
     font-size: 20px;
-    font-weight: bold;
+
     margin: 10px 0 30px 0;
   }
   .btn-container {
@@ -94,13 +94,15 @@ export default {
     justify-content: center;
     align-items: center;
     .rule-make-compleat-btn {
+      font-family: noto-sans-cjk-jp, sans-serif;
+      font-weight: 700;
+      font-style: normal;
       cursor: pointer;
       border-radius: 999px;
       padding: 10px 30px;
       span {
         color: #ffffff;
         font-size: 14px;
-        font-weight: bold;
       }
       &:hover {
         background-color: #5297ac;

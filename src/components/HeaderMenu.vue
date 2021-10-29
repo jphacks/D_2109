@@ -80,11 +80,13 @@ export default {
       }
       .btn-text {
         font-size: 17px;
-        font-weight: bold;
       }
     }
   }
   .rigth_btn {
+    font-family: noto-sans-cjk-jp, sans-serif;
+    font-weight: 700;
+    font-style: normal;
     cursor: pointer;
     background-color: #6f6f6f;
     width: 170px;
@@ -97,7 +99,6 @@ export default {
     align-items: center;
     color: #ffffff;
     font-size: 17px;
-    font-weight: bold;
     &:hover {
       background-color: #434343;
     }
