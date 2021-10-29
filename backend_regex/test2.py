@@ -239,10 +239,6 @@ class ClassNaming(Naming):
     super().__init__(op_naming['class_case'])
   
   def check_lst(self, lst):
-    # 命名規則のlintがOFFの場合
-    if not self.get_capwords_flag and not self.get_snake_flag:
-      return lst
-    
     lst_cp = []
     for line in lst:
       # 関数: 1行づつ正規表現にかける
@@ -267,6 +263,9 @@ class ClassNaming(Naming):
             lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_SNAKE)
 
       lst_cp.append(line)
+    # 命名規則のlintがOFFの場合
+    if not self.get_capwords_flag and not self.get_snake_flag:
+      return lst
     return lst_cp
 
 class MethodNaming(Naming):
@@ -440,32 +439,30 @@ def scan_naming_value(lst, op_naming):
 
 # 前後の空白を調整(1行分)
 def check_operators_space(line: str, method_naming, class_naming):
+    print(f"met:{method_naming.method_lst}")
+    print(class_naming.class_lst)
     strip_str = line.strip()
     # コメント行や空文字のみの行はpass
     if strip_str.startswith('#') or strip_str == '':
       return line
-    
-
-    REJEX_STRING_DOUBLE_STRICT = "=\s*\".*\"\s*"
-    REJEX_STRING_SINGLE_STRICT = "=\s*\'.*\'\s*"
 
     if not (re.findall(REJEX_METHOD_NAME, line)
         or re.findall(REJEX_METHOD_NAME_BACK, line)
         or re.findall(REJEX_CLASS_NAME, line)):
-        REJEX = (f'\(.+\)')
-        remove_str_line = re.sub(REJEX_STRING_SINGLE_STRICT + '|' + REJEX_STRING_DOUBLE_STRICT + '|' + REJEX_COMMENT, '', line)
-        print(remove_str_line)
-        #if re.findall(REJEX, remove_str_line):
-        #  print(line)
-          
-        #  method = [st for st in re.findall(REJEX, line) if st != '']
-        #  if method:
-        #    print(f"括弧: {method}")
-        #    method = method[0]
-        #    result = make_args(method)
-        #    print(method)
-        #    strip_str = strip_str.replace(method, result)
+        #REJEX = (f'(\([^)]*\))')
+        #remove_str_line = re.sub(REJEX_STRING_SINGLE_STRICT + '|' + REJEX_STRING_DOUBLE_STRICT + '|' + REJEX_COMMENT, '', line)
         
+        for s in list(set(method_naming.method_lst)):
+          REJEX = (f'{s}\s*\(.+\)')
+          if re.findall(REJEX, line):
+            args = make_args(re.findall(REJEX, line)[0])
+            strip_str = re.sub(f'{s}\s*\(.+\)', args, strip_str)
+
+        for s in list(set(class_naming.class_lst)):
+          REJEX = (f'{s}\s*\(.+\)')
+          if re.findall(REJEX, line):
+            args = make_args(re.findall(REJEX, line)[0])
+            strip_str = re.sub(f'{s}\s*\(.+\)', args, strip_str)
 
         # 行のword内に' 'が2つ以上入っていたら' '1つにする
         strip_str_lst = [s for s in re.split('\s', strip_str) if s != '']
@@ -855,15 +852,15 @@ def lambda_handler(event, context):
     #print(body_dict)
 
     # compileが通るか確認
-    #compile_dic = is_comile_to_dic(body_dict['code_lst'])
-    #if not compile_dic['flag']:
-    #  print(compile_dic['error'])
-      #return {
-      #  'statusCode': 400,
-      #  'body': json.dumps({
-      #      'error': compile_dic['error']
-      #    })
-      #}
+    compile_dic = is_comile_to_dic(body_dict['code_lst'])
+    if not compile_dic['flag']:
+      #print(compile_dic['error'])
+      return {
+        'statusCode': 400,
+        'body': json.dumps({
+            'error': compile_dic['error']
+          })
+      }
     
     # 空行をきれいにする
     lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
