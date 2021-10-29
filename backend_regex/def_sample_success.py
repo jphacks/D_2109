@@ -5,7 +5,7 @@ def a(a,b, c   = 2)     ->  int:
 def     add_box         (a      , b, c =    3)              :           
   ab=2
   a=3
-  method=      a(ab,a)
+  method              =      a  (ab,a)
   def aaaa():
     return ab
   return  ab

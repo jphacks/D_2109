@@ -1,0 +1,43 @@
+
+{
+	"style_check": {
+		"blank_format": {
+			"action": true
+		},
+		"indent": {
+			"type": " ", 
+			"num": 4,
+			"tab_num": 4
+		},
+		"count_word": {
+			"action": true,
+			"length": 90
+		},
+		"line_space": {
+			"class_or_global_func": {
+			"action": true
+			},
+			"method": {
+			"action": true
+			}
+		}
+	},
+	"naming_check": {
+		"class_case": {
+			"snake": false,
+			"CapWords": true
+		},
+		"method_case": {
+			"snake": true,
+			"CapWords": false
+		},
+		"value_case": {
+			"snake": true,
+			"CapWords": false
+		}
+	},
+	"import_check": {
+		"grouping": true,
+		"sorting": true
+	}
+}

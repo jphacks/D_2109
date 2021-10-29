@@ -425,22 +425,22 @@ def lambda_handler(event, context):
     #body_dict = event['body']
     op = body_dict['op']
     #print(body_dict)
+    
+    # 空行をきれいにする
+    lst_cp1 = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
 
     # compileが通るか確認
-    code_lst = body_dict['code_lst']
-    #compile_dic = is_comile_to_dic(code_lst)
-    #if not compile_dic['flag']:
-      #print(compile_dic['error'])
-    #  return {
-    #    'statusCode': 200,
-    #    'body': json.dumps({
-    #        'code_lst': [compile_dic['error']]
-    #      })
-    #  }
-    #lst_cp = list(map(lambda x: x[:-1] if x[-1] == '\n' else x , code_lst))
-    # 空行をきれいにする
-    lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
-    lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
+    lst_cp = list(map(lambda x: x + '\n' if not x.endswith('\n') else x , lst_cp1))
+    compile_dic = is_comile_to_dic(lst_cp)
+    if not compile_dic['flag']:
+      return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'code_lst': [compile_dic['error']]
+          })
+      }
+    
+    lst_cp = scan_indent_config(lst_cp1, op['style_check']['indent'])
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
     lst_cp = lst_dic['lst']
     def_blank_num = lst_dic['def-blank']

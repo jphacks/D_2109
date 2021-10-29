@@ -431,18 +431,38 @@ def scan_naming_value(lst, op_naming):
 
 # 前後の空白を調整(1行分)
 def check_operators_space(line: str):
-      if not (re.findall(REJEX_METHOD_NAME_BACK, line)
-         and re.findall(REJEX_METHOD_NAME_BACK, line) 
-         and re.findall(REJEX_CLASS_NAME, line)):
-         
+    strip_str = line.strip()
+    # コメント行や空文字のみの行はpass
+    if strip_str.startswith('#') or strip_str == '':
+      return line
+
+    if not (re.findall(REJEX_METHOD_NAME, line)
+        or re.findall(REJEX_METHOD_NAME_BACK, line)
+        or re.findall(REJEX_CLASS_NAME, line)):
+        # 行のword内に' 'が2つ以上入っていたら' '1つにする
+        strip_str_lst = [s for s in re.split('\s', strip_str) if s != '']
+        print(strip_str_lst)
+        n = len(strip_str_lst)
+        print(n)
+        #REJEX = "([\w=]+( {2,}))" * n
+        # 行頭のインデントを取得
+        s = re.match(r" *", line).end() * ' '
+        for i, st in enumerate(strip_str_lst):
+          if i != len(strip_str_lst):
+            s += st + ' '
+          else:
+            s += st
+        line = s
+        print("###########")
+        print(line)
         # スライス内の演算子の前後にはスペースを追加しない
         if(not re.findall('\\[.*:.*\\]', line)):
             line = re.sub(
                 '([a-zA-Z0-9]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([a-zA-Z0-9]*)',
-                '\\1\\2\\3',
+                '\\1 \\2 \\3',
                 line)
             line = line.replace("  ", " ")
-      return line
+    return line
 
 
 def blank_lines(lst, opt):
@@ -820,6 +840,8 @@ def lambda_handler(event, context):
     # 空行をきれいにする
     lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
     lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
+    # 前後の空白を調整
+    lst_cp = scan_operators_space(lst_cp)
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
     lst_cp = lst_dic['lst']
     def_blank_num = lst_dic['def-blank']
@@ -830,9 +852,7 @@ def lambda_handler(event, context):
     lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
     lst_cp = lst_dic['lst']
     s_warn_count = lst_dic['s_warn_count']
-    # 前後の空白を調整
-    #lst_cp = scan_operators_space(lst_cp)
-
+    
 
     # 改行コードを追加
     lst_cp = list(map(lambda x: x + '\n', lst_cp))
