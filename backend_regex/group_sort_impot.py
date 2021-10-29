@@ -327,3 +327,18 @@ def group_import(lines):
     group_lines = comment + import_from_lines + not_import_lines
 
     return group_lines
+
+def sort_import(lines):
+    # 3groupに分割なし + アルファベット順にソート
+
+    import_lines = [line for line in lines if (line.startswith('import'))]
+    from_lines = [line for line in lines if (line.startswith('from'))]
+    not_import_lines = [
+        line for line in lines if not (
+            (line.startswith('import')) or (
+                line.startswith('from')))]
+
+    import_from_lines = sorted(import_lines) + ['']
+    sorted_lines = comment + import_from_lines + not_import_lines
+
+    return sorted_lines
