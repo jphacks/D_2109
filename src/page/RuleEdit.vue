@@ -192,7 +192,9 @@
           <div class="description-container">
             <p class="title">classの命名規則</p>
             <p class="description">classの命名規則を決めます。</p>
-            <p class="description">チェック時：CapWords | 未チェック時：Snake</p>
+            <p class="description">
+              チェック時：CapWords | 未チェック時：Snake
+            </p>
           </div>
           <div class="input-container">
             <input
@@ -209,7 +211,9 @@
           <div class="description-container">
             <p class="title">関数の命名規則</p>
             <p class="description">関数の命名規則を決めます。</p>
-            <p class="description">チェック時：CapWords | 未チェック時：Snake</p>
+            <p class="description">
+              チェック時：CapWords | 未チェック時：Snake
+            </p>
           </div>
           <div class="input-container">
             <input
@@ -226,7 +230,9 @@
           <div class="description-container">
             <p class="title">変数の命名規則</p>
             <p class="description">変数の命名規則を決めます。</p>
-            <p class="description">チェック時：CapWords | 未チェック時：Snake</p>
+            <p class="description">
+              チェック時：CapWords | 未チェック時：Snake
+            </p>
           </div>
           <div class="input-container">
             <input
