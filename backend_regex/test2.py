@@ -31,7 +31,6 @@ OTHER_WORDS = ['Exception']
 
 # 括弧の中を整形
 def make_args(s_lst):
-  #print(s_lst)
   s_lst = re.sub('[\s]', '', s_lst)
   lst = re.split(',', s_lst)
   args = ''
@@ -446,29 +445,27 @@ def check_operators_space(line: str, method_naming, class_naming):
     if strip_str.startswith('#') or strip_str == '':
       return line
     
+
+    REJEX_STRING_DOUBLE_STRICT = "=\s*\".*\"\s*"
+    REJEX_STRING_SINGLE_STRICT = "=\s*\'.*\'\s*"
+
     if not (re.findall(REJEX_METHOD_NAME, line)
         or re.findall(REJEX_METHOD_NAME_BACK, line)
         or re.findall(REJEX_CLASS_NAME, line)):
-        REJEX = ''
-        for s in list(set(method_naming.method_lst)):
-          REJEX += (f'{s}\s*\(.+\)' + '|')
-          if re.findall(REJEX, line):
-            method = [st for st in re.findall(REJEX, line) if st != '']
-            if method:
-              method = method[0]
-              method = make_args(method)
-              print(method)
-              strip_str = re.sub(f'{s}\s*\(.+\)', method, strip_str)
+        REJEX = (f'\(.+\)')
+        remove_str_line = re.sub(REJEX_STRING_SINGLE_STRICT + '|' + REJEX_STRING_DOUBLE_STRICT + '|' + REJEX_COMMENT, '', line)
+        print(remove_str_line)
+        #if re.findall(REJEX, remove_str_line):
+        #  print(line)
+          
+        #  method = [st for st in re.findall(REJEX, line) if st != '']
+        #  if method:
+        #    print(f"括弧: {method}")
+        #    method = method[0]
+        #    result = make_args(method)
+        #    print(method)
+        #    strip_str = strip_str.replace(method, result)
         
-        for s in list(set(class_naming.class_lst)):
-          REJEX += (f'{s}\s*\(.+\)' + '|')
-          if re.findall(REJEX, line):
-            class_obj = [st for st in re.findall(REJEX, line) if st != '']
-            if class_obj:
-              class_obj = class_obj[0]
-              class_obj = make_args(class_obj)
-              print(class_obj)
-              strip_str = re.sub(f'{s}\s*\(.+\)', class_obj, strip_str)
 
         # 行のword内に' 'が2つ以上入っていたら' '1つにする
         strip_str_lst = [s for s in re.split('\s', strip_str) if s != '']
@@ -486,13 +483,13 @@ def check_operators_space(line: str, method_naming, class_naming):
         line = s
         print("###########")
         print(line)
+
         # スライス内の演算子の前後にはスペースを追加しない
         if(not re.findall('\\[.*:.*\\]', line)):
             line = re.sub(
-                '([a-zA-Z0-9]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([a-zA-Z0-9]*)',
-                '\\1 \\2 \\3',
+                '([a-zA-Z0-9]*)([\\s]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([\\s]*)([a-zA-Z0-9]*)',
+                '\\1 \\3 \\5',
                 line)
-            line = line.replace("  ", " ")
     return line
 
 

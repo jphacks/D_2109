@@ -1,8 +1,21 @@
 a=3
 v=2
-
+def a(a,b, c   = 2)     ->  int:
+        pass
+def     add_box         (a      , b, c =    3)              :           
+  ab=2
+  a=3
+  method      =      a         (ab,a)
+  def aaaa():
+    return ab+    a
+  return  ab
+class       PermissionMixin   :
+      def __init__(self) -> None:
+          pass
+      def a(self):
+          pass
 class BaseUser  ()  :
-    def __init__(self, a,   b,c) -> None:
+    def __init__(self) -> None:
         pass
     pass
 class User  (      BaseUser,  PermissionMixin   ):
@@ -12,20 +25,34 @@ class User  (      BaseUser,  PermissionMixin   ):
     def getName(self):
         return self.name
 
+def add_box () 	:
+	ab = 2
+	print('f')
 
-def a(a,b, c   = 2)     ->  int:
-    pass
-def     add_box         (a      , b, c =    3)              :           
-  ab=2
-  a=3
-  user = BaseUser(ab,a,         4)
-  method              =      a  (ab,a)
-  def aaaa():
-    return ab
-  return  ab
-class       PermissionMixin   :
-      def __init__(self) -> None:
-          pass
-      def a(self):
-          pass
+	a = 2
+	def inline():
+		def inline2():
+			print('fff')	
 
+
+
+	return ab
+
+
+
+
+class Net():
+	def fefe():
+		return
+
+def brahh(fff):
+
+
+  return 0
+# l = [1, 2, 3, 56, 5]
+# l = [el + 1 for el in l]
+# print(l)
+
+l = []
+for i in l:
+	print(i)

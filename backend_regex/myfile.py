@@ -1,6 +1,6 @@
 """©trim 整形実行後ファイル
-    ・空白整形の文字数設定 - True
-        関数: 6箇所
+    ・空白整形の設定 - True
+        関数: 8箇所
         クラス: 5箇所
     ・行あたりの文字数設定 - True
         [警告] 0箇所
@@ -10,48 +10,76 @@ a = 3
 v = 2 
 
 
-class BaseUser():
-    def __init__(self, a, b, c) -> None:
-
-    pass 
-  pass 
-
-
-class User(BaseUser, PermissionMixin):
-  name = 'aaaa' 
-
-    def __init__(self) -> None:
-
-    super().__ in it__() 
-
-    # [trim] Warning: 関数名に大文字は含められません.
-    def getName(self):
-
-    return self.name 
-        
-        
 def a(a, b, c=2) -> int:
-  pass 
+    pass 
 
 
 def add_box(a, b, c=3):
-  ab = 2 
-  a = 3 
-  user = BaseUser(ab, a, 4) 
-  method = a(ab, a) 
+    ab = 2 
+    a = 3 
+    method = a (ab,a) 
 
     def aaaa():
+        return ab + a 
 
     return ab 
-  return ab 
 
 
 class PermissionMixin:
     def __init__(self) -> None:
-
-    pass 
+        pass 
 
     def a(self):
+        pass 
+
+
+class BaseUser():
+    def __init__(self) -> None:
+        pass 
 
     pass 
+
+
+class User(BaseUser, PermissionMixin):
+    name = 'aaaa' 
+
+    def __init__(self) -> None:
+        super().__ in it__() 
+
+    # [trim] Warning: 関数名に大文字は含められません.
+    def getName(self):
+        return self.name 
+
         
+def add_box():
+    ab = 2 
+    pr in t('f') 
+    
+    a = 2 
+
+    def inline():
+
+        def inline2():
+            pr in t('fff') 
+            
+    return ab 
+    
+    
+class Net():
+    def fefe():
+        return 
+
+        
+def brahh(fff):
+    
+    
+    return 0 
+
+
+# l = [1, 2, 3, 56, 5]
+# l = [el + 1 for el in l]
+# print(l)
+    
+l = [] 
+f or i in l: 
+    print(i) 
