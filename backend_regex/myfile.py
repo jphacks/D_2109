@@ -1,15 +1,26 @@
 """©trim 整形実行後ファイル
-    ・空白整形の設定 - True
+    ・空白整形の設定
         関数: 0箇所
         クラス: 0箇所
-    ・行あたりの文字数設定 - True
+    ・行あたりの文字数設定 - 90文字
         [警告] 22箇所
+    ・クラス・グローバル関数間の間隔 - 2文字
+    ・メソッド間の間隔 - 1文字
+    ・importの設定
+        ・グルーピング: True
+        ・アルファベットソート: True
+    ・命名規則 - 
+        クラス:  CapWords
+        関数:  snake
+        変数:  CapWords/snake
 """
 
+
 import json 
+import keyword 
 import re 
 import traceback 
-import keyword 
+
 
 # ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
 #  'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for',

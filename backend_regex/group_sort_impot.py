@@ -213,50 +213,50 @@ def group_sort_import(lines):
     base_url = 'https://pypi.org/project/'
 
     for line in import_lines:
-    lib = re.sub('import ([a-z_]*)(\.)*.*','\\1',line)
-    url = base_url + lib
-    res = requests.get(url)
-    print(res)
-    # lib = re.match('import (\w)* | from (\w)*',line)
-    print(lib)
-    # 標準ライブラリの判別
-    if lib in standard_lib:  
-        import_group1.append(line)
+        lib = re.sub('import ([a-z_]*)(\.)*.*','\\1',line)
+        url = base_url + lib
+        res = requests.get(url)
+        print(res)
+        # lib = re.match('import (\w)* | from (\w)*',line)
+        print(lib)
+        # 標準ライブラリの判別
+        if lib in standard_lib:  
+            import_group1.append(line)
 
-    # third_party ライブラリの判別
-    elif res.status_code == 200:
-        import_group2.append(line)
+        # third_party ライブラリの判別
+        elif res.status_code == 200:
+            import_group2.append(line)
 
-    #その他のライブラリ
-    else:
-        import_group3.append(line)
+        #その他のライブラリ
+        else:
+            import_group3.append(line)
 
 
     for line in from_lines:
-    lib = re.sub('from ([a-z_]*)(\.)*.*','\\1',line)
-    url = base_url + lib
-    res = requests.get(url)
-    print(res)
-    # lib = re.match('import (\w)* | from (\w)*',line)
-    print(lib)
-    # 標準ライブラリの判別
-    if lib in standard_lib:  
-        import_group1.append(line)
+        lib = re.sub('from ([a-z_]*)(\.)*.*','\\1',line)
+        url = base_url + lib
+        res = requests.get(url)
+        print(res)
+        # lib = re.match('import (\w)* | from (\w)*',line)
+        print(lib)
+        # 標準ライブラリの判別
+        if lib in standard_lib:  
+            import_group1.append(line)
 
-    # third_party ライブラリの判別
-    elif res.status_code == 200:
-        import_group2.append(line)
+        # third_party ライブラリの判別
+        elif res.status_code == 200:
+            import_group2.append(line)
 
-    #その他のライブラリ
-    else:
-        import_group3.append(line)
+        #その他のライブラリ
+        else:
+            import_group3.append(line)
 
-    import_from_lines = sorted(import_group1) + [''] + sorted(import_group2) + [''] + sorted(import_group3) + ['']
-    sorted_lines = import_from_lines + not_import_lines
+        import_from_lines = sorted(import_group1) + [''] + sorted(import_group2) + [''] + sorted(import_group3) + ['']
+        sorted_lines = import_from_lines + not_import_lines
 
-    print(import_group1)
-    print(import_group2)
-    print(import_group3)
-    print(sorted_lines)
+        print(import_group1)
+        print(import_group2)
+        print(import_group3)
+        print(sorted_lines)
 
-    return sorted_lines
+        return sorted_lines

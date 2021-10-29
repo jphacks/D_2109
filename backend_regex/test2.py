@@ -2,6 +2,7 @@ import json
 import re
 import traceback
 import keyword
+import requests
 
 # ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
 #  'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for',
@@ -25,6 +26,8 @@ TRIM_WARNING_NAMING_CLASS_SNAKE = "# [trim] Warning: クラス名に大文字は
 TRIM_WARNING_NAMING_CLASS_CAPWORDS = "# [trim] Warning: クラス名にアンダーバーは含められません."
 
 TRIM_INFO_STYLE_BLANK_FALSE = "Info: PEP8に基づく、空白の整形設定を行う事を推奨します."
+TRIM_INFO_STYLE_IMPORT_GROUP = "# [trim] Info: グルーピング済みです."
+TRIM_INFO_STYLE_IMPORT_SORT = "# [trim] Info: アルファベットソート済みです."
 
 RESERVED_WORDS = keyword.kwlist
 OTHER_WORDS = ['Exception']
@@ -96,7 +99,7 @@ def scan_indent_config(lst, op_indent):
   bef = 0
   lst_after = []
   for row_no, line in enumerate(lst_cp, 1):
-      print(line)
+      #print(line)
       str_line = line
       # もし空行ならindentをstack_indentのheadに合わせる
       if re.match(r"$ *^", str_line):
@@ -104,8 +107,8 @@ def scan_indent_config(lst, op_indent):
       aft = re.match(r" *", str_line).end()
       
       
-      print(f"bef: {bef}")
-      print(f"aft: {aft}")
+      #print(f"bef: {bef}")
+      #print(f"aft: {aft}")
       
       # コメント行は無視
       if str_line.startswith("#"):
@@ -113,34 +116,35 @@ def scan_indent_config(lst, op_indent):
           continue
       if bef > aft:
         for i, elem in enumerate(stack.get_reverse_lst()):
-            print(elem)
+            #print(elem)
             if elem == aft:
-                print(f"pop数: {i}")
+                #print(f"pop数: {i}")
                 # この時のiがpop数
                 for j in range(i):
-                    print(f"pop: {stack_indent.pop()}")
+                    stack_indent.pop()
+                    #print(f"pop: {stack_indent.pop()}")
                     stack.pop()
       head = stack_indent.get_top()
       if aft != head:
-          print(f"head: {head}")
+          #print(f"head: {head}")
           blank = head * ' '
           # 適切な行頭空白文字を付加
           str_line = blank+str_line.strip()
       
       if str_line.endswith(':'):
-          print(f"先読み:{str_line}")
-          print(lst_cp[row_no])
+          #print(f"先読み:{str_line}")
+          #printlst_cp[row_no])
           stack_indent.push(head + INDENT_NUM)
           # 1つ先読み
           try:
             stack.push(re.match(r" *", lst_cp[row_no]).end())
           except Exception:
             pass
-      #print(stack_indent.stack)
-      #print(stack.stack)
+      ##printstack_indent.stack)
+      ##printstack.stack)
       lst_after.append(str_line)
       bef = aft
-  #print(lst_after)
+  ##printlst_after)
   return lst_after
 
 
@@ -168,7 +172,7 @@ def scan_format_method_class(lst, op_format):
     sub_paterns_back = re.findall(REJEX_METHOD_NAME_BACK, line)
     if sub_paterns_back:
       # 括弧の中の考慮
-      #print(sub_paterns_back[0])
+      ##printsub_paterns_back[0])
       for i, elem in enumerate(sub_paterns_back[0]):
         if (i == 0 or i == 4 or i == 5) and elem != ' ':
           def_blank_num += 1
@@ -346,13 +350,13 @@ class ValueNaming(Naming):
           pass
         # 命名規則のチェック
         elif word:
-          print(word)
+          #printword)
           TRIM_WARNING_NAMING_VALUE_ALL = f"#[trim] Warning: 変数{word}: 大文字とアンダーバーを同時に含められません.\n"
           TRIM_WARNING_NAMING_VALUE_CAPWORDS = f"#[trim] Warning: 変数{word}: アンダーバーを含められません.\n"
           TRIM_WARNING_NAMING_VALUE_SNAKE = f"#[trim] Warning: 変数{word}: 大文字を含められません.\n"
           # 定数は例外
           if re.search('^[A-Z_]+$', word):
-            print("定数")
+            #print"定数")
             pass
           elif self.get_capwords_flag() and self.get_snake_flag():
             # '_'と大文字が両方入っていたらおかしい
@@ -514,7 +518,7 @@ def blank_lines(lst, opt):
 	# 関数・クラスブロックの開始行を探索
 	for line in lst:
 		row_no += 1
-		print(f"{row_no}行目")
+		#printf"{row_no}行目")
 		# 関数の判定
 		sub_pattern_def = re.findall(rejex_method_name, line)
 		# クラスの判定
@@ -524,14 +528,14 @@ def blank_lines(lst, opt):
 		head_blank_all.append(sub_pattern_all[0])
 		# 関数を含む行か判定
 		if len(sub_pattern_def) != 0:
-			print('entered def')
+			#print'entered def')
 			# stack_blankに行頭の空白を保存
 			stack_blank.push(sub_pattern_def[0][0])
 			# ブロックの最初の行番号を保存
 			stack_start_line.push(row_no)
 		# クラスを含む行か判定
 		elif len(sub_pattern_class) != 0:
-			print('entered class')
+			#print'entered class')
 			# stack_blankに行頭の空白を保存
 			stack_blank.push(sub_pattern_class[0])
 			# ブロックの最初の行番号を保存
@@ -541,70 +545,70 @@ def blank_lines(lst, opt):
 	# 関数・クラスブロックの終了行を探索
 	for blank_def in reversed(stack_blank.stack):
 		start_line = stack_start_line.pop()
-		print("start_line: ", start_line)
+		#print"start_line: ", start_line)
 		# 空白行数のカウント用
 		b = 0
 		for idx_all, blank_all in enumerate(head_blank_all):
 			# 関数より上の行は飛ばす
 			if idx_all + 1 <= start_line:
 				continue
-			print(f"{idx_all}行目")
+			#printf"{idx_all}行目")
 			# 最終行の場合
 			if idx_all + 1 == len(head_blank_all):
-				print("最終行です")
+				#print"最終行です")
 				# 空白行の場合
 				if re.search(r'\n$', blank_all) is not None:
-					print('空白行だよ')
+					#print'空白行だよ')
 					# グローバル関数・クラスの場合
 					if len(blank_def) == 0:
 						# blockの最初と最後の行番号をリストに保存
 						line_glob.append([start_line, idx_all - b])
-						print("exited from global")
+						#print"exited from global")
 						break
 					# 内部関数の場合
 					else:
 						line_local.append([start_line, idx_all - b])
-						print("exited from local")
+						#print"exited from local")
 						break
 				# 空白行でない場合
 				else:
-					print('空白行じゃないよ')
+					#print'空白行じゃないよ')
 					# グローバル関数・クラスの場合
 					if len(blank_def) == 0:
 						# blockの最初と最後の行番号をリストに保存
 						line_glob.append([start_line, idx_all + 1])
-						print("exited from global")
+						#print"exited from global")
 						break
 					# 内部関数の場合
 					else:
 						line_local.append([start_line, idx_all + 1])
-						print("exited from local")
+						#print"exited from local")
 						break
 
 			# 空白行は保留
 			elif re.fullmatch(r'[ \t]*\n$', blank_all) is not None:
-				print("空白行・保留")
+				#print"空白行・保留")
 				b += 1
-				print("b: ", b)
+				#print"b: ", b)
 			# ブロック抜けを判定
 			elif len(blank_all) <= len(blank_def):
 				# グローバル関数・クラスの場合
 				if len(blank_def) == 0: 
 					# blockの最初と最後の行番号をリストに保存
 					line_glob.append([start_line, idx_all - b])
-					print("exited from global")
+					#print"exited from global")
 				# 内部関数の場合
 				else:
 					line_local.append([start_line, idx_all - b])
-					print("exited from local")
+					#print"exited from local")
 				break
 
 			# ブロックを抜けてない場合
 			else:
 				b = 0
 
-	print("line_local ", line_local)
-	print("line_glob", line_glob)
+	#print"line_local ", line_local)
+	#print"line_glob", line_glob)
 
 	if not opt['class_or_global_func']['action']:
 		line_glob.clear()
@@ -621,13 +625,13 @@ def blank_lines(lst, opt):
 	## ローカル関数 ##
 	if opt['method']['action']:
 		for block in line_local:
-			print("block: ", block)
+			#print"block: ", block)
 			# ブロック開始行の1つ上の行のインデックス(ひとつ上なので-1, インデックスなのでさらに-1)
 			above_b = block[0] - 2
-			print("above_b: ", above_b)
+			#print"above_b: ", above_b)
 			# ブロック開始行の1つ下の行のインデックス
 			below_b = block[1]
-			print("below_b: ", below_b)
+			#print"below_b: ", below_b)
 			# ブロック開始行の1つ上にコメント行がある場合
 			if re.search(r'#', lst[above_b]) is not None:
 				above_b -= 1
@@ -637,7 +641,7 @@ def blank_lines(lst, opt):
 				while True:
 					# 注目している行が空行でない場合
 					if re.fullmatch(r'\s+', lst[above_b - i]) is None:
-						print("above_b - i + 1: ", above_b - i + 1)
+						#print"above_b - i + 1: ", above_b - i + 1)
 						# ローカル関数ブロックの末行だった場合 -> あとまわし
 						if above_b - i + 1 in [col[1] for col in line_local]:
 							break
@@ -653,37 +657,37 @@ def blank_lines(lst, opt):
 							else:
 								s = 1
 							del_lines += [above_b - j for j in range(s, i)]	
-							print("del_lines: ", del_lines)	
+							#print"del_lines: ", del_lines)	
 							break		
 					i += 1
 			# ブロック開始行の1つ上に空行でない行がある場合
 			elif re.fullmatch(r'\s+', lst[above_b]) is None:
-				print("not blank")
+				#print"not blank")
 				# グローバル関数・クラスの開始行だった場合
 				if above_b + 1 in [col[0] for col in line_glob]:
 					pass
 				else:
 					add_lines.append(above_b + 1)
-				print("add_lines: ", add_lines)
+				#print"add_lines: ", add_lines)
 			# ブロック終了行が最終行の場合
 			if below_b >= len(lst) - 1:
-				print("最終")
+				#print"最終")
 				pass
 			# ブロック終了行の1つ下に空行がある場合
 			elif re.fullmatch(r'\s+', lst[below_b]) is not None:
-				print("blank found")
+				#print"blank found")
 				i = 1
 				while True:
-					print("i: ", i)
+					#print"i: ", i)
 					# 注目している行が最終行の場合 -> ブロック下の空白行すべて消す
 					if below_b + i + 1 == len(head_blank_all):
 						del_lines += [below_b + j for j in range(0, i) if below_b + j not in del_lines]
-						print("del_lines: ", del_lines)
+						#print"del_lines: ", del_lines)
 						break
 					# 注目している行が空行でない
 					if re.fullmatch(r'\s+', lst[below_b + i]) is None:
 						# 空白でなかった行の行番号を表示
-						print("below_b + i + 1: ", below_b + i + 1)
+						#print"below_b + i + 1: ", below_b + i + 1)
 						# グローバル関数・クラスブロックの開始行だった場合
 						if below_b + i + 1 in [col[0] for col in line_glob]:
 							break
@@ -693,41 +697,41 @@ def blank_lines(lst, opt):
 						# それ以外
 						else:
 							del_lines += [below_b + j for j in range(1, i) if below_b + j not in del_lines]
-							print("del_lines: ", del_lines)
+							#print"del_lines: ", del_lines)
 							break
 					i += 1
 			# ブロック終了行の1つ下に空行でない行がある場合
 			else:
-				print("not blank")
+				#print"not blank")
 				# グローバル関数・クラスブロックの開始行だった場合
 				if below_b + 1 in [col[0] for col in line_glob]:
 					pass
 				else:
 					if below_b not in add_lines:
 						add_lines.append(below_b)
-					print("add_lines: ", add_lines)
+					#print"add_lines: ", add_lines)
 
 
 	## グローバル関数 ## 
 	if opt['class_or_global_func']['action']:
-		print("<<<global>>>")
+		#print"<<<global>>>")
 		for block in line_glob:
-			print("block: ", block)
+			#print("block: ", block)
 			# ブロック開始行の1つ上の行のインデックス(ひとつ上なので-1, インデックスなのでさらに-1)
 			above_b = block[0] - 2
-			print("above_b: ", above_b)
+			#print("above_b: ", above_b)
 			# ブロック最終 行の1つ下の行のインデックス
 			below_b = block[1]
-			print("below_b: ", below_b)
+			#print("below_b: ", below_b)
 			# ブロック開始行の1つ上にコメント行がある場合
 			if re.search(r'#', lst[above_b]) is not None:
-				print("コメント見つけた")
+				#print("コメント見つけた")
 				above_b -= 1
 			else:
 				print("見つからない")
 			# ブロック開始行が1行目の場合
 			if above_b == -1:
-				print("一番上")
+				#print("一番上")
 				pass
 			# ブロック開始行の1つ上に空行がある場合
 			elif re.fullmatch(r'\s+', lst[above_b]) is not None:
@@ -736,57 +740,57 @@ def blank_lines(lst, opt):
 					# 注目している行が1行目の場合 -> ブロック上の空白行すべて消す
 					if above_b - i + 1 == len(head_blank_all):
 						del_lines += [above_b - j for j in range(0, i) if above_b - j not in del_lines]
-						print("del_lines: ", del_lines)
+						#print("del_lines: ", del_lines)
 						break
 					# 注目している行が空行でない場合
 					elif re.fullmatch(r'\s+', lst[above_b - i]) is None or below_b - i == 0:
-						print("above_b - i + 1: ", above_b - i + 1)
+						#print("above_b - i + 1: ", above_b - i + 1)
 						# グローバル関数・クラスブロックの末行だった場合 -> あとまわし
 						if above_b - i + 1 in [col[1] for col in line_glob]:
-							print("あとまわし")
+							#print("あとまわし")
 							break
 						# ブロックの上の空行が1行のみだった場合 -> 一行追加で挿入
 						elif i == 1:
 							add_lines += [above_b + 1]
-							print("1行のみ_add_lines: ", add_lines)
+							#print("1行のみ_add_lines: ", add_lines)
 						# ブロックの上の空行が2行のみだった場合 -> 何もしない
 						elif i == 2: 
 							break
 						# それ以外
 						else:
 							del_lines += [above_b - j for j in range(1, i - 1)]
-							print("del_lines: ", del_lines)	
+							#print("del_lines: ", del_lines)	
 							break		
 					i += 1
 			# ブロック開始行の1つ上が空行でない場合(above_bの値によって挙動が変わるのでelseにはしない)
 			elif re.fullmatch(r'\s+', lst[above_b]) is None:
-				print("not blank")
+				#print("not blank")
 				add_lines += [above_b + 1, above_b + 1]
-				print("add_lines: ", add_lines)
+				#print("add_lines: ", add_lines)
 			# ブロック終了行が最終行の場合
 			if below_b >= len(lst) - 1:
-				print("さいしゅうぎょう")
+				#print("さいしゅうぎょう")
 				pass
 			# ブロック終了行の1つ下に空行がある場合
 			elif re.fullmatch(r'\s+', lst[below_b]) is not None:
-				print("blank found")
+				#print("blank found")
 				i = 1
 				while True:
 					# 注目している行が最終行の場合 -> ブロック下の空白行すべて消す
 					if below_b + i + 1 == len(head_blank_all):
-						print("最終行")
+						#print("最終行")
 						del_lines += [below_b + j for j in range(0, i + 1) if below_b + j not in del_lines]
-						print("del_lines: ", del_lines)
+						#print("del_lines: ", del_lines)
 						break
 					# 注目している行が空行でない
 					if re.fullmatch(r'\s+', lst[below_b + i]) is None:
 						# 空白でなかった行の行番号を表示
-						print("below_b + i + 1: ", below_b + i + 1)
+						#print("below_b + i + 1: ", below_b + i + 1)
 						# 最終行の場合 -> 空白行すべて削除
 						if below_b + i + 1 == len(head_blank_all):
-							print("最終行")
+							#print("最終行")
 							del_lines += [above_b + j for j in range(0, i) if above_b + j not in del_lines]
-							print("del_lines: ", del_lines)
+							#print("del_lines: ", del_lines)
 							break
 						# ブロックの下の空行が2行だった場合 -> 何もしない
 						elif i == 2:
@@ -794,21 +798,21 @@ def blank_lines(lst, opt):
 						# ブロックの上の空行が1行のみだった場合 -> 一行追加で挿入
 						elif i == 1:
 							add_lines += [below_b]
-							print("1行のみ_add_lines: ", add_lines)
+							#print("1行のみ_add_lines: ", add_lines)
 							break
 						# それ以外(3行以上)
 						else:
 							del_lines += [below_b + j for j in range(0, i - 2) if below_b + j not in del_lines]
-							print("del_lines: ", del_lines)
+							#print("del_lines: ", del_lines)
 							break
 					i += 1
 			# ブロック終了行の下が空行でない場合
 			else:
-				print("lst[below_b]", lst[below_b])
-				print("not blank, insert")
+				#print("lst[below_b]", lst[below_b])
+				#print("not blank, insert")
 				if below_b not in add_lines:
 					add_lines += [below_b, below_b]
-				print("add_lines: ", add_lines)		
+				#print("add_lines: ", add_lines)		
 
 	del_lines.sort()
 	add_lines.sort()
@@ -818,12 +822,12 @@ def blank_lines(lst, opt):
 	i = 0
 	j = 0
 
-	print("del_lines: ", del_lines)
-	print("add_lines: ", add_lines)
+	#print("del_lines: ", del_lines)
+	#print("add_lines: ", add_lines)
 
 	while True:
 		if i + 1 == len(del_lines) and j + 1 == len(add_lines):
-			print("complete!")
+			#print("complete!")
 			break
 		elif del_lines[i] < add_lines[j]:
 			# 行の削除
@@ -847,11 +851,286 @@ def scan_operators_space(lst, method_naming, class_naming):
     lst_cp.append(check_operators_space(line, method_naming, class_naming))
   return lst_cp
 
+# 3groupに分割 + アルファベット順にソート
+def group_sort_import(lines, op_import):
+    if not (op_import['sorting'] or op_import['grouping']):
+      return lines
+    
+    # 3groupに分割 + アルファベット順にソート
+    import_group1 = []
+    import_group2 = []
+    import_group3 = []
+
+    import_lines = [line for line in lines if (line.startswith('import'))]
+    from_lines = [line for line in lines if (line.startswith('from'))]
+    not_import_lines = [line for line in lines if not ((line.startswith('import')) or (line.startswith('from')))]
+
+    # 198個のpython 標準ライブラリ
+    standard_lib = ['string',
+    're',
+    'difflib',
+    'textwrap',
+    'unicodedata',
+    'stringprep',
+    'readline',
+    'rlcompleter',
+    'struct',
+    'codecs',
+    'datetime',
+    'zoneinfo',
+    'calendar',
+    'collections',
+    'heapq',
+    'bisect',
+    'array',
+    'weakref',
+    'types',
+    'copy',
+    'pprint',
+    'reprlib',
+    'enum',
+    'graphlib',
+    'numbers',
+    'math',
+    'cmath',
+    'decimal',
+    'fractions',
+    'random',
+    'statistics',
+    'itertools',
+    'functools',
+    'operator',
+    'pathlib',
+    'os',
+    'fileinput',
+    'stat',
+    'filecmp',
+    'tempfile',
+    'glob',
+    'fnmatch',
+    'linecache',
+    'shutil',
+    'pickle',
+    'copyreg',
+    'shelve',
+    'marshal',
+    'dbm',
+    'sqlite',
+    'zlib',
+    'gzip',
+    'bz',
+    'lzma',
+    'zipfile',
+    'tarfile',
+    'csv',
+    'configparser',
+    'netrc',
+    'xdrlib',
+    'plistlib',
+    'hashlib',
+    'hmac',
+    'secrets',
+    'io',
+    'time',
+    'argparse',
+    'getopt',
+    'logging',
+    'getpass',
+    'curses',
+    'platform',
+    'errno',
+    'ctypes',
+    'threading',
+    'multiprocessing',
+    'concurrent',
+    'subprocess',
+    'sched',
+    'queue',
+    'contextvars',
+    'asyncio',
+    'socket',
+    'ssl',
+    'select',
+    'selectors',
+    'asyncore',
+    'asynchat',
+    'signal',
+    'mmap',
+    'email',
+    'json',
+    'mailcap',
+    'mailbox',
+    'mimetypes',
+    'base',
+    'binhex',
+    'binascii',
+    'quopri',
+    'uu',
+    'html',
+    'xml',
+    'webbrowser',
+    'cgi',
+    'cgitb',
+    'wsgiref',
+    'urllib',
+    'http',
+    'ftplib',
+    'poplib',
+    'imaplib',
+    'nntplib',
+    'smtplib',
+    'smtpd',
+    'telnetlib',
+    'uuid',
+    'socketserver',
+    'xmlrpc',
+    'ipaddress',
+    'audioop',
+    'aifc',
+    'sunau',
+    'wave',
+    'chunk',
+    'colorsys',
+    'imghdr',
+    'sndhdr',
+    'ossaudiodev',
+    'gettext',
+    'locale',
+    'turtle',
+    'cmd',
+    'shlex',
+    'tkinter',
+    'typing',
+    'pydoc',
+    'doctest',
+    'unittest',
+    'test',
+    'bdb',
+    'faulthandler',
+    'pdb',
+    'timeit',
+    'trace',
+    'tracemalloc',
+    'distutils',
+    'ensurepip',
+    'venv',
+    'zipapp',
+    'sys',
+    'sysconfig',
+    'builtins',
+    'warnings',
+    'dataclasses',
+    'contextlib',
+    'abc',
+    'atexit',
+    'traceback',
+    'gc',
+    'inspect',
+    'site',
+    'code',
+    'codeop',
+    'zipimport',
+    'pkgutil',
+    'modulefinder',
+    'runpy',
+    'importlib',
+    'ast',
+    'symtable',
+    'token',
+    'keyword',
+    'tokenize',
+    'tabnanny',
+    'pyclbr',
+    'py',
+    'compileall',
+    'dis',
+    'pickletools',
+    'msilib',
+    'msvcrt',
+    'winreg',
+    'winsound',
+    'posix',
+    'pwd',
+    'spwd',
+    'grp',
+    'crypt',
+    'termios',
+    'tty',
+    'pty',
+    'fcntl',
+    'pipes',
+    'resource',
+    'nis',
+    'syslog',
+    'optparse',
+    'imp']
+
+    base_url = 'https://pypi.org/project/'
+
+    for line in import_lines:
+      lib = re.sub('import ([a-z_]*)(\.)*.*','\\1',line)
+      url = base_url + lib
+      res = requests.get(url)
+      #print(res)
+      # lib = re.match('import (\w)* | from (\w)*',line)
+      #print(lib)
+      # 標準ライブラリの判別
+      if lib in standard_lib:  
+          import_group1.append(line)
+
+      # third_party ライブラリの判別
+      elif res.status_code == 200:
+          import_group2.append(line)
+
+      #その他のライブラリ
+      else:
+          import_group3.append(line)
+    
+    for line in from_lines:
+      lib = re.sub('from ([a-z_]*)(\.)*.*','\\1',line)
+      url = base_url + lib
+      res = requests.get(url)
+      #print(res)
+      # lib = re.match('import (\w)* | from (\w)*',line)
+      #print(lib)
+      # 標準ライブラリの判別
+      if lib in standard_lib:  
+          import_group1.append(line)
+
+      # third_party ライブラリの判別
+      elif res.status_code == 200:
+          import_group2.append(line)
+
+      #その他のライブラリ
+      else:
+          import_group3.append(line)
+      
+    import_from_lines = sorted(import_group1) + [''] + sorted(import_group2) + [''] + sorted(import_group3) + ['']
+    sorted_lines = import_from_lines + not_import_lines
+
+    #print(import_group1)
+    #print(import_group2)
+    #print(import_group3)
+    #print(sorted_lines)
+
+    return sorted_lines
+
+def make_ss(flag_snake, flag_cap):
+  ss = ' '
+  if not (flag_snake or flag_cap):
+    ss += "False"
+  if flag_cap:
+    ss += "CapWords"
+  if flag_snake:
+    s = '/' if flag_cap else '' 
+    ss += s + "snake"
+  return ss
+
 def lambda_handler(event, context):
     #body_dict = json.loads(event['body'])
     body_dict = event['body']
     op = body_dict['op']
-    #print(body_dict)
+    ##print(body_dict)
 
     # compileが通るか確認
     compile_dic = is_comile_to_dic(body_dict['code_lst'])
@@ -866,6 +1145,7 @@ def lambda_handler(event, context):
     
     # 空行をきれいにする
     lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
+    lst_cp = group_sort_import(lst_cp, op['import_check'])
     lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
     lst_cp = lst_dic['lst']
@@ -893,12 +1173,18 @@ def lambda_handler(event, context):
     
     INFO_MES_LIST = [
       '"""©trim 整形実行後ファイル\n',
-      indent + '・空白整形の設定 - ',
+      indent + '・空白整形の設定',
       indent * 2 + f'関数: {def_blank_num}箇所\n',
       indent * 2 + f'クラス: {class_blank_num}箇所\n',
       indent + '・行あたりの文字数設定 - ',
       indent * 2 + f'[警告] {s_warn_count}箇所\n',
-      '"""\n\n',
+      indent + '・クラス・グローバル関数間の間隔 - ',
+      indent + '・メソッド間の間隔 - ',
+      indent + '・importの設定\n',
+      indent * 2 + f'・グルーピング: ',
+      indent * 2 + f'・アルファベットソート: ',
+      indent + '・命名規則 - ',
+      '"""\n',
     ]
     # 上からopに応じて変形し、=> INFO_MES_LIST_CPへ => lst_cpに戻す
     INFO_MES_LIST_CP = []
@@ -908,7 +1194,7 @@ def lambda_handler(event, context):
       #print(elem)
       if elem.startswith(indent + '・空白整形'):
         flag = op['style_check']['blank_format']['action']
-        elem += f"{flag}\n"
+        elem += f"\n"
         INFO_MES_LIST_CP.append(elem)
         i+=1
         if not flag:
@@ -917,9 +1203,60 @@ def lambda_handler(event, context):
         continue
       if elem.startswith(indent + '・行あたりの文字数設定'):
         flag = op['style_check']['count_word']['action']
+        if flag:
+          elem += f"{op['style_check']['count_word']['length']}文字\n"
+        else:
+           elem += f"{flag}\n"
+        INFO_MES_LIST_CP.append(elem)
+        i+=1
+        continue
+      if elem.startswith(indent + '・クラス・グローバル関数間の間隔'):
+        flag = op['style_check']['line_space']['class_or_global_func']
+        if flag:
+          elem += f"2文字\n"
+        else:
+          elem += f"{flag}\n"
+        INFO_MES_LIST_CP.append(elem)
+        i+=1
+        continue
+      if elem.startswith(indent + '・メソッド間の間隔'):
+        flag = op['style_check']['line_space']['method']
+        if flag:
+          elem += f"1文字\n"
+        else:
+          elem += f"{flag}\n"
+        INFO_MES_LIST_CP.append(elem)
+        i+=1
+        continue
+      if elem.startswith(indent*2 + '・グルーピング'):
+        flag = op['import_check']['grouping']
         elem += f"{flag}\n"
         INFO_MES_LIST_CP.append(elem)
         i+=1
+        continue
+      if elem.startswith(indent*2 + '・アルファベットソート'):
+        flag = op['import_check']['sorting']
+        elem += f"{flag}\n"
+        INFO_MES_LIST_CP.append(elem)
+        i+=1
+        continue
+      if elem.startswith(indent + '・命名規則'):
+        INFO_MES_LIST_CP.append(elem + '\n')
+        class_snake_flag = op['naming_check']['class_case']['snake']
+        method_snake_flag = op['naming_check']['method_case']['snake']
+        value_snake_flag = op['naming_check']['value_case']['snake']
+        class_cap_flag = op['naming_check']['class_case']['CapWords']
+        method_cap_flag = op['naming_check']['method_case']['CapWords']
+        value_cap_flag = op['naming_check']['value_case']['CapWords']
+        
+        ss_class = make_ss(class_snake_flag, class_cap_flag)
+        ss_method = make_ss(method_snake_flag, method_cap_flag)
+        ss_value = make_ss(value_snake_flag, value_cap_flag)
+        
+        INFO_MES_LIST_CP.append(indent * 2 + f'クラス: ' + ss_class +'\n')
+        INFO_MES_LIST_CP.append(indent * 2 + f'関数: ' + ss_method +'\n')
+        INFO_MES_LIST_CP.append(indent * 2 + f'変数: ' + ss_value +'\n')
+        i += 1
         continue
       INFO_MES_LIST_CP.append(elem)
       i += 1
@@ -936,8 +1273,6 @@ def lambda_handler(event, context):
     # 行間の調整
     lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
 
-    #print(lst_cp)
-    
     f = open('myfile.py', 'w') 
     f.writelines(lst_cp)
     f.close()
@@ -1002,7 +1337,7 @@ json = {
           },
           'value_case': {
             'snake': True,
-            'CapWords': False
+            'CapWords': True
           }
         },
         'import_check': {
