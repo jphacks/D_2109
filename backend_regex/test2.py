@@ -234,6 +234,8 @@ class Naming():
 
 
 class ClassNaming(Naming):
+  class_lst = []
+
   def __init__(self, op_naming) -> None:
     super().__init__(op_naming['class_case'])
   
@@ -248,6 +250,7 @@ class ClassNaming(Naming):
       sub_paterns = re.findall(REJEX_CLASS_NAME, line)
       if sub_paterns:
         hit_class = sub_paterns[0][1]
+        self.class_lst = hit_class
         # 行頭のインデントを取得
         starts_blank = re.match(r" *", line).end() * ' '
         
@@ -268,20 +271,19 @@ class ClassNaming(Naming):
     return lst_cp
 
 class MethodNaming(Naming):
+  method_lst = []
+
   def __init__(self, op_naming) -> None:
     super().__init__(op_naming['method_case'])
   
   def check_lst(self, lst):
-    # 命名規則のlintがOFFの場合
-    if not self.get_capwords_flag and not self.get_snake_flag:
-      return lst
-  
     lst_cp = []
     for line in lst:
       # 関数: 1行づつ正規表現にかける
       sub_paterns = re.findall(REJEX_METHOD_NAME, line)
       if sub_paterns:
         method = sub_paterns[0][1]
+        self.method_lst.append(method)
         # 行頭のインデントを取得
         starts_blank = re.match(r" *", line).end() * ' '
         
@@ -297,8 +299,12 @@ class MethodNaming(Naming):
           # 大文字が入っていたらおかしい
           if re.search(r'[A-Z]+', method):
             lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_SNAKE)
-
+    
       lst_cp.append(line)
+    
+    # 命名規則のlintがOFFの場合
+    if not self.get_capwords_flag and not self.get_snake_flag:
+      return lst
     return lst_cp
 
 class ValueNaming(Naming):
@@ -380,7 +386,11 @@ def scan_naming_method_class(lst, op_naming):
   # クラスに関して
   lst = class_naming.check_lst(lst)
     
-  return lst
+  return {
+    'lst': lst,
+    'method_naming': method_naming,
+    'class_naming': class_naming
+  }
 
 
 # 1行ごとに 文字数カウント
@@ -430,15 +440,36 @@ def scan_naming_value(lst, op_naming):
 
 
 # 前後の空白を調整(1行分)
-def check_operators_space(line: str):
+def check_operators_space(line: str, method_naming, class_naming):
     strip_str = line.strip()
     # コメント行や空文字のみの行はpass
     if strip_str.startswith('#') or strip_str == '':
       return line
-
+    
     if not (re.findall(REJEX_METHOD_NAME, line)
         or re.findall(REJEX_METHOD_NAME_BACK, line)
         or re.findall(REJEX_CLASS_NAME, line)):
+        REJEX = ''
+        for s in list(set(method_naming.method_lst)):
+          REJEX += (f'{s}\s*\(.+\)' + '|')
+          if re.findall(REJEX, line):
+            method = [st for st in re.findall(REJEX, line) if st != '']
+            if method:
+              method = method[0]
+              method = make_args(method)
+              print(method)
+              strip_str = re.sub(f'{s}\s*\(.+\)', method, strip_str)
+        
+        for s in list(set(class_naming.class_lst)):
+          REJEX += (f'{s}\s*\(.+\)' + '|')
+          if re.findall(REJEX, line):
+            class_obj = [st for st in re.findall(REJEX, line) if st != '']
+            if class_obj:
+              class_obj = class_obj[0]
+              class_obj = make_args(class_obj)
+              print(class_obj)
+              strip_str = re.sub(f'{s}\s*\(.+\)', class_obj, strip_str)
+
         # 行のword内に' 'が2つ以上入っていたら' '1つにする
         strip_str_lst = [s for s in re.split('\s', strip_str) if s != '']
         print(strip_str_lst)
@@ -814,10 +845,10 @@ def blank_lines(lst, opt):
 	return lst
 
 # 前後の空白を調整(走査)
-def scan_operators_space(lst):
+def scan_operators_space(lst, method_naming, class_naming):
   lst_cp = []
   for line in lst:
-    lst_cp.append(check_operators_space(line))
+    lst_cp.append(check_operators_space(line, method_naming, class_naming))
   return lst_cp
 
 def lambda_handler(event, context):
@@ -840,14 +871,16 @@ def lambda_handler(event, context):
     # 空行をきれいにする
     lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
     lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
-    # 前後の空白を調整
-    lst_cp = scan_operators_space(lst_cp)
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
     lst_cp = lst_dic['lst']
     def_blank_num = lst_dic['def-blank']
     class_blank_num = lst_dic['class-blank']
-    lst_cp = scan_naming_method_class(lst_cp, op['naming_check'])
-    
+    lst_dic = scan_naming_method_class(lst_cp, op['naming_check'])
+    lst_cp = lst_dic['lst']
+    method_naming = lst_dic['method_naming']
+    class_naming = lst_dic['class_naming']
+    # 前後の空白を調整
+    lst_cp = scan_operators_space(lst_cp, method_naming, class_naming)
     # 文字数警告
     lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
     lst_cp = lst_dic['lst']
@@ -864,7 +897,7 @@ def lambda_handler(event, context):
     
     INFO_MES_LIST = [
       '"""©trim 整形実行後ファイル\n',
-      indent + '・空白整形の文字数設定 - ',
+      indent + '・空白整形の設定 - ',
       indent * 2 + f'関数: {def_blank_num}箇所\n',
       indent * 2 + f'クラス: {class_blank_num}箇所\n',
       indent + '・行あたりの文字数設定 - ',
