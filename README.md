@@ -159,6 +159,18 @@
     - インデントの調整(ユーザの設定値やタブ文字を半角スペース変換)
     - 行前後のインデント値とスタックを用いて、コードブロックのネストを表現
     
+    ```python
+     # Wrong(タブ2字になっている)
+     def AddBox():
+            a = 2
+            b = 3
+     
+     # Correct(タブ文字:4字, インデント:半角4字)
+     def AddBox():
+         a = 2
+         b = 3
+    ```
+    
 - [PEP8準拠] 関数/クラスの整形、命名規則条件に沿っているか確認
     - shaper.py/scan_format_method_class・scan_operators_space
     <考慮した事>
