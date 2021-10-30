@@ -15,8 +15,12 @@
   },
   "main": "background.js",
   "dependencies": {
+    "axios": "^0.24.0",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "markdown-it-vue": "^1.1.6",
+    "prismjs": "^1.25.0",
+    "vue": "^2.6.11",
+    "vue-axios": "^3.3.7"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
