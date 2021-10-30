@@ -146,6 +146,9 @@
 - バックエンド
     - Python
  
+ 
+ ### 技術構成
+ <img src="https://github.com/jphacks/D_2109/wiki/images/trim_drawio.png" />
 
 ### 独自技術
 #### ハッカソンで開発した独自機能・技術
