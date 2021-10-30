@@ -1275,7 +1275,7 @@ def lambda_handler(event, context):
     # 行間の調整
     lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
 
-    f = open('myfile.py', 'w') 
+    f = open('/output/myfile.py', 'w') 
     f.writelines(lst_cp)
     f.close()
 
@@ -1289,7 +1289,7 @@ def lambda_handler(event, context):
     return lst_cp
 
 
-fileobj = open("def_sample_success.py", "r", encoding="utf_8")
+fileobj = open("/input/dirty_code.py", "r", encoding="utf_8")
 lst = []
 while True:
   line = fileobj.readline()
