@@ -2,12 +2,14 @@ import json
 import re
 import traceback
 import keyword
-from botocore.vendored import requests
+import urllib.request
+from constants import STANDARD_LIB
 
 # ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
 #  'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for',
 #  'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not',
 #  'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
+
 
 REJEX_METHOD_NAME = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*):"
 REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*)->([ |\t]*)(\w+)([ |\t]*):"
@@ -851,269 +853,104 @@ def scan_operators_space(lst, method_naming, class_naming):
     lst_cp.append(check_operators_space(line, method_naming, class_naming))
   return lst_cp
 
-# 3groupに分割 + アルファベット順にソート
-def group_sort_import(lines, op_import):
-    if not (op_import['sorting'] or op_import['grouping']):
-      return lines
-    
-    # 3groupに分割 + アルファベット順にソート
+
+# 3groupに分割 (ソートなし)
+def group_import(lines):
     import_group1 = []
     import_group2 = []
     import_group3 = []
-
-    import_lines = [line for line in lines if (line.startswith('import'))]
-    from_lines = [line for line in lines if (line.startswith('from'))]
-    not_import_lines = [line for line in lines if not ((line.startswith('import')) or (line.startswith('from')))]
-
-    # 198個のpython 標準ライブラリ
-    standard_lib = ['string',
-    're',
-    'difflib',
-    'textwrap',
-    'unicodedata',
-    'stringprep',
-    'readline',
-    'rlcompleter',
-    'struct',
-    'codecs',
-    'datetime',
-    'zoneinfo',
-    'calendar',
-    'collections',
-    'heapq',
-    'bisect',
-    'array',
-    'weakref',
-    'types',
-    'copy',
-    'pprint',
-    'reprlib',
-    'enum',
-    'graphlib',
-    'numbers',
-    'math',
-    'cmath',
-    'decimal',
-    'fractions',
-    'random',
-    'statistics',
-    'itertools',
-    'functools',
-    'operator',
-    'pathlib',
-    'os',
-    'fileinput',
-    'stat',
-    'filecmp',
-    'tempfile',
-    'glob',
-    'fnmatch',
-    'linecache',
-    'shutil',
-    'pickle',
-    'copyreg',
-    'shelve',
-    'marshal',
-    'dbm',
-    'sqlite',
-    'zlib',
-    'gzip',
-    'bz',
-    'lzma',
-    'zipfile',
-    'tarfile',
-    'csv',
-    'configparser',
-    'netrc',
-    'xdrlib',
-    'plistlib',
-    'hashlib',
-    'hmac',
-    'secrets',
-    'io',
-    'time',
-    'argparse',
-    'getopt',
-    'logging',
-    'getpass',
-    'curses',
-    'platform',
-    'errno',
-    'ctypes',
-    'threading',
-    'multiprocessing',
-    'concurrent',
-    'subprocess',
-    'sched',
-    'queue',
-    'contextvars',
-    'asyncio',
-    'socket',
-    'ssl',
-    'select',
-    'selectors',
-    'asyncore',
-    'asynchat',
-    'signal',
-    'mmap',
-    'email',
-    'json',
-    'mailcap',
-    'mailbox',
-    'mimetypes',
-    'base',
-    'binhex',
-    'binascii',
-    'quopri',
-    'uu',
-    'html',
-    'xml',
-    'webbrowser',
-    'cgi',
-    'cgitb',
-    'wsgiref',
-    'urllib',
-    'http',
-    'ftplib',
-    'poplib',
-    'imaplib',
-    'nntplib',
-    'smtplib',
-    'smtpd',
-    'telnetlib',
-    'uuid',
-    'socketserver',
-    'xmlrpc',
-    'ipaddress',
-    'audioop',
-    'aifc',
-    'sunau',
-    'wave',
-    'chunk',
-    'colorsys',
-    'imghdr',
-    'sndhdr',
-    'ossaudiodev',
-    'gettext',
-    'locale',
-    'turtle',
-    'cmd',
-    'shlex',
-    'tkinter',
-    'typing',
-    'pydoc',
-    'doctest',
-    'unittest',
-    'test',
-    'bdb',
-    'faulthandler',
-    'pdb',
-    'timeit',
-    'trace',
-    'tracemalloc',
-    'distutils',
-    'ensurepip',
-    'venv',
-    'zipapp',
-    'sys',
-    'sysconfig',
-    'builtins',
-    'warnings',
-    'dataclasses',
-    'contextlib',
-    'abc',
-    'atexit',
-    'traceback',
-    'gc',
-    'inspect',
-    'site',
-    'code',
-    'codeop',
-    'zipimport',
-    'pkgutil',
-    'modulefinder',
-    'runpy',
-    'importlib',
-    'ast',
-    'symtable',
-    'token',
-    'keyword',
-    'tokenize',
-    'tabnanny',
-    'pyclbr',
-    'py',
-    'compileall',
-    'dis',
-    'pickletools',
-    'msilib',
-    'msvcrt',
-    'winreg',
-    'winsound',
-    'posix',
-    'pwd',
-    'spwd',
-    'grp',
-    'crypt',
-    'termios',
-    'tty',
-    'pty',
-    'fcntl',
-    'pipes',
-    'resource',
-    'nis',
-    'syslog',
-    'optparse',
-    'imp']
+    print(lines[:10])
+    import_lines = [line for line in lines if (line.strip().startswith('import'))]
+    from_lines = [line for line in lines if (line.strip().startswith('from'))]
+    print(import_lines)
+    print(from_lines)
+    not_import_lines = [
+        line for line in lines if not (
+            (line.startswith('import')) or (
+                line.startswith('from')))]
 
     base_url = 'https://pypi.org/project/'
 
     for line in import_lines:
-      lib = re.sub('import ([a-z_]*)(\.)*.*','\\1',line)
-      url = base_url + lib
-      res = requests.get(url)
-      #print(res)
-      # lib = re.match('import (\w)* | from (\w)*',line)
-      #print(lib)
-      # 標準ライブラリの判別
-      if lib in standard_lib:  
+        lib = re.sub('import ([a-z_]*)(\\.)*.*', '\\1', line)
+        url = base_url + lib
+        #res = requests.get(url)
+        req = urllib.request.Request(url, method='GET')
+        
+        # 標準ライブラリの判別
+        if lib.strip() in STANDARD_LIB:  
           import_group1.append(line)
-
-      # third_party ライブラリの判別
-      elif res.status_code == 200:
+          continue
+              
+        try:
+          res = urllib.request.urlopen(req)
+          # third_party ライブラリの判別
           import_group2.append(line)
-
-      #その他のライブラリ
-      else:
+        except Exception:
+          #その他のライブラリ
           import_group3.append(line)
     
+    print(f"import1: {import_group1}")
+    print(f"import2: {import_group2}")
+    print(f"import3: {import_group3}")
     for line in from_lines:
-      lib = re.sub('from ([a-z_]*)(\.)*.*','\\1',line)
-      url = base_url + lib
-      res = requests.get(url)
-      #print(res)
-      # lib = re.match('import (\w)* | from (\w)*',line)
-      #print(lib)
-      # 標準ライブラリの判別
-      if lib in standard_lib:  
+        print(line)
+        lib = re.sub('from ([a-z_]*)(\\.)*.*', '\\1', line)
+        url = base_url + lib
+        #res = requests.get(url)
+        req = urllib.request.Request(url, method='GET')
+        
+        # 標準ライブラリの判別
+        if lib.strip() in STANDARD_LIB:  
           import_group1.append(line)
-
-      # third_party ライブラリの判別
-      elif res.status_code == 200:
+          continue
+        
+        try:
+          res = urllib.request.urlopen(req)
+          # third_party ライブラリの判別
           import_group2.append(line)
-
-      #その他のライブラリ
-      else:
+        except Exception:
+          #その他のライブラリ
           import_group3.append(line)
-      
-    import_from_lines = sorted(import_group1) + [''] + sorted(import_group2) + [''] + sorted(import_group3) + ['']
-    sorted_lines = import_from_lines + not_import_lines
+    
+    print(f"from1: {import_group1}")
+    print(f"from2: {import_group2}")
+    print(f"from3: {import_group3}")
+    import_from_lines = import_group1 + [''] + import_group2 + [''] + import_group3 + ['']
+    group_lines = import_from_lines + not_import_lines
 
-    #print(import_group1)
-    #print(import_group2)
-    #print(import_group3)
-    #print(sorted_lines)
+    return group_lines
 
-    return sorted_lines
+
+# 3groupに分割なし + アルファベット順にソート
+def sort_import(lines):
+  import_lines = [line for line in lines if (line.startswith('import'))]
+  from_lines = [line for line in lines if (line.startswith('from'))]
+  not_import_lines = [
+      line for line in lines if not (
+          (line.startswith('import')) or (
+              line.startswith('from')))]
+
+  import_from_lines = sorted(from_lines) + sorted(import_lines) + ['']
+  sorted_lines = import_from_lines + not_import_lines
+
+  return sorted_lines
+
+
+# 3groupに分割 + アルファベット順にソート
+def group_sort_import(lines, op_import):
+    print(lines[:10])
+    if not (op_import['sorting'] or op_import['grouping']):
+      return lines
+    # ソート判定
+    if op_import['sorting']:
+      lines = sort_import(lines)
+    # グルーピング判定
+    if op_import['grouping']:
+      lines = group_import(lines)
+    if op_import['sorting'] or op_import['grouping']:
+      lines.insert(0, '# [trim] Info: import部に対し、整形を行いました.') 
+    return lines
 
 def make_ss(flag_snake, flag_cap):
   ss = ' '
@@ -1127,8 +964,8 @@ def make_ss(flag_snake, flag_cap):
   return ss
 
 def lambda_handler(event, context):
-    #body_dict = json.loads(event['body'])
-    body_dict = event['body']
+    print(event)
+    body_dict = json.loads(event['body'])
     op = body_dict['op']
     ##print(body_dict)
 
@@ -1143,7 +980,7 @@ def lambda_handler(event, context):
       return {
         'statusCode': 200,
         'body': json.dumps({
-            'code_lst': compile_dic['error']
+            'code_lst': [compile_dic['error']]
           })
       }
     
@@ -1275,94 +1112,29 @@ def lambda_handler(event, context):
     # 行間の調整
     lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
 
-    f = open('/output/myfile.py', 'w') 
-    f.writelines(lst_cp)
-    f.close()
-
     # TODO implement
-    #return {
-    #  'statusCode': 200,
-    #  'body': json.dumps({
-    #      'code_lst': lst_cp
-    #    })
-    #}
-    return lst_cp
+    return {
+      'statusCode': 200,
+      'body': json.dumps({
+          'code_lst': lst_cp
+        })
+    }
 
-
-fileobj = open("/input/dirty_code.py", "r", encoding="utf_8")
+# ローカルのみ
+fileobj = open("input/dirty_code.py", "r", encoding="utf_8")
 lst = []
+event = {}
 while True:
   line = fileobj.readline()
   if line:
       lst.append(line)
   else:
-      break
-
-json = {
-    "body": {
-      "code_lst": lst,
-      "op": {
-        'style_check': {
-          # classや関数、演算子前後のフォーマット
-          'blank_format': {
-            'action': True, # 強くTrueを推奨
-          },
-          # indent設定
-          'indent': {
-            'type': ' ', 
-            'num': 4,
-            'tab_num': 4
-          },
-          # 1行あたりの文字数
-          'count_word': {
-            'action': True,
-            'length': 90
-          },
-          # 行間
-          'line_space': {
-            'class_or_global_func': {
-              'action': True,
-            },
-            'method': {
-              'action': True,
-            }
-          }
-        },
-        'naming_check': {
-          'class_case': {
-            'snake': False,
-            'CapWords': True
-          },
-          'method_case': {
-            'snake': True,
-            'CapWords': False
-          },
-          'value_case': {
-            'snake': True,
-            'CapWords': True
-          }
-        },
-        'import_check': {
-          'grouping': True,
-          'sorting': True
-        }
-      }
-    }
-}
-
-"""
-以下どちらかを必ず選択
-'indent': {
-          'type': '\t', 
-          'tab_num': 4
-        }
-
-'indent': {
-          'type': ' ', 
-          'num': 4,
-          'tab_num': 4
-        }
-"""
-
-lambda_handler(json, None)
-
+    break
+with open('rule.json') as json_data:
+  op = json.load(json_data)
+  # bodyを文字列として送る(POST通信を想定)
+  event['body'] = json.dumps({
+    'code_lst': lst,
+    'op': op
+  })
+  lambda_handler((event), None)
