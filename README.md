@@ -154,6 +154,7 @@
 
 - [PEP8準拠] インデントの調整
     - shaper.py/scan_indent_config
+    
     ＜考慮した事＞
     - 末尾文字の削除
     - インデントの調整(ユーザの設定値やタブ文字を半角スペース変換)
@@ -173,6 +174,7 @@
     
 - [PEP8準拠] 関数/クラスの整形、命名規則条件に沿っているか確認
     - shaper.py/scan_format_method_class・scan_operators_space
+    
     <考慮した事>
     - 先頭の空白文字の記憶によりインデントが崩れないようにする
     - 関数・クラスが取り得るワードパターンを正規表現で検知(関数だと戻り値があるパターンなどがあり、それも考慮している)
@@ -193,11 +195,33 @@
 
 - [PEP8準拠] 変数が命名規則条件に沿っているか確認
     - shaper.py/scan_naming_value
+    
+    <考慮した事>
+    - 関数・クラス・文字列を正規表現により無視する
+    - 演算子や特殊文字でsplitする
+    - 残ったワードから予約語を取り除くことで変数のみを抽出
+
+    ```python
+    # Wrong
+    word_Count = 2
+    
+    # Correct(snakeのみ許容)
+    # [trim] Warning: 変数名に大文字は含められません.
+    word_Count = 2
+    ```
 
 - [オリジナル] pythonコードをコンパイル
     - compile_test.py
-
     
+    ```python
+    Traceback (most recent call last):
+      File "/var/task/lambda_function.py", line 279, in is_comile_to_dic
+        compile(line, '', 'exec')
+      File "<string>", line 9
+        a=3
+    IndentationError: unexpected indent
+    ```
+
 * 独自で開発したものの内容をこちらに記載してください
 * 特に力を入れた部分をファイルリンク、またはcommit_idを記載してください。
 
