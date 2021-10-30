@@ -1,6 +1,7 @@
 # <img style="width:20px" src="./public/favicon.png"> trim</dvi>
 
-[![IMAGE ALT TEXT HERE](https://github.com/jphacks/D_2109/wiki/images/lp.png)](https://www.youtube.com/watch?v=LUPQFB4QyVo)
+## 紹介動画 (下記画像をクリック！)
+[![IMAGE ALT TEXT HERE](https://github.com/jphacks/D_2109/wiki/images/lp.png)](https://www.youtube.com/watch?v=b0qmjrAcZtw)
 
 ## デモ
 
