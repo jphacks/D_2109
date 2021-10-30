@@ -195,7 +195,7 @@
     ```
 
 - [PEP8準拠] 変数が命名規則条件に沿っているか確認
-    - shaper.py/scan_naming_value
+    - scan_naming_value.py : [56f357ab40a4f3812523ee5bddf08e64f60dc612](https://github.com/jphacks/D_2109/commit/56f357ab40a4f3812523ee5bddf08e64f60dc612)
     
     <考慮した事>
     - 関数・クラス・文字列を正規表現により無視する
@@ -212,7 +212,7 @@
     ```
 
 - [オリジナル] pythonコードをコンパイル
-    - compile_test.py
+    - compile_test.py : [8076e361631e805b7337455852f2f29de736cca9](https://github.com/jphacks/D_2109/commit/8076e361631e805b7337455852f2f29de736cca9)
     
     ```python
     Traceback (most recent call last):
