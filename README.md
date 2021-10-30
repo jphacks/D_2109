@@ -2,8 +2,14 @@
 
 [![IMAGE ALT TEXT HERE](https://github.com/jphacks/D_2109/wiki/images/lp.png)](https://www.youtube.com/watch?v=LUPQFB4QyVo)
 
+## デモ
+
+[![IMAGE ALT TEXT HERE](https://github.com/jphacks/D_2109/wiki/images/trim_demo_play.png)](https://youtu.be/LZ33qJSdBPs)
+
+
 ## 製品概要
 <span style="font-weight:bold">ディベロッパー × Tech</span>
+
 <img src="https://github.com/jphacks/D_2109/wiki/images/start_moc.png" />
 
 ### 背景(製品開発のきっかけ、課題等）
