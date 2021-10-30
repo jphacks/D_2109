@@ -101,7 +101,7 @@
     ```
 
 - [PEP8準拠] import部(3グループに分割)
-    - group_sort_import.py/group_import
+    - group_sort_import.py/group_import :  [5f6f5a784a83f0acecb405397202b36cf519b40a](https://github.com/jphacks/D_2109/commit/5f6f5a784a83f0acecb405397202b36cf519b40a)
     1.  Python の標準ライブラリ
     2.  サードパーティのライブラリ (今回は、PyPIに登録されているライブラリをhttpリクエストにより検出)
     3.  自作ライブラリなどのローカルライブラリ
@@ -125,11 +125,11 @@
     import local_module
     ```
     
-- [オリジナル] import部(アルファベット順ソート)
-     - group_sort_import.py/sort_import
+- [オリジナル] import部(アルファベット順ソート) 
+     - group_sort_import.py/sort_import :  [fe80c75e10c9e6805fd122e07607f7d2d6fd1980](https://github.com/jphacks/D_2109/commit/fe80c75e10c9e6805fd122e07607f7d2d6fd1980)
 
 - [PEP8準拠] 1行がX文字を超える場合は、改行警告 
-    - line_checkcount.py
+    - line_checkcount.py : [9a45cf15e4f0285671d867ec89803815c6292f73](https://github.com/jphacks/D_2109/commit/9a45cf15e4f0285671d867ec89803815c6292f73)
 
     ```python
         # [trim] Warning: 1行あたりの行数は最大{op_count_word["length"]}文字です.適切な位置で折り返してください.
@@ -137,7 +137,7 @@
     ```
 
 - [PEP8準拠] 演算子の前後に空白文字を1文字を追加
-    - check_operators_space.py
+    - check_operators_space.py :  [9862616d33690dd0a98bc6e3ee42324cd7fa4973](https://github.com/jphacks/D_2109/commit/9862616d33690dd0a98bc6e3ee42324cd7fa4973)
     
     ＜注意した例外のパターン＞
     - def, class の引数には適用しない
