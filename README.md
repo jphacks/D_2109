@@ -89,7 +89,7 @@
     - commit_id : [07c2f51a48ced98d10e032d0a3968f464e8b3a8e](https://github.com/jphacks/D_2109/commit/07c2f51a48ced98d10e032d0a3968f464e8b3a8e)
 
 - [PEP8準拠] import部(1行に複数個のインポートをしてる場合に分割)
-    - split_import.py/
+    - split_import.py
 
     ```python
     # Wrong
@@ -153,8 +153,33 @@
     ```
 
 - [PEP8準拠] インデントの調整
-    - commit_id : 
+    - shaper.py/scan_indent_config
+    ＜考慮した事＞
+    - 末尾文字の削除
+    - インデントの調整(ユーザの設定値やタブ文字を半角スペース変換)
+    - 行前後のインデント値とスタックを用いて、コードブロックのネストを表現
+    
+- [PEP8準拠] 関数/クラスの整形、命名規則条件に沿っているか確認
+    - shaper.py/scan_format_method_class・scan_operators_space
+    <考慮した事>
+    - 先頭の空白文字の記憶によりインデントが崩れないようにする
+    - 関数・クラスが取り得るワードパターンを正規表現で検知(関数だと戻り値があるパターンなどがあり、それも考慮している)
+    - 上記正規表現から関数名・クラス名の取得
+    - 関数・クラス部の空白を調整
+    - 関数の仮引数部の整形
+    
+    ```python
+    # Wrong
+    def     Add_box     (box, a  = 2,   b) ->None   :
+        pass
+    
+    # Correct(CapWordsのみ許容)
+    # [trim] Warning: クラス名にアンダーバーは含められません.
+    def Add_box (box, a=2, b) -> None:
+        pass
 
+- [PEP8準拠] 変数が命名規則条件に沿っているか確認
+    - shaper.py/
 
 - [オリジナル] pythonコードをコンパイル
     - compile_test.py
