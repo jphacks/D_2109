@@ -153,7 +153,7 @@
     ```
 
 - [PEP8準拠] インデントの調整
-    - shaper.py/scan_indent_config
+    - scan_indent_config.py : [45ce98f11c8fc030de1fb04ea6ce49926e974061](https://github.com/jphacks/D_2109/commit/45ce98f11c8fc030de1fb04ea6ce49926e974061)
     
     ＜考慮した事＞
     - 末尾文字の削除
@@ -173,7 +173,8 @@
     ```
     
 - [PEP8準拠] 関数/クラスの整形、命名規則条件に沿っているか確認
-    - shaper.py/scan_format_method_class・scan_operators_space
+    - scan_format_method_class.py : [26d16c81cba66085551d9f23720bd62a4fca3901](https://github.com/jphacks/D_2109/commit/26d16c81cba66085551d9f23720bd62a4fca3901) 
+    - scan_operators_space.py : [6f0da59dde2bbb70ff3845658fb464d3ea5316ce](https://github.com/jphacks/D_2109/commit/6f0da59dde2bbb70ff3845658fb464d3ea5316ce)
     
     <考慮した事>
     - 先頭の空白文字の記憶によりインデントが崩れないようにする
