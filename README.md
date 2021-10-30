@@ -210,6 +210,38 @@
     # [trim] Warning: 変数名に大文字は含められません.
     word_Count = 2
     ```
+    
+- [PEP8準拠] クラス・関数ブロックの上下の空白行の行数を確認・修正
+    - blank_lines.py : [2804f616e082b1e876af251292f6a404e5af394d](https://github.com/jphacks/D_2109/commit/2804f616e082b1e876af251292f6a404e5af394d)
+    
+    <考慮した事>
+    - 正規表現を用いた独自のアルゴリズムで関数・クラスブロックを認識(returnがなくても認識可能)
+    - PEP8に基づき、グローバル関数・クラスについてはブロックの上下2行、ローカル関数についてはブロックの上下1行に空白が入るよう調整
+    - 関数・クラスの開始行の一つ上のコメント行は無視するよう実装
+
+    ```python
+    # Wrong
+    def sample_func():
+        return
+    Class SampleClass:
+        a = 1
+        
+        
+        
+        def sample_method():
+            print(a)    
+    
+    # Correct(snakeのみ許容)
+    def sample_func():
+        return
+        
+        
+    Class SampleClass:
+        a = 1
+     
+        def sample_method():
+            print(a)    
+    ```
 
 - [オリジナル] pythonコードをコンパイル
     - compile_test.py : [8076e361631e805b7337455852f2f29de736cca9](https://github.com/jphacks/D_2109/commit/8076e361631e805b7337455852f2f29de736cca9)
