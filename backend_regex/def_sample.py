@@ -1,3 +1,11 @@
+import frjaeuisdilfj
+import os
+import numpy
+from tqdm import tqdm
+from adeafuhvfuad import kuvfhasedil
+import urllib
+import pandas
+
 a=3
 v=2
 def a(a,b, c   = 2)     ->  int:

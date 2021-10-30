@@ -2,7 +2,7 @@ import json
 import re
 import traceback
 import keyword
-import requests
+from botocore.vendored import requests
 
 # ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
 #  'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for',
@@ -1132,19 +1132,21 @@ def lambda_handler(event, context):
     op = body_dict['op']
     ##print(body_dict)
 
+    # 空行をきれいにする
+    lst_cp1 = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
+
     # compileが通るか確認
-    compile_dic = is_comile_to_dic(body_dict['code_lst'])
+    lst_cp = list(map(lambda x: x + '\n' if not x.endswith('\n') else x , lst_cp1))
+    compile_dic = is_comile_to_dic(lst_cp)
     if not compile_dic['flag']:
       #print(compile_dic['error'])
       return {
-        'statusCode': 400,
+        'statusCode': 200,
         'body': json.dumps({
-            'error': compile_dic['error']
+            'code_lst': compile_dic['error']
           })
       }
     
-    # 空行をきれいにする
-    lst_cp = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
     lst_cp = group_sort_import(lst_cp, op['import_check'])
     lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
