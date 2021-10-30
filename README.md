@@ -231,7 +231,7 @@
         def sample_method():
             print(a)    
     
-    # Correct(snakeのみ許容)
+    # Correct
     def sample_func():
         return
         
