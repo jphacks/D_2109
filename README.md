@@ -165,7 +165,7 @@
             a = 2
             b = 3
      
-     # Correct(タブ文字:4字, インデント:半角4字)
+     # Correct(タブ文字:4字扱い, インデント:半角4字)
      def AddBox():
          a = 2
          b = 3
@@ -189,9 +189,10 @@
     # [trim] Warning: クラス名にアンダーバーは含められません.
     def Add_box (box, a=2, b) -> None:
         pass
+    ```
 
 - [PEP8準拠] 変数が命名規則条件に沿っているか確認
-    - shaper.py/
+    - shaper.py/scan_naming_value
 
 - [オリジナル] pythonコードをコンパイル
     - compile_test.py
