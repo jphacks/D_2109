@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="115" height="71" viewBox="0 0 115 71">
+  <g id="alphabet_small" transform="translate(-648 -327.366)">
+    <rect id="長方形_587" data-name="長方形 587" width="115" height="71" rx="8" transform="translate(648 327.366)" fill="#3b3b3b"/>
+    <text id="Apple" transform="translate(662 347.366)" fill="#e55c6e" font-size="15" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.085em"><tspan x="0" y="0">A</tspan><tspan y="0" fill="#fff">pple</tspan></text>
+    <text id="Banana" transform="translate(662 368.366)" fill="#f5f397" font-size="15" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.085em"><tspan x="0" y="0">B</tspan><tspan y="0" fill="#fff">anana</tspan></text>
+    <text id="Cat" transform="translate(662 389.366)" fill="#92d4c4" font-size="15" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.085em"><tspan x="0" y="0">C</tspan><tspan y="0" fill="#fff">at</tspan></text>
+    <g id="グループ_2222" data-name="グループ 2222" transform="translate(743.435 346.994)">
+      <path id="多角形_14" data-name="多角形 14" d="M2.106,1.789a1,1,0,0,1,1.789,0L5.276,4.553A1,1,0,0,1,4.382,6H1.618A1,1,0,0,1,.724,4.553Z" transform="translate(5.565 34.372) rotate(180)" fill="#fff"/>
+      <line id="線_19" data-name="線 19" y2="30.553" transform="translate(2.619)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2.3"/>
+    </g>
+    <path id="パス_27408" data-name="パス 27408" d="M2.541-2.32a2.817,2.817,0,0,0,1.808-.792h.043L4.5-2.47H5.782v-3.5C5.782-7.7,5-8.61,3.482-8.61a4.785,4.785,0,0,0-2.5.792l.567,1.038a3.384,3.384,0,0,1,1.647-.567c.738,0,.995.449,1.027,1.038C1.8-6.053.765-5.38.765-4.1A1.7,1.7,0,0,0,2.541-2.32Zm.513-1.23c-.46,0-.792-.2-.792-.674,0-.535.492-.941,1.958-1.123v1.209A1.628,1.628,0,0,1,3.054-3.55Z" transform="translate(742.625 345.213)" fill="#fff"/>
+    <path id="パス_27409" data-name="パス 27409" d="M.615-2.41H5.354V-3.651H2.573l2.685-3.9V-8.4H.915v1.241H3.3L.615-3.255Z" transform="translate(743.014 391.506)" fill="#fff"/>
+  </g>
+</svg>

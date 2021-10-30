@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="115" height="71" viewBox="0 0 115 71">
+  <g id="snake_case" transform="translate(-842 -214.235)">
+    <rect id="長方形_596" data-name="長方形 596" width="115" height="71" rx="8" transform="translate(842 214.235)" fill="#3b3b3b"/>
+    <text id="my_code" transform="translate(856 249.603)" fill="#fff" font-size="18" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.06em"><tspan x="0" y="0">my</tspan><tspan y="0" fill="#fc9f81">_</tspan><tspan y="0">code</tspan></text>
+    <text id="snake_case-2" data-name="snake_case" transform="translate(871 268.235)" fill="#fc9f81" font-size="9" font-family="NotoSansCJKjp-Bold, Noto Sans CJK JP" font-weight="700" letter-spacing="0.085em"><tspan x="0" y="0">snake_case</tspan></text>
+  </g>
+</svg>
