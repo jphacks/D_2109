@@ -15,27 +15,16 @@ class MyStack_Indent:
         del self.stack[-1]  # リストから要素を削除する
         return result  # リスト末尾から取り出したデータを返送する
 
-# indent設定に合わせて\t=>' '*X文字にする
-def scan_indent_config(lst, op_indent):
-  INDENT_TAB_NUM = op_indent['tab_num']
-  if op_indent['type'] == '\t':
-    INDENT_NUM = op_indent['tab_num']
-  else:
-    INDENT_NUM = op_indent['num']
-  
-  # 末尾文字の削除
-  lst_cp = list(map(lambda x: x.rstrip(), lst))
 
-  # タブ文字を' '*INDENT_TAB_NUMに置き換え
-  lst_cp = list(map(lambda x: re.sub('\t', ' '*INDENT_TAB_NUM, x), lst_cp))
-  
+# 走査して、適切なインデントに調節していく
+def scan_indent_config(lst_cp, op_indent):
   stack_indent = MyStack_Indent(0)
   stack = MyStack_Indent(0)
+  INDENT_NUM = op_indent['tab_num'] if op_indent['type'] == '\t' else op_indent['num']
 
   bef = 0
   lst_after = []
   for row_no, line in enumerate(lst_cp, 1):
-      #print(line)
       str_line = line
       # もし空行ならindentをstack_indentのheadに合わせる
       if re.match(r"$ *^", str_line):

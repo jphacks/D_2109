@@ -1,38 +1,11 @@
 import json
 import re
-import traceback
-import keyword
-import urllib.request
-from constants import STANDARD_LIB
 
-# ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
-#  'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for',
-#  'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not',
-#  'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
-
-
-REJEX_METHOD_NAME = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*):"
-REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*)->([ |\t]*)(\w+)([ |\t]*):"
-REJEX_CLASS_NAME = "class([ |\t]*)(\w+)([ |\t]*)(\((.*)\))*([ |\t]*):"
-
-REJEX_STRING_DOUBLE = "\s*\".*\"\s*"
-REJEX_STRING_SINGLE = "\s*\'.*\'\s*"
-REJEX_COMMENT = "\s*#.*\s*\n\s*"
-
-TRIM_WARNING_NAMING_METHOD_ALL = "# [trim] Warning: 関数名に大文字とアンダーバーを同時に含められません."
-TRIM_WARNING_NAMING_METHOD_SNAKE = "# [trim] Warning: 関数名に大文字は含められません."
-TRIM_WARNING_NAMING_METHOD_CAPWORDS = "# [trim] Warning: 関数名にアンダーバーは含められません."
-
-TRIM_WARNING_NAMING_CLASS_ALL = "# [trim] Warning: クラス名に大文字とアンダーバーを同時に含められません."
-TRIM_WARNING_NAMING_CLASS_SNAKE = "# [trim] Warning: クラス名に大文字は含められません."
-TRIM_WARNING_NAMING_CLASS_CAPWORDS = "# [trim] Warning: クラス名にアンダーバーは含められません."
-
-TRIM_INFO_STYLE_BLANK_FALSE = "Info: PEP8に基づく、空白の整形設定を行う事を推奨します."
-TRIM_INFO_STYLE_IMPORT_GROUP = "# [trim] Info: グルーピング済みです."
-TRIM_INFO_STYLE_IMPORT_SORT = "# [trim] Info: アルファベットソート済みです."
-
-RESERVED_WORDS = keyword.kwlist
-OTHER_WORDS = ['Exception']
+from constants import *
+from method.is_comile_to_dic import is_comile_to_dic
+from method.import_part.split_import import split_import
+from method.import_part.group_sort_impot import sort_import
+from method.import_part.group_sort_impot import group_import
 
 # 括弧の中を整形
 def make_args(s_lst):
@@ -72,36 +45,16 @@ class MyStack_Indent:
         del self.stack[-1]  # リストから要素を削除する
         return result  # リスト末尾から取り出したデータを返送する
 
-# コンパイルが通るかどうかを確認
-def is_comile_to_dic(lst):
-  try:
-    line = ''.join(lst)
-    compile(line, '', 'exec')
-    return {'flag': True}
-  except Exception as e:
-      return {'flag': False, 'error': str(traceback.format_exc())}
 
-# indent設定に合わせて\t=>' '*X文字にする
-def scan_indent_config(lst, op_indent):
-  INDENT_TAB_NUM = op_indent['tab_num']
-  if op_indent['type'] == '\t':
-    INDENT_NUM = op_indent['tab_num']
-  else:
-    INDENT_NUM = op_indent['num']
-  
-  # 末尾文字の削除
-  lst_cp = list(map(lambda x: x.rstrip(), lst))
-
-  # タブ文字を' '*INDENT_TAB_NUMに置き換え
-  lst_cp = list(map(lambda x: re.sub('\t', ' '*INDENT_TAB_NUM, x), lst_cp))
-  
+# 走査して、適切なインデントに調節していく
+def scan_indent_config(lst_cp, op_indent):
   stack_indent = MyStack_Indent(0)
   stack = MyStack_Indent(0)
+  INDENT_NUM = op_indent['tab_num'] if op_indent['type'] == '\t' else op_indent['num']
 
   bef = 0
   lst_after = []
   for row_no, line in enumerate(lst_cp, 1):
-      #print(line)
       str_line = line
       # もし空行ならindentをstack_indentのheadに合わせる
       if re.match(r"$ *^", str_line):
@@ -846,6 +799,7 @@ def blank_lines(lst, opt):
 
 	return lst
 
+
 # 前後の空白を調整(走査)
 def scan_operators_space(lst, method_naming, class_naming):
   lst_cp = []
@@ -854,92 +808,8 @@ def scan_operators_space(lst, method_naming, class_naming):
   return lst_cp
 
 
-# 3groupに分割 (ソートなし)
-def group_import(lines):
-    import_group1 = []
-    import_group2 = []
-    import_group3 = []
-    print(lines[:10])
-    import_lines = [line for line in lines if (line.strip().startswith('import'))]
-    from_lines = [line for line in lines if (line.strip().startswith('from'))]
-    print(import_lines)
-    print(from_lines)
-    not_import_lines = [
-        line for line in lines if not (
-            (line.startswith('import')) or (
-                line.startswith('from')))]
-
-    base_url = 'https://pypi.org/project/'
-
-    for line in import_lines:
-        lib = re.sub('import ([a-z_]*)(\\.)*.*', '\\1', line)
-        url = base_url + lib
-        #res = requests.get(url)
-        req = urllib.request.Request(url, method='GET')
-        
-        # 標準ライブラリの判別
-        if lib.strip() in STANDARD_LIB:  
-          import_group1.append(line)
-          continue
-              
-        try:
-          res = urllib.request.urlopen(req)
-          # third_party ライブラリの判別
-          import_group2.append(line)
-        except Exception:
-          #その他のライブラリ
-          import_group3.append(line)
-    
-    print(f"import1: {import_group1}")
-    print(f"import2: {import_group2}")
-    print(f"import3: {import_group3}")
-    for line in from_lines:
-        print(line)
-        lib = re.sub('from ([a-z_]*)(\\.)*.*', '\\1', line)
-        url = base_url + lib
-        #res = requests.get(url)
-        req = urllib.request.Request(url, method='GET')
-        
-        # 標準ライブラリの判別
-        if lib.strip() in STANDARD_LIB:  
-          import_group1.append(line)
-          continue
-        
-        try:
-          res = urllib.request.urlopen(req)
-          # third_party ライブラリの判別
-          import_group2.append(line)
-        except Exception:
-          #その他のライブラリ
-          import_group3.append(line)
-    
-    print(f"from1: {import_group1}")
-    print(f"from2: {import_group2}")
-    print(f"from3: {import_group3}")
-    import_from_lines = import_group1 + [''] + import_group2 + [''] + import_group3 + ['']
-    group_lines = import_from_lines + not_import_lines
-
-    return group_lines
-
-
-# 3groupに分割なし + アルファベット順にソート
-def sort_import(lines):
-  import_lines = [line for line in lines if (line.startswith('import'))]
-  from_lines = [line for line in lines if (line.startswith('from'))]
-  not_import_lines = [
-      line for line in lines if not (
-          (line.startswith('import')) or (
-              line.startswith('from')))]
-
-  import_from_lines = sorted(from_lines) + sorted(import_lines) + ['']
-  sorted_lines = import_from_lines + not_import_lines
-
-  return sorted_lines
-
-
 # 3groupに分割 + アルファベット順にソート
 def group_sort_import(lines, op_import):
-    print(lines[:10])
     if not (op_import['sorting'] or op_import['grouping']):
       return lines
     # ソート判定
@@ -963,20 +833,28 @@ def make_ss(flag_snake, flag_cap):
     ss += s + "snake"
   return ss
 
+# 空行をきれいにする
+def strip_blank_line(code_lst: list) -> list:
+  return list(map(lambda x: x.strip() if x.strip() == '' else x, code_lst))
+
+# コード配列の各要素の行末に改行文字
+def add_newline_char(code_lst: list) -> list:
+  return list(map(lambda x: x + '\n' if not x.endswith('\n') else x , code_lst))
+
 def lambda_handler(event, context):
-    print(event)
     body_dict = json.loads(event['body'])
+    lst_cp = body_dict['code_lst']
     op = body_dict['op']
-    ##print(body_dict)
 
-    # 空行をきれいにする
-    lst_cp1 = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
+    INDENT_TAB_NUM = op['style_check']['indent']['tab_num']
 
+    # コード配列の各要素の行末に改行文字
+    lst_cp = add_newline_char(lst_cp)
+    
     # compileが通るか確認
-    lst_cp = list(map(lambda x: x + '\n' if not x.endswith('\n') else x , lst_cp1))
     compile_dic = is_comile_to_dic(lst_cp)
+
     if not compile_dic['flag']:
-      #print(compile_dic['error'])
       return {
         'statusCode': 200,
         'body': json.dumps({
@@ -984,7 +862,22 @@ def lambda_handler(event, context):
           })
       }
     
+    # 空行をきれいにする
+    lst_cp = strip_blank_line(lst_cp)
+
+    # 末尾空白文字の削除
+    lst_cp = list(map(lambda x: x.rstrip(), lst))
+
+    # タブ文字を' '*INDENT_TAB_NUMに置き換え
+    lst_cp = list(map(lambda x: re.sub('\t', ' '*INDENT_TAB_NUM, x), lst_cp))
+
+    # import部のスプリット
+    lst_cp = split_import(lst_cp)
+    
+    # import部のグルーピング・ソーティング
     lst_cp = group_sort_import(lst_cp, op['import_check'])
+
+    
     lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
     lst_cp = lst_dic['lst']
@@ -1111,6 +1004,10 @@ def lambda_handler(event, context):
         
     # 行間の調整
     lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
+
+    f = open('output/output.py', 'w') 
+    f.writelines(lst_cp)
+    f.close()
 
     # TODO implement
     return {

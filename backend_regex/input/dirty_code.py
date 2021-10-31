@@ -1,6 +1,7 @@
 import frjaeuisdilfj
-import os
+import os, sys
 import numpy
+# jfariegioare
 from tqdm import tqdm
 from adeafuhvfuad import kuvfhasedil
 import urllib
@@ -10,7 +11,9 @@ a=3
 v=2
 def a(a,b, c   = 2)     ->  int:
         pass
-def     add_box         (a      , b, c =    3)              :           
+def     add_box         (a      , b, c =    3)              :  
+  import pypi
+  import saskdopa, aeuhfiaw, urllib         
   ab=2
   a=3
   method      =      a         (ab,a)

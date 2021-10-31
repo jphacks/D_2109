@@ -1,3 +1,5 @@
+import keyword
+
 # 198個のpython 標準ライブラリ
 STANDARD_LIB = [
   'string',
@@ -199,3 +201,37 @@ STANDARD_LIB = [
   'optparse',
   'imp'
 ]
+
+REJEX_METHOD_NAME = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*):"
+REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*)->([ |\t]*)(\w+)([ |\t]*):"
+REJEX_CLASS_NAME = "class([ |\t]*)(\w+)([ |\t]*)(\((.*)\))*([ |\t]*):"
+
+REJEX_STRING_DOUBLE = "\s*\".*\"\s*"
+REJEX_STRING_SINGLE = "\s*\'.*\'\s*"
+REJEX_COMMENT = "\s*#.*\s*\n\s*"
+
+TRIM_WARNING_NAMING_METHOD_ALL = "# [trim] Warning: 関数名に大文字とアンダーバーを同時に含められません."
+TRIM_WARNING_NAMING_METHOD_SNAKE = "# [trim] Warning: 関数名に大文字は含められません."
+TRIM_WARNING_NAMING_METHOD_CAPWORDS = "# [trim] Warning: 関数名にアンダーバーは含められません."
+
+TRIM_WARNING_NAMING_CLASS_ALL = "# [trim] Warning: クラス名に大文字とアンダーバーを同時に含められません."
+TRIM_WARNING_NAMING_CLASS_SNAKE = "# [trim] Warning: クラス名に大文字は含められません."
+TRIM_WARNING_NAMING_CLASS_CAPWORDS = "# [trim] Warning: クラス名にアンダーバーは含められません."
+
+TRIM_INFO_STYLE_BLANK_FALSE = "Info: PEP8に基づく、空白の整形設定を行う事を推奨します."
+TRIM_INFO_STYLE_IMPORT_GROUP = "# [trim] Info: グルーピング済みです."
+TRIM_INFO_STYLE_IMPORT_SORT = "# [trim] Info: アルファベットソート済みです."
+
+TRIM_INPORT_COMMENT = [
+  '# [trim] Info: グルーピング済みです',
+  '# [trim] Info: アルファベットソート済みです'
+]
+
+RESERVED_WORDS = keyword.kwlist
+
+# ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
+#  'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for',
+#  'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not',
+#  'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
+
+OTHER_WORDS = ['Exception']
