@@ -3,8 +3,8 @@ import urllib.request
 from method.general import get_start_blank_num
 from constants import STANDARD_LIB, TRIM_INPORT_COMMENT
 
-def group_import(lines):
-    # 3groupに分割 (ソートなし)
+# 3groupに分割 (ソートなし)
+def group_import(lines: list) -> list:
     import_group1 = []
     import_group2 = []
     import_group3 = []
@@ -13,7 +13,7 @@ def group_import(lines):
     from_lines = []
     not_import_lines = []
     for line in lines:
-        if len(get_start_blank_num(line)) != 0:
+        if get_start_blank_num(line) != 0:
             not_import_lines.append(line)
             continue
         if line.startswith('import'):
@@ -70,12 +70,12 @@ def group_import(lines):
 
 
 # 3groupに分割なし + アルファベット順にソート
-def sort_import(lines):
+def sort_import(lines: list) -> list:
   import_lines = []
   from_lines = []
   not_import_lines = []
   for line in lines:
-    if len(get_start_blank_num(line)) != 0:
+    if get_start_blank_num(line) != 0:
       not_import_lines.append(line)
       continue
     if line.startswith('import'):
@@ -91,3 +91,18 @@ def sort_import(lines):
   sorted_lines = import_from_lines + not_import_lines
 
   return sorted_lines
+
+
+# 3groupに分割 + アルファベット順にソート
+def group_sort_import(lines: list, op_import: dict) -> list:
+  if not (op_import['sorting'] or op_import['grouping']):
+    return lines
+  # ソート判定
+  if op_import['sorting']:
+    lines = sort_import(lines)
+  # グルーピング判定
+  if op_import['grouping']:
+    lines = group_import(lines)
+  if op_import['sorting'] or op_import['grouping']:
+    lines.insert(0, '# [trim] Info: import部に対し、整形を行いました.') 
+  return lines

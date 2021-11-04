@@ -1,353 +1,13 @@
 import json
 import re
-import traceback
-import keyword
-import urllib.request
 
-# ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
-#  'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for',
-#  'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not',
-#  'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
-
-# 198個のpython 標準ライブラリ
-standard_lib = [
-  'string',
-  're',
-  'difflib',
-  'textwrap',
-  'unicodedata',
-  'stringprep',
-  'readline',
-  'rlcompleter',
-  'struct',
-  'codecs',
-  'datetime',
-  'zoneinfo',
-  'calendar',
-  'collections',
-  'heapq',
-  'bisect',
-  'array',
-  'weakref',
-  'types',
-  'copy',
-  'pprint',
-  'reprlib',
-  'enum',
-  'graphlib',
-  'numbers',
-  'math',
-  'cmath',
-  'decimal',
-  'fractions',
-  'random',
-  'statistics',
-  'itertools',
-  'functools',
-  'operator',
-  'pathlib',
-  'os',
-  'fileinput',
-  'stat',
-  'filecmp',
-  'tempfile',
-  'glob',
-  'fnmatch',
-  'linecache',
-  'shutil',
-  'pickle',
-  'copyreg',
-  'shelve',
-  'marshal',
-  'dbm',
-  'sqlite',
-  'zlib',
-  'gzip',
-  'bz',
-  'lzma',
-  'zipfile',
-  'tarfile',
-  'csv',
-  'configparser',
-  'netrc',
-  'xdrlib',
-  'plistlib',
-  'hashlib',
-  'hmac',
-  'secrets',
-  'io',
-  'time',
-  'argparse',
-  'getopt',
-  'logging',
-  'getpass',
-  'curses',
-  'platform',
-  'errno',
-  'ctypes',
-  'threading',
-  'multiprocessing',
-  'concurrent',
-  'subprocess',
-  'sched',
-  'queue',
-  'contextvars',
-  'asyncio',
-  'socket',
-  'ssl',
-  'select',
-  'selectors',
-  'asyncore',
-  'asynchat',
-  'signal',
-  'mmap',
-  'email',
-  'json',
-  'mailcap',
-  'mailbox',
-  'mimetypes',
-  'base',
-  'binhex',
-  'binascii',
-  'quopri',
-  'uu',
-  'html',
-  'xml',
-  'webbrowser',
-  'cgi',
-  'cgitb',
-  'wsgiref',
-  'urllib',
-  'http',
-  'ftplib',
-  'poplib',
-  'imaplib',
-  'nntplib',
-  'smtplib',
-  'smtpd',
-  'telnetlib',
-  'uuid',
-  'socketserver',
-  'xmlrpc',
-  'ipaddress',
-  'audioop',
-  'aifc',
-  'sunau',
-  'wave',
-  'chunk',
-  'colorsys',
-  'imghdr',
-  'sndhdr',
-  'ossaudiodev',
-  'gettext',
-  'locale',
-  'turtle',
-  'cmd',
-  'shlex',
-  'tkinter',
-  'typing',
-  'pydoc',
-  'doctest',
-  'unittest',
-  'test',
-  'bdb',
-  'faulthandler',
-  'pdb',
-  'timeit',
-  'trace',
-  'tracemalloc',
-  'distutils',
-  'ensurepip',
-  'venv',
-  'zipapp',
-  'sys',
-  'sysconfig',
-  'builtins',
-  'warnings',
-  'dataclasses',
-  'contextlib',
-  'abc',
-  'atexit',
-  'traceback',
-  'gc',
-  'inspect',
-  'site',
-  'code',
-  'codeop',
-  'zipimport',
-  'pkgutil',
-  'modulefinder',
-  'runpy',
-  'importlib',
-  'ast',
-  'symtable',
-  'token',
-  'keyword',
-  'tokenize',
-  'tabnanny',
-  'pyclbr',
-  'py',
-  'compileall',
-  'dis',
-  'pickletools',
-  'msilib',
-  'msvcrt',
-  'winreg',
-  'winsound',
-  'posix',
-  'pwd',
-  'spwd',
-  'grp',
-  'crypt',
-  'termios',
-  'tty',
-  'pty',
-  'fcntl',
-  'pipes',
-  'resource',
-  'nis',
-  'syslog',
-  'optparse',
-  'imp'
-]
-
-REJEX_METHOD_NAME = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*):"
-REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*)->([ |\t]*)(\w+)([ |\t]*):"
-REJEX_CLASS_NAME = "class([ |\t]*)(\w+)([ |\t]*)(\((.*)\))*([ |\t]*):"
-
-REJEX_STRING_DOUBLE = "\s*\".*\"\s*"
-REJEX_STRING_SINGLE = "\s*\'.*\'\s*"
-REJEX_COMMENT = "\s*#.*\s*\n\s*"
-
-TRIM_WARNING_NAMING_METHOD_ALL = "# [trim] Warning: 関数名に大文字とアンダーバーを同時に含められません."
-TRIM_WARNING_NAMING_METHOD_SNAKE = "# [trim] Warning: 関数名に大文字は含められません."
-TRIM_WARNING_NAMING_METHOD_CAPWORDS = "# [trim] Warning: 関数名にアンダーバーは含められません."
-
-TRIM_WARNING_NAMING_CLASS_ALL = "# [trim] Warning: クラス名に大文字とアンダーバーを同時に含められません."
-TRIM_WARNING_NAMING_CLASS_SNAKE = "# [trim] Warning: クラス名に大文字は含められません."
-TRIM_WARNING_NAMING_CLASS_CAPWORDS = "# [trim] Warning: クラス名にアンダーバーは含められません."
-
-TRIM_INFO_STYLE_BLANK_FALSE = "Info: PEP8に基づく、空白の整形設定を行う事を推奨します."
-TRIM_INFO_STYLE_IMPORT_GROUP = "# [trim] Info: グルーピング済みです."
-TRIM_INFO_STYLE_IMPORT_SORT = "# [trim] Info: アルファベットソート済みです."
-
-RESERVED_WORDS = keyword.kwlist
-OTHER_WORDS = ['Exception']
-
-# 括弧の中を整形
-def make_args(s_lst):
-  s_lst = re.sub('[\s]', '', s_lst)
-  lst = re.split(',', s_lst)
-  args = ''
-  for i, s in enumerate(lst):
-    if i == 0:
-      args += s
-      continue
-    args += ', ' + s
-  return args
-
-# スタックの定義(by 刀祢)
-class MyStack:
-    def __init__(self):
-        self.stack = []
-    def push(self, item):
-        self.stack.append(item)
-    def pop(self):
-        result = self.stack[-1]  # 末尾の要素を変数に取り出す
-        del self.stack[-1]  # リストから要素を削除する
-        return result  # リスト末尾から取り出したデータを返送する
-
-# スタックの定義
-class MyStack_Indent:
-    def __init__(self, n):
-        self.stack = [0]
-    def get_top(self):
-      return self.stack[-1]
-    def get_reverse_lst(self):
-        return reversed(self.stack)
-    def push(self, item):
-        self.stack.append(item)
-    def pop(self):
-        result = self.stack[-1]  # 末尾の要素を変数に取り出す
-        del self.stack[-1]  # リストから要素を削除する
-        return result  # リスト末尾から取り出したデータを返送する
-
-# コンパイルが通るかどうかを確認
-def is_comile_to_dic(lst):
-  try:
-    line = ''.join(lst)
-    compile(line, '', 'exec')
-    return {'flag': True}
-  except Exception as e:
-      return {'flag': False, 'error': str(traceback.format_exc())}
-
-# indent設定に合わせて\t=>' '*X文字にする
-def scan_indent_config(lst, op_indent):
-  INDENT_TAB_NUM = op_indent['tab_num']
-  if op_indent['type'] == '\t':
-    INDENT_NUM = op_indent['tab_num']
-  else:
-    INDENT_NUM = op_indent['num']
-  
-  # 末尾文字の削除
-  lst_cp = list(map(lambda x: x.rstrip(), lst))
-
-  # タブ文字を' '*INDENT_TAB_NUMに置き換え
-  lst_cp = list(map(lambda x: re.sub('\t', ' '*INDENT_TAB_NUM, x), lst_cp))
-  
-  stack_indent = MyStack_Indent(0)
-  stack = MyStack_Indent(0)
-
-  bef = 0
-  lst_after = []
-  for row_no, line in enumerate(lst_cp, 1):
-      #print(line)
-      str_line = line
-      # もし空行ならindentをstack_indentのheadに合わせる
-      if re.match(r"$ *^", str_line):
-          str_line = stack_indent.get_top() * ' '
-      aft = re.match(r" *", str_line).end()
-      
-      
-      #print(f"bef: {bef}")
-      #print(f"aft: {aft}")
-      
-      # コメント行は無視
-      if str_line.startswith("#"):
-          lst_after.append(str_line)
-          continue
-      if bef > aft:
-        for i, elem in enumerate(stack.get_reverse_lst()):
-            #print(elem)
-            if elem == aft:
-                #print(f"pop数: {i}")
-                # この時のiがpop数
-                for j in range(i):
-                    stack_indent.pop()
-                    #print(f"pop: {stack_indent.pop()}")
-                    stack.pop()
-      head = stack_indent.get_top()
-      if aft != head:
-          #print(f"head: {head}")
-          blank = head * ' '
-          # 適切な行頭空白文字を付加
-          str_line = blank+str_line.strip()
-      
-      if str_line.endswith(':'):
-          #print(f"先読み:{str_line}")
-          #printlst_cp[row_no])
-          stack_indent.push(head + INDENT_NUM)
-          # 1つ先読み
-          try:
-            stack.push(re.match(r" *", lst_cp[row_no]).end())
-          except Exception:
-            pass
-      ##printstack_indent.stack)
-      ##printstack.stack)
-      lst_after.append(str_line)
-      bef = aft
-  ##printlst_after)
-  return lst_after
+from constants import *
+from method.is_comile_to_dic import is_comile_to_dic
+from method.scan_indent_config import scan_indent_config
+from method.import_part.split_import import split_import
+from method.import_part.group_sort_impot import group_sort_import
+from method.general import strip_blank_line, add_newline_char, get_start_blank, make_args
+from cls.stack import Stack
 
 
 # 走査: 関数とクラスの整形
@@ -366,10 +26,9 @@ def scan_format_method_class(lst, op_format):
     str_line = line
 
     # 先頭の空白文字を取得
-    blank_str = re.match(r" *", line).end() * ' '
+    blank_str = get_start_blank(line)
 
     # 1行づつ正規表現にかける
-
     # 関数: 戻り値パターン -> 通常パターン
     sub_paterns_back = re.findall(REJEX_METHOD_NAME_BACK, line)
     if sub_paterns_back:
@@ -452,7 +111,7 @@ class ClassNaming(Naming):
         hit_class = sub_paterns[0][1]
         self.class_lst = hit_class
         # 行頭のインデントを取得
-        starts_blank = re.match(r" *", line).end() * ' '
+        starts_blank = get_start_blank(line)
         
         if self.get_capwords_flag() and self.get_snake_flag():
           # '_'と大文字が両方入っていたらおかしい
@@ -488,7 +147,7 @@ class MethodNaming(Naming):
         method = sub_paterns[0][1]
         self.method_lst.append(method)
         # 行頭のインデントを取得
-        starts_blank = re.match(r" *", line).end() * ' '
+        starts_blank = get_start_blank(line)
         
         if self.get_capwords_flag() and self.get_snake_flag():
           # '_'と大文字が両方入っていたらおかしい
@@ -535,7 +194,7 @@ class ValueNaming(Naming):
       words_lst = re.split(split_word, s)
       #print(words_lst)
       # 行頭のインデントを取得
-      starts_blank = re.match(r" *", line).end() * ' '
+      starts_blank = get_start_blank(line)
       #print(words_lst)
       for word in words_lst:
         if word == '':
@@ -609,7 +268,7 @@ def scan_style_count_word(lst, op_count_word):
   for line in lst:
     match_flag = bool(pattern.match(line))
     # 行頭のインデントを取得
-    starts_blank = re.match(r" *", line).end() * ' '
+    starts_blank = get_start_blank(line)
     # もし'/'で終わってたら状態を保存
     if match_flag:
       #print("match!!")
@@ -676,7 +335,7 @@ def check_operators_space(line: str, method_naming, class_naming):
         #print(n)
         #REJEX = "([\w=]+( {2,}))" * n
         # 行頭のインデントを取得
-        s = re.match(r" *", line).end() * ' '
+        s = get_start_blank(line)
         for i, st in enumerate(strip_str_lst):
           if i != len(strip_str_lst):
             s += st + ' '
@@ -703,8 +362,8 @@ def blank_lines(lst, opt):
 	SENTINEL = 1000000
 
 	### def・classブロックのサーチ ### 
-	stack_blank = MyStack()
-	stack_start_line = MyStack()
+	stack_blank = Stack()
+	stack_start_line = Stack()
 
 	line_glob = []
 	line_local = []
@@ -1046,6 +705,7 @@ def blank_lines(lst, opt):
 
 	return lst
 
+
 # 前後の空白を調整(走査)
 def scan_operators_space(lst, method_naming, class_naming):
   lst_cp = []
@@ -1053,104 +713,6 @@ def scan_operators_space(lst, method_naming, class_naming):
     lst_cp.append(check_operators_space(line, method_naming, class_naming))
   return lst_cp
 
-
-# 3groupに分割 (ソートなし)
-def group_import(lines):
-    import_group1 = []
-    import_group2 = []
-    import_group3 = []
-    print(lines[:10])
-    import_lines = [line for line in lines if (line.strip().startswith('import'))]
-    from_lines = [line for line in lines if (line.strip().startswith('from'))]
-    print(import_lines)
-    print(from_lines)
-    not_import_lines = [
-        line for line in lines if not (
-            (line.startswith('import')) or (
-                line.startswith('from')))]
-
-    base_url = 'https://pypi.org/project/'
-
-    for line in import_lines:
-        lib = re.sub('import ([a-z_]*)(\\.)*.*', '\\1', line)
-        url = base_url + lib
-        #res = requests.get(url)
-        req = urllib.request.Request(url, method='GET')
-        
-        # 標準ライブラリの判別
-        if lib.strip() in standard_lib:  
-          import_group1.append(line)
-          continue
-              
-        try:
-          res = urllib.request.urlopen(req)
-          # third_party ライブラリの判別
-          import_group2.append(line)
-        except Exception:
-          #その他のライブラリ
-          import_group3.append(line)
-    
-    print(f"import1: {import_group1}")
-    print(f"import2: {import_group2}")
-    print(f"import3: {import_group3}")
-    for line in from_lines:
-        print(line)
-        lib = re.sub('from ([a-z_]*)(\\.)*.*', '\\1', line)
-        url = base_url + lib
-        #res = requests.get(url)
-        req = urllib.request.Request(url, method='GET')
-        
-        # 標準ライブラリの判別
-        if lib.strip() in standard_lib:  
-          import_group1.append(line)
-          continue
-        
-        try:
-          res = urllib.request.urlopen(req)
-          # third_party ライブラリの判別
-          import_group2.append(line)
-        except Exception:
-          #その他のライブラリ
-          import_group3.append(line)
-    
-    print(f"from1: {import_group1}")
-    print(f"from2: {import_group2}")
-    print(f"from3: {import_group3}")
-    import_from_lines = import_group1 + [''] + import_group2 + [''] + import_group3 + ['']
-    group_lines = import_from_lines + not_import_lines
-
-    return group_lines
-
-
-# 3groupに分割なし + アルファベット順にソート
-def sort_import(lines):
-  import_lines = [line for line in lines if (line.startswith('import'))]
-  from_lines = [line for line in lines if (line.startswith('from'))]
-  not_import_lines = [
-      line for line in lines if not (
-          (line.startswith('import')) or (
-              line.startswith('from')))]
-
-  import_from_lines = sorted(from_lines) + sorted(import_lines) + ['']
-  sorted_lines = import_from_lines + not_import_lines
-
-  return sorted_lines
-
-
-# 3groupに分割 + アルファベット順にソート
-def group_sort_import(lines, op_import):
-    print(lines[:10])
-    if not (op_import['sorting'] or op_import['grouping']):
-      return lines
-    # ソート判定
-    if op_import['sorting']:
-      lines = sort_import(lines)
-    # グルーピング判定
-    if op_import['grouping']:
-      lines = group_import(lines)
-    if op_import['sorting'] or op_import['grouping']:
-      lines.insert(0, '# [trim] Info: import部に対し、整形を行いました.') 
-    return lines
 
 def make_ss(flag_snake, flag_cap):
   ss = ' '
@@ -1163,20 +725,21 @@ def make_ss(flag_snake, flag_cap):
     ss += s + "snake"
   return ss
 
+
 def lambda_handler(event, context):
     body_dict = json.loads(event['body'])
-    #body_dict = event['body']
+    lst_cp = body_dict['code_lst']
     op = body_dict['op']
-    ##print(body_dict)
 
-    # 空行をきれいにする
-    lst_cp1 = list(map(lambda x: x.strip() if x.strip() == '' else x, body_dict['code_lst']))
+    INDENT_TAB_NUM = op['style_check']['indent']['tab_num']
 
+    # コード配列の各要素の行末に改行文字
+    lst_cp = add_newline_char(lst_cp)
+    
     # compileが通るか確認
-    lst_cp = list(map(lambda x: x + '\n' if not x.endswith('\n') else x , lst_cp1))
     compile_dic = is_comile_to_dic(lst_cp)
+
     if not compile_dic['flag']:
-      #print(compile_dic['error'])
       return {
         'statusCode': 200,
         'body': json.dumps({
@@ -1184,12 +747,31 @@ def lambda_handler(event, context):
           })
       }
     
+    # 空行をきれいにする
+    lst_cp = strip_blank_line(lst_cp)
+
+    # 末尾空白文字の削除
+    lst_cp = list(map(lambda x: x.rstrip(), lst_cp))
+
+    # タブ文字を' '*INDENT_TAB_NUMに置き換え
+    lst_cp = list(map(lambda x: re.sub('\t', ' '*INDENT_TAB_NUM, x), lst_cp))
+
+    # import部のスプリット
+    lst_cp = split_import(lst_cp)
+    
+    # import部のグルーピング・ソーティング
     lst_cp = group_sort_import(lst_cp, op['import_check'])
+
+    # 走査して、適切なインデントに調節していく
     lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
+    
+
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
     lst_cp = lst_dic['lst']
     def_blank_num = lst_dic['def-blank']
     class_blank_num = lst_dic['class-blank']
+    
+    
     lst_dic = scan_naming_method_class(lst_cp, op['naming_check'])
     lst_cp = lst_dic['lst']
     method_naming = lst_dic['method_naming']
@@ -1312,6 +894,9 @@ def lambda_handler(event, context):
     # 行間の調整
     lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
 
+    """f = open('output/output.py', 'w') 
+    f.writelines(lst_cp)
+    f.close()"""
 
     # TODO implement
     return {
@@ -1320,4 +905,22 @@ def lambda_handler(event, context):
           'code_lst': lst_cp
         })
     }
-    
+
+# ローカルのみ
+"""fileobj = open("input/dirty_code.py", "r", encoding="utf_8")
+lst = []
+event = {}
+while True:
+  line = fileobj.readline()
+  if line:
+      lst.append(line)
+  else:
+    break
+with open('rule.json') as json_data:
+  op = json.load(json_data)
+  # bodyを文字列として送る(POST通信を想定)
+  event['body'] = json.dumps({
+    'code_lst': lst,
+    'op': op
+  })
+  lambda_handler((event), None)"""

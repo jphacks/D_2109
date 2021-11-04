@@ -3,104 +3,11 @@ import re
 
 from constants import *
 from method.is_comile_to_dic import is_comile_to_dic
+from method.scan_indent_config import scan_indent_config
 from method.import_part.split_import import split_import
-from method.import_part.group_sort_impot import sort_import
-from method.import_part.group_sort_impot import group_import
-
-# 括弧の中を整形
-def make_args(s_lst):
-  s_lst = re.sub('[\s]', '', s_lst)
-  lst = re.split(',', s_lst)
-  args = ''
-  for i, s in enumerate(lst):
-    if i == 0:
-      args += s
-      continue
-    args += ', ' + s
-  return args
-
-# スタックの定義(by 刀祢)
-class MyStack:
-    def __init__(self):
-        self.stack = []
-    def push(self, item):
-        self.stack.append(item)
-    def pop(self):
-        result = self.stack[-1]  # 末尾の要素を変数に取り出す
-        del self.stack[-1]  # リストから要素を削除する
-        return result  # リスト末尾から取り出したデータを返送する
-
-# スタックの定義
-class MyStack_Indent:
-    def __init__(self, n):
-        self.stack = [0]
-    def get_top(self):
-      return self.stack[-1]
-    def get_reverse_lst(self):
-        return reversed(self.stack)
-    def push(self, item):
-        self.stack.append(item)
-    def pop(self):
-        result = self.stack[-1]  # 末尾の要素を変数に取り出す
-        del self.stack[-1]  # リストから要素を削除する
-        return result  # リスト末尾から取り出したデータを返送する
-
-
-# 走査して、適切なインデントに調節していく
-def scan_indent_config(lst_cp, op_indent):
-  stack_indent = MyStack_Indent(0)
-  stack = MyStack_Indent(0)
-  INDENT_NUM = op_indent['tab_num'] if op_indent['type'] == '\t' else op_indent['num']
-
-  bef = 0
-  lst_after = []
-  for row_no, line in enumerate(lst_cp, 1):
-      str_line = line
-      # もし空行ならindentをstack_indentのheadに合わせる
-      if re.match(r"$ *^", str_line):
-          str_line = stack_indent.get_top() * ' '
-      aft = re.match(r" *", str_line).end()
-      
-      
-      #print(f"bef: {bef}")
-      #print(f"aft: {aft}")
-      
-      # コメント行は無視
-      if str_line.startswith("#"):
-          lst_after.append(str_line)
-          continue
-      if bef > aft:
-        for i, elem in enumerate(stack.get_reverse_lst()):
-            #print(elem)
-            if elem == aft:
-                #print(f"pop数: {i}")
-                # この時のiがpop数
-                for j in range(i):
-                    stack_indent.pop()
-                    #print(f"pop: {stack_indent.pop()}")
-                    stack.pop()
-      head = stack_indent.get_top()
-      if aft != head:
-          #print(f"head: {head}")
-          blank = head * ' '
-          # 適切な行頭空白文字を付加
-          str_line = blank+str_line.strip()
-      
-      if str_line.endswith(':'):
-          #print(f"先読み:{str_line}")
-          #printlst_cp[row_no])
-          stack_indent.push(head + INDENT_NUM)
-          # 1つ先読み
-          try:
-            stack.push(re.match(r" *", lst_cp[row_no]).end())
-          except Exception:
-            pass
-      ##printstack_indent.stack)
-      ##printstack.stack)
-      lst_after.append(str_line)
-      bef = aft
-  ##printlst_after)
-  return lst_after
+from method.import_part.group_sort_impot import group_sort_import
+from method.general import strip_blank_line, add_newline_char, get_start_blank, make_args
+from cls.stack import Stack
 
 
 # 走査: 関数とクラスの整形
@@ -119,7 +26,7 @@ def scan_format_method_class(lst, op_format):
     str_line = line
 
     # 先頭の空白文字を取得
-    blank_str = re.match(r" *", line).end() * ' '
+    blank_str = get_start_blank(line)
 
     # 1行づつ正規表現にかける
 
@@ -205,7 +112,7 @@ class ClassNaming(Naming):
         hit_class = sub_paterns[0][1]
         self.class_lst = hit_class
         # 行頭のインデントを取得
-        starts_blank = re.match(r" *", line).end() * ' '
+        starts_blank = get_start_blank(line)
         
         if self.get_capwords_flag() and self.get_snake_flag():
           # '_'と大文字が両方入っていたらおかしい
@@ -241,7 +148,7 @@ class MethodNaming(Naming):
         method = sub_paterns[0][1]
         self.method_lst.append(method)
         # 行頭のインデントを取得
-        starts_blank = re.match(r" *", line).end() * ' '
+        starts_blank = get_start_blank(line)
         
         if self.get_capwords_flag() and self.get_snake_flag():
           # '_'と大文字が両方入っていたらおかしい
@@ -288,7 +195,7 @@ class ValueNaming(Naming):
       words_lst = re.split(split_word, s)
       #print(words_lst)
       # 行頭のインデントを取得
-      starts_blank = re.match(r" *", line).end() * ' '
+      starts_blank = get_start_blank(line)
       #print(words_lst)
       for word in words_lst:
         if word == '':
@@ -362,7 +269,7 @@ def scan_style_count_word(lst, op_count_word):
   for line in lst:
     match_flag = bool(pattern.match(line))
     # 行頭のインデントを取得
-    starts_blank = re.match(r" *", line).end() * ' '
+    starts_blank = get_start_blank(line)
     # もし'/'で終わってたら状態を保存
     if match_flag:
       #print("match!!")
@@ -429,7 +336,7 @@ def check_operators_space(line: str, method_naming, class_naming):
         #print(n)
         #REJEX = "([\w=]+( {2,}))" * n
         # 行頭のインデントを取得
-        s = re.match(r" *", line).end() * ' '
+        s = get_start_blank(line)
         for i, st in enumerate(strip_str_lst):
           if i != len(strip_str_lst):
             s += st + ' '
@@ -456,8 +363,8 @@ def blank_lines(lst, opt):
 	SENTINEL = 1000000
 
 	### def・classブロックのサーチ ### 
-	stack_blank = MyStack()
-	stack_start_line = MyStack()
+	stack_blank = Stack()
+	stack_start_line = Stack()
 
 	line_glob = []
 	line_local = []
@@ -808,20 +715,6 @@ def scan_operators_space(lst, method_naming, class_naming):
   return lst_cp
 
 
-# 3groupに分割 + アルファベット順にソート
-def group_sort_import(lines, op_import):
-    if not (op_import['sorting'] or op_import['grouping']):
-      return lines
-    # ソート判定
-    if op_import['sorting']:
-      lines = sort_import(lines)
-    # グルーピング判定
-    if op_import['grouping']:
-      lines = group_import(lines)
-    if op_import['sorting'] or op_import['grouping']:
-      lines.insert(0, '# [trim] Info: import部に対し、整形を行いました.') 
-    return lines
-
 def make_ss(flag_snake, flag_cap):
   ss = ' '
   if not (flag_snake or flag_cap):
@@ -833,13 +726,6 @@ def make_ss(flag_snake, flag_cap):
     ss += s + "snake"
   return ss
 
-# 空行をきれいにする
-def strip_blank_line(code_lst: list) -> list:
-  return list(map(lambda x: x.strip() if x.strip() == '' else x, code_lst))
-
-# コード配列の各要素の行末に改行文字
-def add_newline_char(code_lst: list) -> list:
-  return list(map(lambda x: x + '\n' if not x.endswith('\n') else x , code_lst))
 
 def lambda_handler(event, context):
     body_dict = json.loads(event['body'])
@@ -866,7 +752,7 @@ def lambda_handler(event, context):
     lst_cp = strip_blank_line(lst_cp)
 
     # 末尾空白文字の削除
-    lst_cp = list(map(lambda x: x.rstrip(), lst))
+    lst_cp = list(map(lambda x: x.rstrip(), lst_cp))
 
     # タブ文字を' '*INDENT_TAB_NUMに置き換え
     lst_cp = list(map(lambda x: re.sub('\t', ' '*INDENT_TAB_NUM, x), lst_cp))
@@ -877,12 +763,16 @@ def lambda_handler(event, context):
     # import部のグルーピング・ソーティング
     lst_cp = group_sort_import(lst_cp, op['import_check'])
 
-    
+    # 走査して、適切なインデントに調節していく 
     lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
+    
+    
     lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
     lst_cp = lst_dic['lst']
     def_blank_num = lst_dic['def-blank']
     class_blank_num = lst_dic['class-blank']
+    
+    
     lst_dic = scan_naming_method_class(lst_cp, op['naming_check'])
     lst_cp = lst_dic['lst']
     method_naming = lst_dic['method_naming']
