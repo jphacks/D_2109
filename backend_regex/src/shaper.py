@@ -1,13 +1,14 @@
 import json
 import re
 
-from constants import *
+from constants import REJEX_METHOD_NAME, REJEX_METHOD_NAME_BACK, REJEX_CLASS_NAME, TRIM_INFO_STYLE_BLANK_FALSE
 from method.is_comile_to_dic import is_comile_to_dic
 from method.scan_indent_config import scan_indent_config
+from method.naming import scan_naming_method_class, scan_naming_value
 from method.import_part.split_import import split_import
 from method.import_part.group_sort_impot import group_sort_import
 from method.general import strip_blank_line, add_newline_char, get_start_blank, make_args
-from cls.stack import Stack
+from method.stack import Stack
 
 
 # 走査: 関数とクラスの整形
@@ -84,177 +85,6 @@ def scan_format_method_class(lst, op_format):
     'class-blank': class_blank_num
   }
 
-# 命名規則クラス
-class Naming():
-  def __init__(self, op_naming_case) -> None:
-      self.snake_flag = op_naming_case['snake']
-      self.capwords_flag = op_naming_case['CapWords']
-  
-  def get_snake_flag(self):
-    return self.snake_flag
-  
-  def get_capwords_flag(self):
-    return self.capwords_flag
-
-
-class ClassNaming(Naming):
-  class_lst = []
-
-  def __init__(self, op_naming) -> None:
-    super().__init__(op_naming['class_case'])
-  
-  def check_lst(self, lst):
-    lst_cp = []
-    for line in lst:
-      # 関数: 1行づつ正規表現にかける
-      sub_paterns = re.findall(REJEX_CLASS_NAME, line)
-      if sub_paterns:
-        hit_class = sub_paterns[0][1]
-        self.class_lst = hit_class
-        # 行頭のインデントを取得
-        starts_blank = get_start_blank(line)
-        
-        if self.get_capwords_flag() and self.get_snake_flag():
-          # '_'と大文字が両方入っていたらおかしい
-          if '_' in hit_class and re.search(r'[A-Z]+', hit_class):
-            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_ALL)
-        elif self.get_capwords_flag():
-          # '_'が入っていたらおかしい
-          if '_' in hit_class:
-            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_CAPWORDS)
-        elif self.get_snake_flag():
-          # 大文字が入っていたらおかしい
-          if re.search(r'[A-Z]+', hit_class):
-            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_SNAKE)
-
-      lst_cp.append(line)
-    # 命名規則のlintがOFFの場合
-    if not self.get_capwords_flag and not self.get_snake_flag:
-      return lst
-    return lst_cp
-
-class MethodNaming(Naming):
-  method_lst = []
-
-  def __init__(self, op_naming) -> None:
-    super().__init__(op_naming['method_case'])
-  
-  def check_lst(self, lst):
-    lst_cp = []
-    for line in lst:
-      # 関数: 1行づつ正規表現にかける
-      sub_paterns = re.findall(REJEX_METHOD_NAME, line)
-      if sub_paterns:
-        method = sub_paterns[0][1]
-        self.method_lst.append(method)
-        # 行頭のインデントを取得
-        starts_blank = get_start_blank(line)
-        
-        if self.get_capwords_flag() and self.get_snake_flag():
-          # '_'と大文字が両方入っていたらおかしい
-          if '_' in method and re.search(r'[A-Z]+', method):
-            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_ALL)
-        elif self.get_capwords_flag():
-          # '_'が入っていたらおかしい
-          if '_' in method:
-            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_CAPWORDS)
-        elif self.get_snake_flag():
-          # 大文字が入っていたらおかしい
-          if re.search(r'[A-Z]+', method):
-            lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_SNAKE)
-    
-      lst_cp.append(line)
-    
-    # 命名規則のlintがOFFの場合
-    if not self.get_capwords_flag and not self.get_snake_flag:
-      return lst
-    return lst_cp
-
-class ValueNaming(Naming):
-  value_lst = []
-
-  def __init__(self, op_naming) -> None:
-    super().__init__(op_naming['value_case'])
-  
-  def check_lst(self, lst):
-    # 命名規則のlintがOFFの場合
-    if not self.get_capwords_flag and not self.get_snake_flag:
-      return lst
-    
-    #print(lst)
-    # 関数とクラスを削除する正規表現
-    STR_REJEX = REJEX_METHOD_NAME + '|' + REJEX_CLASS_NAME + '|' + REJEX_METHOD_NAME_BACK + '|'
-    # 文字列を消去する正規表現
-    STR_REJEX += REJEX_STRING_SINGLE + '|' + REJEX_STRING_DOUBLE + '|' + REJEX_COMMENT
-    split_word = '\+|-|\*|\/|%|\*\*|=|\+=|-=|\*=|\/=|%=|\*\*=|==|!=|>|<|>=|<=|\\\\|\s|,|\[|\]|\{|\}|:'
-    lst_cp = []
-    already_lst = []
-    for line in lst:
-      #print(line)
-      s = re.sub(STR_REJEX, '', line)
-      words_lst = re.split(split_word, s)
-      #print(words_lst)
-      # 行頭のインデントを取得
-      starts_blank = get_start_blank(line)
-      #print(words_lst)
-      for word in words_lst:
-        if word == '':
-          pass
-        elif word in RESERVED_WORDS:
-          pass
-        elif word in OTHER_WORDS:
-          pass
-        elif '(' in word or ')' in word or '.' in word:
-          pass
-        elif word.isdigit():
-          pass
-        elif word in already_lst:
-          pass
-        # 命名規則のチェック
-        elif word:
-          #printword)
-          TRIM_WARNING_NAMING_VALUE_ALL = f"#[trim] Warning: 変数{word}: 大文字とアンダーバーを同時に含められません.\n"
-          TRIM_WARNING_NAMING_VALUE_CAPWORDS = f"#[trim] Warning: 変数{word}: アンダーバーを含められません.\n"
-          TRIM_WARNING_NAMING_VALUE_SNAKE = f"#[trim] Warning: 変数{word}: 大文字を含められません.\n"
-          # 定数は例外
-          if re.search('^[A-Z_]+$', word):
-            #print"定数")
-            pass
-          elif self.get_capwords_flag() and self.get_snake_flag():
-            # '_'と大文字が両方入っていたらおかしい
-            if '_' in word and re.search(r'[A-Z]+', word):
-              lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_ALL)
-          elif self.get_capwords_flag():
-            # '_'が入っていたらおかしい
-            if '_' in word:
-              lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_CAPWORDS)
-          elif self.get_snake_flag():
-            # 大文字が入っていたらおかしい
-            if re.search(r'[A-Z]+', word):
-              lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_SNAKE)
-          already_lst.append(word)
-      lst_cp.append(line)
-      
-    return lst_cp
-
-
-# 走査: 関数とクラスの命名規則チェック
-def scan_naming_method_class(lst, op_naming):
-  class_naming = ClassNaming(op_naming)
-  method_naming = MethodNaming(op_naming)
-
-  # 関数に関して
-  lst = method_naming.check_lst(lst)
-
-  # クラスに関して
-  lst = class_naming.check_lst(lst)
-    
-  return {
-    'lst': lst,
-    'method_naming': method_naming,
-    'class_naming': class_naming
-  }
-
 
 # 1行ごとに 文字数カウント
 def scan_style_count_word(lst, op_count_word):
@@ -291,15 +121,6 @@ def scan_style_count_word(lst, op_count_word):
     'lst': lst_cp,
     's_warn_count': s_warn_count
   }
-
-# 1行ごと変数の解析
-def scan_naming_value(lst, op_naming):
-  value_naming = ValueNaming(op_naming)
-
-  # 変数に関して
-  lst = value_naming.check_lst(lst)
-    
-  return lst
 
 
 # 前後の空白を調整(1行分)
@@ -772,11 +593,12 @@ def lambda_handler(event, context):
     def_blank_num = lst_dic['def-blank']
     class_blank_num = lst_dic['class-blank']
     
-    
+    # 走査: 関数とクラスの命名規則チェック
     lst_dic = scan_naming_method_class(lst_cp, op['naming_check'])
     lst_cp = lst_dic['lst']
     method_naming = lst_dic['method_naming']
     class_naming = lst_dic['class_naming']
+
     # 文字数警告
     lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
     lst_cp = lst_dic['lst']
@@ -787,8 +609,8 @@ def lambda_handler(event, context):
     
     # 改行コードを追加
     lst_cp = list(map(lambda x: x + '\n', lst_cp))
-    #print(lst_cp)
-    # 変数の解析
+
+    # 変数の解析と命名規則チェック
     lst_cp = scan_naming_value(lst_cp, op['naming_check'])
     # インデント文字
     indent = '\t' if op['style_check']['indent']['type'] == '\t' else ' '*op['style_check']['indent']['num']

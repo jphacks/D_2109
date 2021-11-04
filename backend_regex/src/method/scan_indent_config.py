@@ -1,6 +1,6 @@
 import re
 
-from cls.stack import InitDisplayStack
+from method.stack import InitDisplayStack
 from method.general import get_start_blank_num
 
 
