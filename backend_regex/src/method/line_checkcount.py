@@ -3,7 +3,7 @@ from method.general import get_start_blank
 
 
 # 1行ごとに 文字数カウント
-def check_str_count(line:str):
+def check_str_count(line:str) -> str:
   if len(line)>=80:
     new_line = f'{line[:80]}\\\n'
     new_line += check_str_count(line[80:])
@@ -13,7 +13,7 @@ def check_str_count(line:str):
 
 
 # 1行ごとに 文字数カウント
-def scan_style_count_word(lst, op_count_word):
+def scan_style_count_word(lst: list, op_count_word: dict) -> dict:
   s_warn_count = 0
   if not op_count_word['action']:
     return lst

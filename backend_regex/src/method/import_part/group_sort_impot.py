@@ -1,7 +1,7 @@
 import re
 import urllib.request
 from method.general import get_start_blank_num
-from constants import STANDARD_LIB, TRIM_INPORT_COMMENT
+from constants import STANDARD_LIB
 
 # 3groupに分割 (ソートなし)
 def group_import(lines: list) -> list:

@@ -2,10 +2,8 @@ import re
 
 from method.naming import MethodNaming, ClassNaming
 from method.general import make_args
+from constants import REJEX_METHOD_NAME, REJEX_METHOD_NAME_BACK, REJEX_CLASS_NAME
 
-REJEX_METHOD_NAME = "def([ |\t]+)(\\w+)([ |\t]*)\\((.*)\\)([ |\t]*):"
-REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\\w+)([ |\t]*)\\((.*)\\)([ |\t]*)->([ |\t]*)(\\w+)([ |\t]*):"
-REJEX_CLASS_NAME = "class([ |\t]*)(\\w+)([ |\t]*)(\\((.*)\\))*([ |\t]*):"
 
 # 前後の空白を調整(1行分)
 def check_operators_space(line: str, method_naming: MethodNaming, class_naming: ClassNaming) -> str:

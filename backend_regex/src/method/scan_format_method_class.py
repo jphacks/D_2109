@@ -4,7 +4,7 @@ from method.general import get_start_blank, make_args
 
 
 # 走査: 関数とクラスの整形
-def scan_format_method_class(lst, op_format):
+def scan_format_method_class(lst: list, op_format: dict) -> dict:
   def_blank_num = 0
   class_blank_num = 0
 

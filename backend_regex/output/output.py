@@ -15,7 +15,6 @@
         変数:  snake
 """
 # [trim] Info: import部に対し、整形を行いました.
-import json 
 
 from method.blank_lines import blank_lines 
 # [trim] Warning: 1行あたりの行数は最大90文字です.適切な位置で折り返してください.

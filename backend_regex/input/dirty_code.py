@@ -1,4 +1,4 @@
-import json
+
 
 from method.is_comile_to_dic import is_comile_to_dic
 from method.scan_indent_config import scan_indent_config
@@ -11,6 +11,7 @@ from method.scan_operators_space import scan_operators_space
 from method.blank_lines import blank_lines
 from method.trim_top_messages import trim_top_messages
 from method.general import strip_blank_line, add_newline_char, delete_blank_ends, replace_tab_to_blank, replace_blank_to_tab
+
 
 
 def lambda_handler(event, context):

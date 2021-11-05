@@ -2,7 +2,7 @@ from method.general import get_indent
 from constants import TRIM_INFO_STYLE_BLANK_FALSE
 
 # 命名規則のflagに合わせて設定表記用の文字列を生成
-def make_naming_ops(flag_snake, flag_cap):
+def make_naming_ops(flag_snake: bool, flag_cap: bool) -> str:
   ss = ' '
   if not (flag_snake or flag_cap):
     ss += "False"
@@ -18,7 +18,7 @@ def make_naming_ops(flag_snake, flag_cap):
 def trim_top_messages(lst_cp: list, 
                       op_style: dict, op_import: dict, op_naming: dict, 
                       def_blank_num: int, class_blank_num: int, 
-                      s_warn_count: int):
+                      s_warn_count: int) -> list:
     
     # インデント文字を取得
     indent = indent = get_indent(op_style['indent']['type'], op_style['indent']['num'])
