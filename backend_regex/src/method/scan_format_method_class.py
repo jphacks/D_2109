@@ -1,20 +1,7 @@
 import re
+from constants import REJEX_METHOD_NAME_BACK, REJEX_METHOD_NAME, REJEX_CLASS_NAME
+from method.general import get_start_blank, make_args
 
-REJEX_METHOD_NAME = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*):"
-REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\w+)([ |\t]*)\((.*)\)([ |\t]*)->([ |\t]*)(\w+)([ |\t]*):"
-REJEX_CLASS_NAME = "class([ |\t]*)(\w+)([ |\t]*)(\((.*)\))*([ |\t]*):"
-
-# 括弧の中を整形
-def make_args(s_lst):
-  s_lst = re.sub('[\s]', '', s_lst)
-  lst = re.split(',', s_lst)
-  args = ''
-  for i, s in enumerate(lst):
-    if i == 0:
-      args += s
-      continue
-    args += ', ' + s
-  return args
 
 # 走査: 関数とクラスの整形
 def scan_format_method_class(lst, op_format):
@@ -32,7 +19,7 @@ def scan_format_method_class(lst, op_format):
     str_line = line
 
     # 先頭の空白文字を取得
-    blank_str = re.match(r" *", line).end() * ' '
+    blank_str = get_start_blank(line)
 
     # 1行づつ正規表現にかける
 

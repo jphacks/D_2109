@@ -1,11 +1,14 @@
 import re
 
+from method.naming import MethodNaming, ClassNaming
+from method.general import make_args
+
 REJEX_METHOD_NAME = "def([ |\t]+)(\\w+)([ |\t]*)\\((.*)\\)([ |\t]*):"
 REJEX_METHOD_NAME_BACK = "def([ |\t]+)(\\w+)([ |\t]*)\\((.*)\\)([ |\t]*)->([ |\t]*)(\\w+)([ |\t]*):"
 REJEX_CLASS_NAME = "class([ |\t]*)(\\w+)([ |\t]*)(\\((.*)\\))*([ |\t]*):"
 
 # 前後の空白を調整(1行分)
-def check_operators_space(line: str, method_naming, class_naming):
+def check_operators_space(line: str, method_naming: MethodNaming, class_naming: ClassNaming) -> str:
     #print(f"met:{method_naming.method_lst}")
     #print(class_naming.class_lst)
     strip_str = line.strip()
@@ -61,7 +64,7 @@ def check_operators_space(line: str, method_naming, class_naming):
 
 
 # 前後の空白を調整(走査)
-def scan_operators_space(lst, method_naming, class_naming):
+def scan_operators_space(lst: list, method_naming, class_naming) -> list:
   lst_cp = []
   for line in lst:
     lst_cp.append(check_operators_space(line, method_naming, class_naming))
