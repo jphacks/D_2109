@@ -1,6 +1,6 @@
 <template>
   <div class="code-gen-complete-page">
-    <header-menu @changePage="ParentChangePage($event)" />
+    <header-menu @changePage="ChildChangePage($event)" />
     <div class="code-viewer-container">
       <div class="left-viewer">
         <div class="daruma_container">
@@ -63,7 +63,7 @@ export default {
     ChangePage(target) {
       this.$emit("changePage", { page: target });
     },
-    ParentChangePage(target) {
+    ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
     },
     ChangeHeight() {

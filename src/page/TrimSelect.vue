@@ -1,6 +1,6 @@
 <template>
   <div class="trim-select-page">
-    <header-menu @changePage="ParentChangePage($event)" />
+    <header-menu @changePage="ChildChangePage($event)" />
     <div class="title-container">
       <img class="daruma_icon" src="../assets/daruma_icon.svg" alt="" />
       <div class="title">
@@ -58,7 +58,7 @@ export default {
     ChangePage(target) {
       this.$emit("changePage", { page: target });
     },
-    ParentChangePage(target) {
+    ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
     },
   },

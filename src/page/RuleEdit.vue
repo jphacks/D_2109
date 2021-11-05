@@ -1,6 +1,6 @@
 <template>
   <div class="rule-edit-page">
-    <header-menu @changePage="ParentChangePage($event)" />
+    <header-menu @changePage="ChildChangePage($event)" />
     <div class="title-container">
       <img class="daruma_icon" src="../assets/daruma_blue_icon.svg" alt="" />
       <div class="title">以下の中から適用するルールを選択してください</div>
@@ -101,10 +101,14 @@
             </p>
           </div>
           <div class="input-container">
-            <input
-              type="checkbox"
-              v-model="
+            <toggle-switch
+              :status="
                 rule_json.style_check.line_space.class_or_global_func.action
+              "
+              @changeStatus="
+                ChangeCheckBox(
+                  'style_check.line_space.class_or_global_func.action'
+                )
               "
             />
             <p></p>
@@ -122,9 +126,11 @@
             </p>
           </div>
           <div class="input-container">
-            <input
-              type="checkbox"
-              v-model="rule_json.style_check.line_space.method.action"
+            <toggle-switch
+              :status="rule_json.style_check.line_space.method.action"
+              @changeStatus="
+                ChangeCheckBox('style_check.line_space.method.action')
+              "
             />
             <p></p>
           </div>
@@ -144,7 +150,10 @@
             </p>
           </div>
           <div class="input-container">
-            <input type="checkbox" v-model="rule_json.import_check.grouping" />
+            <toggle-switch
+              :status="rule_json.import_check.grouping"
+              @changeStatus="ChangeCheckBox('import_check.grouping')"
+            />
           </div>
         </div>
         <div class="card-container">
@@ -157,7 +166,10 @@
             <p class="description">アルファベット順に並び替える機能です。</p>
           </div>
           <div class="input-container">
-            <input type="checkbox" v-model="rule_json.import_check.sorting" />
+            <toggle-switch
+              :status="rule_json.import_check.sorting"
+              @changeStatus="ChangeCheckBox('import_check.sorting')"
+            />
           </div>
         </div>
         <!-- タイトル -->
@@ -175,9 +187,9 @@
             </p>
           </div>
           <div class="input-container">
-            <input
-              type="checkbox"
-              v-model="rule_json.style_check.blank_format.action"
+            <toggle-switch
+              :status="rule_json.style_check.blank_format.action"
+              @changeStatus="ChangeCheckBox('style_check.blank_format.action')"
             />
           </div>
         </div>
@@ -197,9 +209,9 @@
             </p>
           </div>
           <div class="input-container">
-            <input
-              type="checkbox"
-              v-model="rule_json.naming_check.class_case.snake"
+            <toggle-switch
+              :status="rule_json.naming_check.class_case.snake"
+              @changeStatus="ChangeCheckBox('naming_check.class_case.snake')"
             />
           </div>
         </div>
@@ -216,9 +228,9 @@
             </p>
           </div>
           <div class="input-container">
-            <input
-              type="checkbox"
-              v-model="rule_json.naming_check.method_case.snake"
+            <toggle-switch
+              :status="rule_json.naming_check.method_case.snake"
+              @changeStatus="ChangeCheckBox('naming_check.method_case.snake')"
             />
           </div>
         </div>
@@ -235,9 +247,9 @@
             </p>
           </div>
           <div class="input-container">
-            <input
-              type="checkbox"
-              v-model="rule_json.naming_check.value_case.snake"
+            <toggle-switch
+              :status="rule_json.naming_check.value_case.snake"
+              @changeStatus="ChangeCheckBox('naming_check.value_case.snake')"
             />
           </div>
         </div>
@@ -251,11 +263,13 @@
 
 <script>
 import HeaderMenu from "../components/HeaderMenu.vue";
+import ToggleSwitch from "../components/ToggleSwitch.vue";
 
 export default {
   name: "RuleEditPage",
   components: {
     HeaderMenu,
+    ToggleSwitch,
   },
   data() {
     return {
@@ -383,6 +397,25 @@ export default {
   created() {},
   computed: {},
   methods: {
+    ChangeCheckBox(target) {
+      let object_keys = target.split(/\./g);
+      console.log(object_keys.length);
+      // キーの数が2つであれば実行
+      if (object_keys.length === 2) {
+        this.rule_json[object_keys[0]][object_keys[1]] =
+          !this.rule_json[object_keys[0]][object_keys[1]];
+      } else if (object_keys.length === 3) {
+        this.rule_json[object_keys[0]][object_keys[1]][object_keys[2]] =
+          !this.rule_json[object_keys[0]][object_keys[1]][object_keys[2]];
+      } else if (object_keys.length === 4) {
+        this.rule_json[object_keys[0]][object_keys[1]][object_keys[2]][
+          object_keys[3]
+        ] =
+          !this.rule_json[object_keys[0]][object_keys[1]][object_keys[2]][
+            object_keys[3]
+          ];
+      }
+    },
     ChangeGridLine(target) {
       this.tile_style.grid = false;
       this.tile_style.line = false;
@@ -391,7 +424,7 @@ export default {
     ChangePage(target) {
       this.$emit("changePage", { page: target });
     },
-    ParentChangePage(target) {
+    ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
     },
     CodeSubmit() {

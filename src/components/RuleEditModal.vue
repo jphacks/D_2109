@@ -69,7 +69,7 @@ export default {
     ChangePage(target) {
       this.$emit("changePage", { page: target });
     },
-    ParentChangePage(target) {
+    ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
     },
     CodeSubmit() {
