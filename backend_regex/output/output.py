@@ -1,9 +1,9 @@
 """©trim 整形実行後ファイル
     ・空白整形の設定
-        関数: 8箇所
-        クラス: 5箇所
+        関数: 0箇所
+        クラス: 0箇所
     ・行あたりの文字数設定 - 90文字
-        [警告] 0箇所
+        [警告] 2箇所
     ・クラス・グローバル関数間の間隔 - 2文字
     ・メソッド間の間隔 - 1文字
     ・importの設定
@@ -15,98 +15,110 @@
         変数:  snake
 """
 # [trim] Info: import部に対し、整形を行いました.
-import os 
-import sys 
-import urllib 
+import json 
 
-import numpy 
-import pandas 
-from tqdm import tqdm 
-
-import frjaeuisdilfj 
-from adeafuhvfuad import kuvfhasedil 
-
-
-# jfariegioare
-
-a=3 
-v=2 
+from method.blank_lines import blank_lines 
+# [trim] Warning: 1行あたりの行数は最大90文字です.適切な位置で折り返してください.
+from method.general import strip_blank_line, add_newline_char, delete_blank_ends, replace_tab_to_blank, replace_blank_to_tab 
+from method.import_part.group_sort_impot import group_sort_import 
+from method.import_part.split_import import split_import 
+from method.is_comile_to_dic import is_comile_to_dic 
+from method.line_checkcount import scan_style_count_word 
+from method.naming import scan_naming_method_class, scan_naming_value 
+from method.scan_format_method_class import scan_format_method_class 
+from method.scan_indent_config import scan_indent_config 
+from method.scan_operators_space import scan_operators_space 
+from method.trim_top_messages import trim_top_messages 
 
 
-def a(a, b, c=2) -> int:
-    pass 
-
-
-def add_box(a, b, c=3):
-    import pypi 
-    import saskdopa 
-    import aeuhfiaw 
-    import urllib 
-    ab=2 
-    a=3 
-    method = a(ab, a) 
-
-    def aaaa():
-        return ab+ a 
-
-    return ab 
-
-
-class PermissionMixin:
-    def __init__(self) -> None:
-        pass 
-
-    def a(self):
-        pass 
-
-
-class BaseUser():
-    def __init__(self) -> None:
-        pass 
-
-    pass 
-
-
-class User(BaseUser, PermissionMixin):
-    name = 'aaaa' 
-
-    def __init__(self) -> None:
-        super().__init__() 
-
-    # [trim] Warning: 関数名に大文字は含められません.
-    def getName(self):
-        return self.name 
-
+def lambda_handler(event, context):
+    body_dict = json.loads(event['body']) 
+    #body_dict = event['body']
+    lst_cp = body_dict['code_lst'] 
+    op = body_dict['op'] 
+    
+    INDENT_TAB_NUM = op['style_check']['indent']['tab_num'] 
+    
+    # コード配列の各要素の行末に改行文字
+    lst_cp = add_newline_char(lst_cp) 
+    
+    # compileが通るか確認
+    compile_dic = is_comile_to_dic(lst_cp) 
+    
+    if not compile_dic['flag']: 
+        return { 
+        'statusCode': 200, 
+        'body': json.dumps({ 
+        'code_lst': [compile_dic['error']] 
+        }) 
+        } 
         
-def add_box():
-    ab = 2 
-    print('f') 
+    # 空行をきれいにする
+    lst_cp = strip_blank_line(lst_cp) 
     
-    a = 2 
-
-    def inline():
-
-        def inline2():
-            print('fff') 
-            
-    return ab 
+    # 末尾空白文字の削除
+    lst_cp = delete_blank_ends(lst_cp) 
     
+    # タブ文字を' '*INDENT_TAB_NUMに置き換え
+    lst_cp = replace_tab_to_blank(lst_cp, INDENT_TAB_NUM) 
     
-class Net():
-    def fefe():
-        return 
-
-        
-def brahh(fff):
+    # import部のスプリット
+    lst_cp = split_import(lst_cp) 
     
+    # import部のグルーピング・ソーティング
+    lst_cp = group_sort_import(lst_cp, op['import_check']) 
     
-    return 0 
-
-
-# l = [1, 2, 3, 56, 5]
-# l = [el + 1 for el in l]
-# print(l)
+    # 走査して、適切なインデントに調節していく
+    lst_cp = scan_indent_config(lst_cp, op['style_check']['indent']) 
     
-l = [] 
-for i in l: 
-    print(i) 
+    # 走査して、関数とクラスの整形を行う
+    lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format']) 
+    lst_cp = lst_dic['lst'] 
+    def_blank_num = lst_dic['def-blank'] 
+    class_blank_num = lst_dic['class-blank'] 
+    
+    # 走査して、関数とクラスの命名規則をチェックする
+    lst_dic = scan_naming_method_class(lst_cp, op['naming_check']) 
+    lst_cp = lst_dic['lst'] 
+    method_naming = lst_dic['method_naming'] 
+    class_naming = lst_dic['class_naming'] 
+    
+    # 1行辺りの文字数をチェック
+    lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word']) 
+    lst_cp = lst_dic['lst'] 
+    s_warn_count = lst_dic['s_warn_count'] 
+    
+    # 演算子前後の空白を調整
+    lst_cp = scan_operators_space(lst_cp, method_naming, class_naming) 
+    
+    # 変数の解析と命名規則チェック
+    lst_cp = scan_naming_value(lst_cp, op['naming_check']) 
+    
+    # 改行コードを追加
+    lst_cp = add_newline_char(lst_cp) 
+    
+    # 整形後の上部に表示するメッセージを作成する
+    lst_cp = trim_top_messages( 
+    lst_cp, 
+    op['style_check'], 
+    op['import_check'], 
+    op['naming_check'], 
+    def_blank_num, 
+    class_blank_num, 
+    s_warn_count, # 行辺りの文字数設定 
+    ) 
+    
+    # タブ文字設定の場合は半角X個をタブ文字に変換
+    # [trim] Warning: 1行あたりの行数は最大90文字です.適切な位置で折り返してください.
+    lst_cp = replace_blank_to_tab(lst_cp, op['style_check']['indent']['type'], op['style_check']['indent']['tab_num']) 
+    
+    # 行間の調整
+    lst_cp = blank_lines(lst_cp, op['style_check']['line_space']) 
+    
+    # TODO implement
+    return { 
+    'statusCode': 200, 
+    'body': json.dumps({ 
+    'code_lst': lst_cp 
+    }) 
+    } 

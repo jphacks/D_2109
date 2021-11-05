@@ -210,6 +210,9 @@ REJEX_STRING_DOUBLE = "\s*\".*\"\s*"
 REJEX_STRING_SINGLE = "\s*\'.*\'\s*"
 REJEX_COMMENT = "\s*#.*\s*\n\s*"
 
+REJEX_IMPORT = "\s*import\s+[\w\.\,\s]+"
+REJEX_IMPORT_FROM = "\s*from\s+[\w\.]+\s*import\s+[\w\.\,\s]+"
+
 TRIM_WARNING_NAMING_METHOD_ALL = "# [trim] Warning: 関数名に大文字とアンダーバーを同時に含められません."
 TRIM_WARNING_NAMING_METHOD_SNAKE = "# [trim] Warning: 関数名に大文字は含められません."
 TRIM_WARNING_NAMING_METHOD_CAPWORDS = "# [trim] Warning: 関数名にアンダーバーは含められません."

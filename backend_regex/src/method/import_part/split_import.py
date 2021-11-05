@@ -1,11 +1,11 @@
-from method.general import get_start_blank_num
+from method.general import get_start_blank
 
 # 1行に1つのimport文になるように分割
 def split_import(lst: list) -> list:
   lst_cp = []
   for line in lst:
     # 行頭のインデントを取得
-    starts_blank = get_start_blank_num(line)
+    starts_blank = get_start_blank(line)
     strip_line = line.strip()
     if strip_line.startswith('import'):
       # 1つのみのimportはそのまま

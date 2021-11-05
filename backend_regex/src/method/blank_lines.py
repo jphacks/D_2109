@@ -255,7 +255,8 @@ def blank_lines(lst: list, opt: dict) -> list:
 				#print("コメント見つけた")
 				above_b -= 1
 			else:
-				print("見つからない")
+				#print("見つからない")
+				pass	
 			# ブロック開始行が1行目の場合
 			if above_b == -1:
 				#print("一番上")
