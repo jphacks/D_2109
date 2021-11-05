@@ -1,6 +1,6 @@
 <template>
   <div class="rule-gen-complete-page">
-    <header-menu @changePage="ParentChangePage($event)" />
+    <header-menu @changePage="ChildChangePage($event)" />
     <div class="daruma-container">
       <img src="../assets/daruma_blue_load.svg" alt="" />
       <img src="../assets/daruma_red_load.svg" alt="" />
@@ -47,7 +47,7 @@ export default {
     ChangePage(target) {
       this.$emit("changePage", { page: target });
     },
-    ParentChangePage(target) {
+    ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
     },
     ChangeHeight() {

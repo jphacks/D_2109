@@ -1,6 +1,6 @@
 <template>
   <div class="loading-page">
-    <header-menu @changePage="ParentChangePage($event)" />
+    <header-menu @changePage="ChildChangePage($event)" />
     <img src="../assets/ninja_icon.svg" alt="" />
     <p>コードを生成中･･･</p>
     <div class="progress-bar-container">
@@ -32,7 +32,7 @@ export default {
     });
   },
   methods: {
-    ParentChangePage(target) {
+    ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
     },
   },

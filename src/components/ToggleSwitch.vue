@@ -1,6 +1,13 @@
 <template>
-  <div class="toggle-switch" :class="status ? 'active-bg' : 'nonactive-bg'" @click="ChangeStatus()">
-    <div class="toggle" :class="status ? 'active-toggle' : 'nonactive-toggle'"/>
+  <div
+    class="toggle-switch"
+    :class="status ? 'active-bg' : 'nonactive-bg'"
+    @click="ChangeStatus()"
+  >
+    <div
+      class="toggle"
+      :class="status ? 'active-toggle' : 'nonactive-toggle'"
+    />
   </div>
 </template>
 
@@ -15,8 +22,7 @@ export default {
     return {};
   },
   watch: {},
-  created() {
-  },
+  created() {},
   computed: {},
   methods: {
     ChangeStatus() {
@@ -27,10 +33,10 @@ export default {
 </script>
 
 <style lang="scss">
-.toggle-switch{
+.toggle-switch {
   cursor: pointer;
-  width: 30px;
-  height: 18px;
+  width: 45px;
+  height: 28px;
   border-radius: 999px;
   display: flex;
   flex-direction: column;
@@ -38,28 +44,28 @@ export default {
   align-items: center;
   position: relative;
   transition: 0.3s;
-  .toggle{
-    width: 14px;
-    height: 14px;
+  .toggle {
+    width: 24px;
+    height: 24px;
     border-radius: 999px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     position: absolute;
     transition: 0.3s;
   }
 }
-.active-bg{
-  background-color: #D17559;
-  .active-toggle{
-    left: 14px;
-    background-color: #FFFFFF;
+.active-bg {
+  background-color: #d17559;
+  .active-toggle {
+    left: 19px;
+    background-color: #ffffff;
   }
 }
 
-.nonactive-bg{
-  background-color: #FFFFFF;
-  .nonactive-toggle{
+.nonactive-bg {
+  background-color: #ffffff;
+  .nonactive-toggle {
     left: 2px;
-    background-color: #D1D1D1;
+    background-color: #d1d1d1;
   }
 }
 </style>
