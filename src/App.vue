@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <start-page v-if="disp_flag.start_page" @changePage="ChangePage($event)" />
+    <start-page
+      v-if="disp_flag.start_page"
+      @changePage="ChangePage($event)"
+      @OpenInstructions="OpenInstructions()"
+    />
     <file-code-select-modal
       v-if="disp_flag.file_code_select_modal"
       @changePage="ChangePage($event)"
@@ -10,33 +14,48 @@
       v-if="disp_flag.trim_select_page"
       @changePage="ChangePage($event)"
       @fileSelect="PythonFileSelect($event)"
+      @OpenInstructions="OpenInstructions()"
     />
     <direct-code-edit
       v-if="disp_flag.direct_code_edit_page"
       @changePage="ChangePage($event)"
       @codeGen="CodeGenLoading($event)"
+      @OpenInstructions="OpenInstructions()"
     />
-    <loading v-if="disp_flag.loading_page" @changePage="ChangePage($event)" />
+    <loading
+      v-if="disp_flag.loading_page"
+      @changePage="ChangePage($event)"
+      @OpenInstructions="OpenInstructions()"
+    />
     <code-gen-complete
       v-if="disp_flag.code_gen_complete_page"
       @changePage="ChangePage($event)"
       @downloadItem="PythonFileDownload($event)"
       :input_python="input_python"
       :output_python="output_python"
+      @OpenInstructions="OpenInstructions()"
     />
     <rule-edit
       v-if="disp_flag.rule_edit_page"
       @changePage="ChangePage($event)"
       @ruleGen="RuleGenLoading($event)"
+      @OpenInstructions="OpenInstructions()"
     />
     <rule-make-loading
       v-if="disp_flag.rule_make_loading"
+      @OpenInstructions="OpenInstructions()"
       @changePage="ChangePage($event)"
     />
     <rule-gen-complete
       v-if="disp_flag.rule_gen_complete"
       @changePage="ChangePage($event)"
       @downloadItem="RuleFileDownload($event)"
+      @OpenInstructions="OpenInstructions()"
+    />
+    <instructions
+      v-if="disp_flag.instructions"
+      @changePage="ChangePage($event)"
+      :open_page="instructions_data"
     />
   </div>
 </template>
@@ -51,6 +70,7 @@ import CodeGenComplete from "./page/CodeGenComplete.vue";
 import RuleEdit from "./page/RuleEdit.vue";
 import RuleMakeLoading from "./page/RuleMakeLoading.vue";
 import RuleGenComplete from "./page/RuleGenComplete.vue";
+import Instructions from "./page/Instructions.vue";
 
 export default {
   name: "App",
@@ -64,6 +84,7 @@ export default {
     RuleEdit,
     RuleMakeLoading,
     RuleGenComplete,
+    Instructions,
   },
   data() {
     return {
@@ -73,6 +94,7 @@ export default {
       python_name: "",
       input_python: "",
       output_python: "",
+      instructions_data: "",
       disp_flag: {
         start_page: false,
         file_code_select_modal: false,
@@ -83,6 +105,7 @@ export default {
         rule_edit_page: false,
         rule_make_loading: false,
         rule_gen_complete: false,
+        instructions: true,
       },
     };
   },
@@ -91,6 +114,28 @@ export default {
   },
   computed: {},
   methods: {
+    OpenInstructions() {
+      if (this.disp_flag.start_page) {
+        this.instructions_data = "start_page";
+      } else if (this.disp_flag.file_code_select_modal) {
+        this.instructions_data = "file_code_select_modal";
+      } else if (this.disp_flag.trim_select_page) {
+        this.instructions_data = "trim_select_page";
+      } else if (this.disp_flag.direct_code_edit_page) {
+        this.instructions_data = "direct_code_edit_page";
+      } else if (this.disp_flag.loading_page) {
+        this.instructions_data = "loading_page";
+      } else if (this.disp_flag.code_gen_complete_page) {
+        this.instructions_data = "code_gen_complete_page";
+      } else if (this.disp_flag.rule_edit_page) {
+        this.instructions_data = "rule_edit_page";
+      } else if (this.disp_flag.rule_make_loading) {
+        this.instructions_data = "rule_make_loading";
+      } else if (this.disp_flag.rule_gen_complete) {
+        this.instructions_data = "rule_gen_complete";
+      }
+      this.ChangePage({ page: "instructions" });
+    },
     GetAPIResult() {
       this.axios
         .post(
@@ -177,6 +222,7 @@ export default {
       this.disp_flag.rule_edit_page = false;
       this.disp_flag.rule_gen_complete = false;
       this.disp_flag.rule_make_loading = false;
+      this.disp_flag.instructions = false;
       this.disp_flag[target.page] = true;
       // trim_select_pageを開こうとしているかつ入力ruleが空の場合にModal表示
       if (target.page === "trim_select_page" && this.rule_flag !== true) {
