@@ -38,6 +38,9 @@
       @changePage="ChangePage($event)"
       @downloadItem="RuleFileDownload($event)"
     />
+    <instructions
+      v-if="disp_flag.instructions"
+    />
   </div>
 </template>
 
@@ -51,6 +54,7 @@ import CodeGenComplete from "./page/CodeGenComplete.vue";
 import RuleEdit from "./page/RuleEdit.vue";
 import RuleMakeLoading from "./page/RuleMakeLoading.vue";
 import RuleGenComplete from "./page/RuleGenComplete.vue";
+import Instructions from "./page/Instructions.vue";
 
 export default {
   name: "App",
@@ -64,6 +68,7 @@ export default {
     RuleEdit,
     RuleMakeLoading,
     RuleGenComplete,
+    Instructions,
   },
   data() {
     return {
@@ -83,11 +88,12 @@ export default {
         rule_edit_page: false,
         rule_make_loading: false,
         rule_gen_complete: false,
+        instructions:true
       },
     };
   },
   created() {
-    this.ChangePage({ page: "start_page" });
+    // this.ChangePage({ page: "start_page" });
   },
   computed: {},
   methods: {
