@@ -1,6 +1,9 @@
 <template>
   <div class="trim-select-page">
-    <header-menu @changePage="ChildChangePage($event)" />
+    <header-menu
+      @changePage="ChildChangePage($event)"
+      @OpenInstructions="OpenInstructions()"
+    />
     <div class="back-btn-container" @click="ChangePage('trim_select_page')">
       <img class="back-btn-image" src="../assets/left_arrow_white.svg" alt="" />
       <span>前のステップへ</span>
@@ -50,6 +53,9 @@ export default {
     },
     ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
+    },
+    OpenInstructions() {
+      this.$emit("OpenInstructions");
     },
     CodeSubmit() {
       this.$emit("codeGen", { code: this.input_code });

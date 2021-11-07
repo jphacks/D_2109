@@ -1,6 +1,9 @@
 <template>
   <div class="rule-gen-complete-page">
-    <header-menu @changePage="ChildChangePage($event)" />
+    <header-menu
+      @changePage="ChildChangePage($event)"
+      @OpenInstructions="OpenInstructions()"
+    />
     <div class="daruma-container">
       <img src="../assets/daruma_blue_load.svg" alt="" />
       <img src="../assets/daruma_red_load.svg" alt="" />
@@ -49,6 +52,9 @@ export default {
     },
     ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
+    },
+    OpenInstructions() {
+      this.$emit("OpenInstructions");
     },
     ChangeHeight() {
       console.log(this.input_area_height);

@@ -1,6 +1,9 @@
 <template>
   <div class="rule-edit-page">
-    <header-menu @changePage="ChildChangePage($event)" />
+    <header-menu
+      @changePage="ChildChangePage($event)"
+      @OpenInstructions="OpenInstructions()"
+    />
     <div class="title-container">
       <img class="daruma_icon" src="../assets/daruma_blue_icon.svg" alt="" />
       <div class="title">以下の中から適用するルールを選択してください</div>
@@ -426,6 +429,9 @@ export default {
     },
     ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
+    },
+    OpenInstructions() {
+      this.$emit("OpenInstructions");
     },
     CodeSubmit() {
       this.JsonValidation();

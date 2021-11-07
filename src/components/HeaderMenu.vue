@@ -1,8 +1,8 @@
 <template>
   <div class="header-menu">
-    <div class="left-content">
+    <div class="left-content" @click="OpenInstructions()">
       <img class="logo" src="../assets/logo.svg" alt="" />
-      <!-- <div class="btn_container">
+      <div class="btn_container">
         <img
           class="triangle"
           src="../assets/rounded-triangle-pink.svg"
@@ -10,7 +10,7 @@
         />
         <span class="btn-text" style="color: #e55c6e">使いかた</span>
       </div>
-      <div class="btn_container">
+      <!-- <div class="btn_container">
         <img
           class="triangle"
           src="../assets/rounded-triangle-bule.svg"
@@ -34,6 +34,9 @@ export default {
   methods: {
     ChangePage(target) {
       this.$emit("changePage", { page: target });
+    },
+    OpenInstructions() {
+      this.$emit("OpenInstructions");
     },
   },
 };

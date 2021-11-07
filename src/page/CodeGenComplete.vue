@@ -1,6 +1,9 @@
 <template>
   <div class="code-gen-complete-page">
-    <header-menu @changePage="ChildChangePage($event)" />
+    <header-menu
+      @changePage="ChildChangePage($event)"
+      @OpenInstructions="OpenInstructions()"
+    />
     <div class="code-viewer-container">
       <div class="left-viewer">
         <div class="daruma_container">
@@ -65,6 +68,9 @@ export default {
     },
     ChildChangePage(target) {
       this.$emit("changePage", { page: target.page });
+    },
+    OpenInstructions() {
+      this.$emit("OpenInstructions");
     },
     ChangeHeight() {
       console.log(this.input_area_height);
