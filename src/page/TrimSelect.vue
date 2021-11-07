@@ -1,6 +1,10 @@
 <template>
   <div class="trim-select-page">
     <header-menu @changePage="ChildChangePage($event)" />
+    <div class="back-btn-container" @click="ChangePage('trim_select_page')">
+      <img class="back-btn-image" src="../assets/left_arrow_white.svg" alt="" />
+      <span>ルールファイルの選択へ</span>
+    </div>
     <div class="title-container">
       <img class="daruma_icon" src="../assets/daruma_icon.svg" alt="" />
       <div class="title">
@@ -74,6 +78,35 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .back-btn-container {
+    cursor: pointer;
+    border-radius: 999px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 120px;
+    left: 50px;
+    &:hover > .back-btn-image {
+      background-color: #868686;
+    }
+    &:hover > span {
+      color: #868686;
+    }
+    .back-btn-image {
+      cursor: pointer;
+      width: 25px;
+      height: 25px;
+      border-radius: 999px;
+      background-color: #595959;
+      padding: 7px;
+    }
+    span {
+      margin-left: 10px;
+      color: #595959;
+    }
+  }
   .title-container {
     display: flex;
     flex-direction: row;
