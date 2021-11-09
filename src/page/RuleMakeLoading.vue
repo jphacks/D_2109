@@ -4,11 +4,7 @@
       @changePage="ChildChangePage($event)"
       @OpenInstructions="OpenInstructions()"
     />
-    <div class="daruma-container">
-      <img src="../assets/daruma_blue_load.svg" alt="" />
-      <img src="../assets/daruma_red_load.svg" alt="" />
-      <img src="../assets/daruma_green_load.svg" alt="" />
-    </div>
+    <img src="../assets/daruma_loading .gif" alt="" />
     <p>ルールファイルを作成中･･･</p>
     <div class="progress-bar-container">
       <div :style="progress_bar_style" class="progress-bar" />
@@ -58,18 +54,8 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .daruma-container {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    img {
-      margin: 5px 15px;
-    }
-  }
   p {
-    margin-top: 30px;
+    margin-top: 20px;
     font-size: 20px;
   }
   .progress-bar-container {

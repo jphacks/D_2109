@@ -4,7 +4,7 @@
       @changePage="ChildChangePage($event)"
       @OpenInstructions="OpenInstructions()"
     />
-    <img src="../assets/ninja_icon.svg" alt="" />
+    <img src="../assets/ninja_loading.gif" alt="" />
     <p>コードを生成中･･･</p>
     <div class="progress-bar-container">
       <div :style="progress_bar_style" class="progress-bar" />
@@ -55,7 +55,7 @@ export default {
   justify-content: center;
   align-items: center;
   p {
-    margin-top: 30px;
+    margin-top: 20px;
     font-size: 20px;
   }
   .progress-bar-container {

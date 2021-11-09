@@ -105,7 +105,7 @@ export default {
         rule_edit_page: false,
         rule_make_loading: false,
         rule_gen_complete: false,
-        instructions: true,
+        instructions: false,
       },
     };
   },
