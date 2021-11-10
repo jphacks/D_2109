@@ -259,7 +259,8 @@
       </div>
     </div>
     <div class="rule-input-compleat-btn" @click="CodeSubmit()">
-      <span>ルールの選択を完了する</span>
+      <img src="../assets/check_mark.svg" alt="" />
+      <span>完了する</span>
     </div>
   </div>
 </template>
@@ -470,7 +471,7 @@ export default {
       height: 70px;
     }
     .title {
-      min-width: 500px;
+      width: 500px;
       padding: 20px 20px 20px 30px;
       background-image: url("../assets/hukidashi.svg");
       background-repeat: no-repeat;
@@ -520,11 +521,10 @@ export default {
     }
   }
   .rule-list-container {
-    width: 80%;
-    min-width: 750px;
+    width: 700px;
     height: 400px;
     border-radius: 7px;
-    box-shadow: inset 5px 5px 10px #cdd7d4, inset -5px -5px 10px #ebf7f4;
+    box-shadow: inset 3px 3px 5px #cdd7d4, inset -3px -3px 5px #ebf7f4;
     .grid-list-container {
       width: 100%;
       height: 100%;
@@ -613,8 +613,7 @@ export default {
         padding: 25px 0 10px 0;
       }
       .card-container {
-        width: 90%;
-        min-width: 650px;
+        width: 650px;
         height: 130px;
         margin: 10px;
         background-color: #fbfcec;
@@ -631,13 +630,13 @@ export default {
           align-items: center;
           position: relative;
           .card-image-bg {
-            width: 200px;
-            height: 120px;
+            width: 190px;
+            height: 110px;
             position: absolute;
           }
           .card-image {
-            width: 150px;
-            height: 90px;
+            width: 140px;
+            height: 80px;
             position: absolute;
           }
         }
@@ -664,7 +663,7 @@ export default {
           align-items: center;
           input[type="number"] {
             width: 60px;
-            height: 70px;
+            height: 60px;
             font-size: 20px;
             text-align: right;
             outline: none;
@@ -696,16 +695,26 @@ export default {
     font-style: normal;
     cursor: pointer;
     border-radius: 999px;
-    padding: 10px 30px;
+    padding: 7px 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     bottom: 90px;
-    background-color: #92d4c4;
+    right: 40px;
+    background-color: #e55c6e;
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
     span {
       color: #ffffff;
       font-size: 14px;
     }
     &:hover {
-      background-color: #5297ac;
+      background-color: #ba3636;
     }
   }
 }
