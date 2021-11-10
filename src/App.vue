@@ -34,6 +34,12 @@
       :input_python="input_python"
       :output_python="output_python"
       @OpenInstructions="OpenInstructions()"
+      @ShowExpansionModal="ShowExpansionModal()"
+    />
+    <code-expansion-modal
+      v-if="disp_flag.code_expansion_modal"
+      :output_python="output_python"
+      @ShowExpansionModal="ShowExpansionModal()"
     />
     <rule-edit
       v-if="disp_flag.rule_edit_page"
@@ -67,6 +73,7 @@ import TrimSelect from "./page/TrimSelect.vue";
 import DirectCodeEdit from "./page/DirectCodeEdit.vue";
 import Loading from "./page/Loading.vue";
 import CodeGenComplete from "./page/CodeGenComplete.vue";
+import CodeExpansionModal from "./page/CodeExpansionModal.vue";
 import RuleEdit from "./page/RuleEdit.vue";
 import RuleMakeLoading from "./page/RuleMakeLoading.vue";
 import RuleGenComplete from "./page/RuleGenComplete.vue";
@@ -81,6 +88,7 @@ export default {
     DirectCodeEdit,
     Loading,
     CodeGenComplete,
+    CodeExpansionModal,
     RuleEdit,
     RuleMakeLoading,
     RuleGenComplete,
@@ -102,6 +110,7 @@ export default {
         direct_code_edit_page: false,
         loading_page: false,
         code_gen_complete_page: false,
+        code_expansion_modal: false,
         rule_edit_page: false,
         rule_make_loading: false,
         rule_gen_complete: false,
@@ -114,6 +123,10 @@ export default {
   },
   computed: {},
   methods: {
+    ShowExpansionModal() {
+      this.disp_flag.code_expansion_modal =
+        !this.disp_flag.code_expansion_modal;
+    },
     OpenInstructions() {
       if (this.disp_flag.start_page) {
         this.instructions_data = "start_page";
