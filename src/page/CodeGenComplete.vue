@@ -18,6 +18,10 @@
           <span> 変更後 </span>
         </div>
         <code-viewer class="code-viewer" :code_list="output_python" />
+        <div class="expansion-btn-container" @click="ShowExpansionModal()">
+          <span>拡大表示</span>
+          <img src="../assets/fullscreen.svg" alt="" />
+        </div>
       </div>
     </div>
     <div class="btn-container">
@@ -60,6 +64,9 @@ export default {
   created() {},
   computed: {},
   methods: {
+    ShowExpansionModal() {
+      this.$emit("ShowExpansionModal");
+    },
     downloadItem() {
       this.$emit("downloadItem");
     },
@@ -108,6 +115,26 @@ export default {
     }
     .right-viewer {
       margin-left: 20px;
+      position: relative;
+      .expansion-btn-container {
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        right: 20px;
+        bottom: 10px;
+        span {
+          color: #f2f2f2;
+          font-weight: 400;
+          margin-right: 5px;
+        }
+        img {
+          position: relative;
+          top: -2px;
+        }
+      }
     }
     .daruma_container {
       width: 100%;
