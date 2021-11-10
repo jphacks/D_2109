@@ -10,27 +10,46 @@
         </p>
       </div>
     </div>
-    <div class="switch-btn-container">
-      <div class="btn-container go-top-btn">
-        <img src="../assets/home.svg" alt="" />
-        <span class="go-top-text btn-text" @click="ChangePage('start_page')"
-          >トップに戻る</span
-        >
+    <div class="selector-container">
+      <div class="title">メニュー</div>
+      <div class="btn-container go-top" @click="ChangePage('start_page')">
+        <div class="left-pin" />
+        <div class="right-pin" />
+        <div class="btn-title">トップへ戻る</div>
+        <div class="img-container go-top-img">
+          <img src="../assets/home_back.svg" alt="" />
+          <img class="img-active" src="../assets/home_back_hover.svg" alt="" />
+        </div>
       </div>
-      <div class="btn-container pc-btn">
-        <img src="../assets/pc_file.svg" alt="" />
-        <label class="pc-text btn-text">
-          <input type="file" @change="FileSelect" accept=".json" />
-          ファイルを選択する
-        </label>
-      </div>
-      <div class="btn-container rule-make-btn">
-        <img src="../assets/rule_make.svg" alt="" />
-        <span
-          class="rule-make-text btn-text"
-          @click="ChangePage('rule_edit_page')"
-          >ルールを作成する</span
-        >
+      <label class="btn-container select-file">
+        <div class="left-pin" />
+        <div class="right-pin" />
+        <div class="btn-title">ルールファイルを選択</div>
+        <div class="img-container select-file-img">
+          <img src="../assets/rule_select.svg" alt="" />
+          <img
+            class="img-active"
+            src="../assets/rule_select_hover.svg"
+            alt=""
+          />
+        </div>
+        <input type="file" @change="FileSelect" accept=".json" />
+      </label>
+      <div
+        class="btn-container make-rule"
+        @click="ChangePage('rule_edit_page')"
+      >
+        <div class="left-pin" />
+        <div class="right-pin" />
+        <div class="btn-title">ルールを作成する</div>
+        <div class="img-container make-rule-img">
+          <img src="../assets/rule_create.svg" alt="" />
+          <img
+            class="img-active"
+            src="../assets/rule_create_hover.svg"
+            alt=""
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -104,64 +123,127 @@ export default {
       }
     }
   }
-  .switch-btn-container {
-    width: 100%;
-    height: 300px;
+  .selector-container {
+    background-color: #d7be96;
+    width: 750px;
+    height: 280px;
+    margin-top: 20px;
+    border-radius: 15px;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
-    .btn-container {
-      height: 240px;
+    position: relative;
+    .title {
+      width: 150px;
+      height: 58px;
+      padding-left: 20px;
+      color: #7c5510;
+      background-image: url("../assets/mini_husen.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
-      border-radius: 30px;
-      .btn-text {
-        font-family: noto-sans-cjk-jp, sans-serif;
-        font-weight: 700;
-        font-style: normal;
-        cursor: pointer;
-        color: #ffffff;
-        margin: 20px 0 10px 0;
-        padding: 5px 20px;
-        font-size: 16px;
+      position: absolute;
+      top: 20px;
+      left: 40px;
+    }
+    .btn-container {
+      cursor: pointer;
+      background-color: #e8e1d7;
+      border: 3px solid #ffffff00;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      transition: 0.2s;
+      .left-pin {
+        width: 15px;
+        height: 15px;
         border-radius: 999px;
+        background-color: #d0b546;
+        position: absolute;
+        top: 6px;
+        left: 6px;
+      }
+      .right-pin {
+        width: 15px;
+        height: 15px;
+        border-radius: 999px;
+        background-color: #d0b546;
+        position: absolute;
+        top: 6px;
+        right: 6px;
+      }
+      .btn-title {
+        color: #7b685c;
+        font-size: 15px;
+        position: absolute;
+        top: 25px;
+        transition: 0.2s;
+      }
+      .img-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        img {
+          position: absolute;
+          transition: 0.2s;
+        }
+        .img-active {
+          opacity: 0;
+        }
+      }
+      &:hover {
+        border: 3px solid #f5f397;
+        background-color: #fbfcec;
+      }
+      &:hover > .btn-title {
+        color: #000000;
+      }
+      &:hover > .img-container > .img-active {
+        opacity: 1;
+      }
+      input[type="file"] {
+        display: none;
       }
     }
-    .go-top-btn {
-      background-color: #313131;
-      padding: 25px 25px 0px 25px;
-      .go-top-text {
-        background-color: #6f6f6f;
-        &:hover {
-          background-color: #434343;
-        }
+    .go-top {
+      width: 160px;
+      height: 170px;
+      top: 90px;
+      left: 30px;
+      .go-top-img {
+        width: 100px;
+        height: 100px;
+        top: 50px;
       }
     }
-    .pc-btn {
-      background-color: #efed95;
-      margin: 0 40px 0 40px;
-      padding: 25px 45px 0px 45px;
-      .pc-text {
-        background-color: #e55c6e;
-        &:hover {
-          background-color: #ba3636;
-        }
-        input[type="file"] {
-          display: none;
-        }
+    .select-file {
+      width: 230px;
+      height: 200px;
+      top: 60px;
+      left: 230px;
+      .select-file-img {
+        width: 200px;
+        height: 100px;
+        top: 70px;
       }
     }
-    .rule-make-btn {
-      background-color: #ffb49c;
-      padding: 25px 25px 0px 25px;
-      .rule-make-text {
-        background-color: #92d4c4;
-        &:hover {
-          background-color: #5297ac;
-        }
+    .make-rule {
+      width: 230px;
+      height: 200px;
+      top: 60px;
+      right: 30px;
+      .make-rule-img {
+        width: 140px;
+        height: 120px;
+        top: 70px;
       }
     }
   }
