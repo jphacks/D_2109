@@ -114,11 +114,12 @@
           </div>
           <div class="description" v-if="style.third">
             <div class="description-text">
-              <img
+              <video
+                src="../assets/Instructions_rule.mp4"
                 class="image-preview"
-                src="../assets/rule_preview.png"
-                alt=""
-              />
+                loop
+                autoplay
+              ></video>
               <div class="list-container">
                 <div class="list-number">1.</div>
                 <div class="list-text">
@@ -152,11 +153,12 @@
           </div>
           <div class="description" v-if="style.fourth">
             <div class="description-text">
-              <img
+              <video
+                src="../assets/Instructions_menu.mp4"
                 class="image-preview"
-                src="../assets/menu_preview.png"
-                alt=""
-              />
+                loop
+                autoplay
+              ></video>
               <div class="list-container">
                 <div class="list-number">1.</div>
                 <div class="list-text">
