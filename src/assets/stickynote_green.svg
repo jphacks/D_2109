@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="325" height="83" viewBox="0 0 325 83">
+  <defs>
+    <filter id="長方形_2287" x="0" y="0" width="325" height="83" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feFlood flood-opacity="0.102"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="stickynote_green" transform="translate(-182.5 -60.5)">
+    <g transform="matrix(1, 0, 0, 1, 182.5, 60.5)" filter="url(#長方形_2287)">
+      <rect id="長方形_2287-2" data-name="長方形 2287" width="304" height="62" rx="1" transform="translate(10.5 7.5)" fill="ivory"/>
+    </g>
+    <rect id="長方形_2293" data-name="長方形 2293" width="36" height="62" rx="1" transform="translate(193 68)" fill="#e1ec94"/>
+  </g>
+</svg>

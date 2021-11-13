@@ -46,6 +46,16 @@
       @changePage="ChangePage($event)"
       @ruleGen="RuleGenLoading($event)"
       @OpenInstructions="OpenInstructions()"
+      @RuleDescriptionModal="RuleDescriptionModal($event)"
+    />
+    <rule-description-modal
+      v-if="disp_flag.rule_description_modal"
+      :title="disp_description.title"
+      :title_bg_path="disp_description.title_bg_path"
+      :desctiptions="disp_description.descriptions"
+      :code_before="disp_description.before_code"
+      :code_after="disp_description.after_code"
+      @RuleDescriptionModal="RuleDescriptionModal($event)"
     />
     <rule-make-loading
       v-if="disp_flag.rule_make_loading"
@@ -75,6 +85,7 @@ import Loading from "./page/Loading.vue";
 import CodeGenComplete from "./page/CodeGenComplete.vue";
 import CodeExpansionModal from "./page/CodeExpansionModal.vue";
 import RuleEdit from "./page/RuleEdit.vue";
+import RuleDescriptionModal from "./page/RuleDescriptionModal.vue";
 import RuleMakeLoading from "./page/RuleMakeLoading.vue";
 import RuleGenComplete from "./page/RuleGenComplete.vue";
 import Instructions from "./page/Instructions.vue";
@@ -90,6 +101,7 @@ export default {
     CodeGenComplete,
     CodeExpansionModal,
     RuleEdit,
+    RuleDescriptionModal,
     RuleMakeLoading,
     RuleGenComplete,
     Instructions,
@@ -112,10 +124,110 @@ export default {
         code_gen_complete_page: false,
         code_expansion_modal: false,
         rule_edit_page: false,
+        rule_description_modal: false,
         rule_make_loading: false,
         rule_gen_complete: false,
         instructions: false,
       },
+      disp_description: {},
+      description_lists: [
+        {
+          title: "スタイルに関するルール",
+          title_bg_path: require("./assets/stickynote_blue.svg"),
+          descriptions: [
+            {
+              image_path: require("./assets/line_count.svg"),
+              title: "1文字あたりの文字数",
+              text: "1行あたりの文字数を決めます。文字数を指定することでコードが複雑になることを防ぎ、点検のしやすいキレイなコードを作ることに役立てることが可能です。<br>PEP8では、最大文字数を80文字にすることが推奨されます。<br>trimでは文字数をオーバーして記憶があった場合は警告を表示します。",
+            },
+          ],
+          before_code: "import os",
+          after_code: "#test<br>import os",
+        },
+        {
+          title: "スタイルに関するルール",
+          title_bg_path: require("./assets/stickynote_blue.svg"),
+          descriptions: [
+            {
+              image_path: require("./assets/methods_height.svg"),
+              title: "クラス・グローバル関数間の間隔（上下の空白行）",
+              text: "PEP8に基づき、クラス・グローバル関数ブロックの上下空白行が2行になるように調整します。<br>上下に空白行を生成することでコードが見やすくなります。",
+            },
+          ],
+          before_code: "import os",
+          after_code: "#test<br>import os",
+        },
+        {
+          title: "スタイルに関するルール",
+          title_bg_path: require("./assets/stickynote_blue.svg"),
+          descriptions: [
+            {
+              image_path: require("./assets/def_height.svg"),
+              title: "メソッドブロック間の間隔（上下の空白行）",
+              text: "PEP8に基づき、メソッドブロックの上下空白行が1行になるように調整します。<br>上下に空白行を生成することでコードが見やすくなります。",
+            },
+          ],
+          before_code: "import os",
+          after_code: "#test<br>import os",
+        },
+        {
+          title: "importに関するルール",
+          title_bg_path: require("./assets/stickynote_red.svg"),
+          descriptions: [
+            {
+              image_path: require("./assets/grouping.svg"),
+              title: "グルーピング",
+              text: "モジュールの種類によって以下の間隔でインポートするようにグループ化します。<br>1. 標準ライブラリ → 2. サードパーティ → 3. ローカルライブラリ（自作のライブラリ）<br>グループ化することでモジュールの管理がしやすくなります。<br>これは、PEP8に準拠します。",
+            },
+          ],
+          before_code: "import os",
+          after_code: "#test<br>import os",
+        },
+        {
+          title: "importに関するルール",
+          title_bg_path: require("./assets/stickynote_red.svg"),
+          descriptions: [
+            {
+              image_path: require("./assets/alphabet.svg"),
+              title: "アルファベット順に並び替え",
+              text: "モジュールをアルファベット順に並び替えます。<br>目的のモジュールの発見が容易になるなど、開発の効率化につながります。<br>グループ化機能と組み合わせることで、モジュールをもっとスッキリまとめることができます。",
+            },
+          ],
+          before_code: "import os",
+          after_code: "#test<br>import os",
+        },
+        {
+          title: "空白に関するルール",
+          title_bg_path: require("./assets/stickynote_yellow.svg"),
+          descriptions: [
+            {
+              image_path: require("./assets/margin.svg"),
+              title: "空白・スペースのチェック",
+              text: "PEP8では、演算子前後や関数の引数部、辞書内など様々な場面で空白を置くかどうか？に関するルールがあります。<br>ここであ、このルールに沿って整形するかどうかを設定できます。",
+            },
+          ],
+          before_code: "import os",
+          after_code: "#test<br>import os",
+        },
+        {
+          title: "命名規則に関するルール",
+          title_bg_path: require("./assets/stickynote_green.svg"),
+          descriptions: [
+            {
+              image_path: require("./assets/capwords.svg"),
+              title: "CapWords形式",
+              text: 'CapWords形式を命名方法に採用します。<br>最初の１文字を大文字、それ以降はキャメルケースにのっとって記述する方法です。<br>キャメルケース：各構成語の先頭を大文字にする形式（<span style="color:#E55C6E;">J</span>ava<span style="color:#E55C6E;">S</span>cript、<span style="color:#E55C6E;">P</span>lay<span style="color:#E55C6E;">S</span>tationなど）',
+            },
+            {
+              image_path: require("./assets/snake_case.svg"),
+              title: "snake_case形式",
+              text: "snake_case形式を命名方法に採用します。<br>また、プログラミングでは書く要素名にスペース（空白）が使えない場合がほとんど。（× file download）<br>snake_case形式では各構成語を「_」（アンダースコア）で区切って記述します。<br>なお、snake_case形式には大文字を使えません。",
+            },
+          ],
+          before_code: "import os",
+          after_code: "#test<br>import os",
+        },
+      ],
     };
   },
   created() {
@@ -123,6 +235,11 @@ export default {
   },
   computed: {},
   methods: {
+    RuleDescriptionModal(target) {
+      this.disp_description = this.description_lists[target.index];
+      this.disp_flag.rule_description_modal =
+        !this.disp_flag.rule_description_modal;
+    },
     ShowExpansionModal() {
       this.disp_flag.code_expansion_modal =
         !this.disp_flag.code_expansion_modal;
@@ -233,6 +350,7 @@ export default {
       this.disp_flag.loading_page = false;
       this.disp_flag.code_gen_complete_page = false;
       this.disp_flag.rule_edit_page = false;
+      this.disp_flag.rule_description_modal = false;
       this.disp_flag.rule_gen_complete = false;
       this.disp_flag.rule_make_loading = false;
       this.disp_flag.instructions = false;
