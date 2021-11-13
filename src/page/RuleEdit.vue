@@ -71,7 +71,7 @@
         <!-- タイトル -->
         <span class="card-title">スタイルに関するルール</span>
         <!-- カード -->
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('0')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
             <img
@@ -92,7 +92,7 @@
             <p>文字</p>
           </div>
         </div>
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('1')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
             <img class="card-image" src="../assets/methods_height.svg" alt="" />
@@ -117,7 +117,7 @@
             <p></p>
           </div>
         </div>
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('2')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
             <img class="card-image" src="../assets/def_height.svg" alt="" />
@@ -141,7 +141,7 @@
         <!-- タイトル -->
         <span class="card-title">importに関するルール</span>
         <!-- カード -->
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('3')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_red.svg" alt="" />
             <img class="card-image" src="../assets/grouping_small.svg" alt="" />
@@ -159,7 +159,7 @@
             />
           </div>
         </div>
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('4')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_red.svg" alt="" />
             <img class="card-image" src="../assets/alphabet.svg" alt="" />
@@ -178,7 +178,7 @@
         <!-- タイトル -->
         <span class="card-title">空白に関するルール</span>
         <!-- カード -->
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('5')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_yellow.svg" alt="" />
             <img class="card-image" src="../assets/margin.svg" alt="" />
@@ -199,7 +199,7 @@
         <!-- タイトル -->
         <span class="card-title">命名規則に関するルール</span>
         <!-- カード -->
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('6')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
             <img class="card-image" src="../assets/cap_snake.svg" alt="" />
@@ -218,7 +218,7 @@
             />
           </div>
         </div>
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('6')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
             <img class="card-image" src="../assets/cap_snake.svg" alt="" />
@@ -237,7 +237,7 @@
             />
           </div>
         </div>
-        <div class="card-container">
+        <div class="card-container" @click="RuleDescriptionModal('6')">
           <div class="image-container">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
             <img class="card-image" src="../assets/cap_snake.svg" alt="" />
@@ -401,6 +401,9 @@ export default {
   created() {},
   computed: {},
   methods: {
+    RuleDescriptionModal(target) {
+      this.$emit("RuleDescriptionModal", { index: target });
+    },
     ChangeCheckBox(target) {
       let object_keys = target.split(/\./g);
       console.log(object_keys.length);
@@ -613,6 +616,7 @@ export default {
         padding: 25px 0 10px 0;
       }
       .card-container {
+        cursor: pointer;
         width: 650px;
         height: 130px;
         margin: 10px;
