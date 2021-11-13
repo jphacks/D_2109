@@ -71,8 +71,8 @@
         <!-- タイトル -->
         <span class="card-title">スタイルに関するルール</span>
         <!-- カード -->
-        <div class="card-container" @click="RuleDescriptionModal('0')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('0')">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
             <img
               class="card-image"
@@ -80,7 +80,7 @@
               alt=""
             />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('0')">
             <p class="title">一行あたりの文字数</p>
             <p class="description">一行あたりの文字数を決めます。</p>
           </div>
@@ -92,12 +92,12 @@
             <p>文字</p>
           </div>
         </div>
-        <div class="card-container" @click="RuleDescriptionModal('1')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('1')">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
             <img class="card-image" src="../assets/methods_height.svg" alt="" />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('1')">
             <p class="title">クラス・グローバル関数間の間隔</p>
             <p class="description">
               クラス・グローバル関数ブロックの上下を2行空けるかを決めます。
@@ -117,12 +117,12 @@
             <p></p>
           </div>
         </div>
-        <div class="card-container" @click="RuleDescriptionModal('2')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('2')">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
             <img class="card-image" src="../assets/def_height.svg" alt="" />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('2')">
             <p class="title">メソッドブロック間の間隔</p>
             <p class="description">
               メソッドブロックの上下を1行空けるかを決めます。
@@ -141,12 +141,12 @@
         <!-- タイトル -->
         <span class="card-title">importに関するルール</span>
         <!-- カード -->
-        <div class="card-container" @click="RuleDescriptionModal('3')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('3')">
             <img class="card-image-bg" src="../assets/card_red.svg" alt="" />
             <img class="card-image" src="../assets/grouping_small.svg" alt="" />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('3')">
             <p class="title">グルーピング</p>
             <p class="description">
               インポートを種類によって、振り分けを行う機能です。
@@ -159,12 +159,12 @@
             />
           </div>
         </div>
-        <div class="card-container" @click="RuleDescriptionModal('4')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('4')">
             <img class="card-image-bg" src="../assets/card_red.svg" alt="" />
             <img class="card-image" src="../assets/alphabet.svg" alt="" />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('4')">
             <p class="title">アルファベット順並び替え</p>
             <p class="description">アルファベット順に並び替える機能です。</p>
           </div>
@@ -178,12 +178,12 @@
         <!-- タイトル -->
         <span class="card-title">空白に関するルール</span>
         <!-- カード -->
-        <div class="card-container" @click="RuleDescriptionModal('5')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('5')">
             <img class="card-image-bg" src="../assets/card_yellow.svg" alt="" />
             <img class="card-image" src="../assets/margin.svg" alt="" />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('5')">
             <p class="title">予約語や変数間の空白</p>
             <p class="description">
               classや関数、演算子前後を空白で整形する機能です。
@@ -199,12 +199,12 @@
         <!-- タイトル -->
         <span class="card-title">命名規則に関するルール</span>
         <!-- カード -->
-        <div class="card-container" @click="RuleDescriptionModal('6')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('6')">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
             <img class="card-image" src="../assets/cap_snake.svg" alt="" />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('6')">
             <p class="title">classの命名規則</p>
             <p class="description">classの命名規則を決めます。</p>
             <p class="description">
@@ -218,12 +218,12 @@
             />
           </div>
         </div>
-        <div class="card-container" @click="RuleDescriptionModal('6')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('6')">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
             <img class="card-image" src="../assets/cap_snake.svg" alt="" />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('6')">
             <p class="title">関数の命名規則</p>
             <p class="description">関数の命名規則を決めます。</p>
             <p class="description">
@@ -237,12 +237,12 @@
             />
           </div>
         </div>
-        <div class="card-container" @click="RuleDescriptionModal('6')">
-          <div class="image-container">
+        <div class="card-container">
+          <div class="image-container" @click="RuleDescriptionModal('6')">
             <img class="card-image-bg" src="../assets/card_green.svg" alt="" />
             <img class="card-image" src="../assets/cap_snake.svg" alt="" />
           </div>
-          <div class="description-container">
+          <div class="description-container" @click="RuleDescriptionModal('6')">
             <p class="title">変数の命名規則</p>
             <p class="description">変数の命名規則を決めます。</p>
             <p class="description">
