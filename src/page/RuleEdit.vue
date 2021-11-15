@@ -95,7 +95,7 @@
         <div class="card-container">
           <div class="image-container" @click="RuleDescriptionModal('1')">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
-            <img class="card-image" src="../assets/methods_height.svg" alt="" />
+            <img class="card-image" src="../assets/def_height.svg" alt="" />
           </div>
           <div class="description-container" @click="RuleDescriptionModal('1')">
             <p class="title">クラス・グローバル関数間の間隔</p>
@@ -120,12 +120,12 @@
         <div class="card-container">
           <div class="image-container" @click="RuleDescriptionModal('2')">
             <img class="card-image-bg" src="../assets/card_blue.svg" alt="" />
-            <img class="card-image" src="../assets/def_height.svg" alt="" />
+            <img class="card-image" src="../assets/methods_height.svg" alt="" />
           </div>
           <div class="description-container" @click="RuleDescriptionModal('2')">
-            <p class="title">メソッドブロック間の間隔</p>
+            <p class="title">クラス内のメソッドブロック間の間隔</p>
             <p class="description">
-              メソッドブロックの上下を1行空けるかを決めます。
+              クラス内のメソッドブロックの上下を1行空けるかを決めます。
             </p>
           </div>
           <div class="input-container">
