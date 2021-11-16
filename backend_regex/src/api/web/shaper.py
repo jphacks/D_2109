@@ -63,6 +63,9 @@ def lambda_handler(event, context):
     lst_cp = lst_dic['lst']
     method_naming = lst_dic['method_naming']
     class_naming = lst_dic['class_naming']
+    
+    print(method_naming.method_lst)
+    print(method_naming.method_hit_lst)
 
     # 1行辺りの文字数をチェック
     lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
@@ -72,22 +75,24 @@ def lambda_handler(event, context):
     # 演算子前後の空白を調整
     lst_cp = scan_operators_space(lst_cp, method_naming, class_naming)
     
-	# 改行コードを追加
+	  # 改行コードを追加
     lst_cp = add_newline_char(lst_cp)
 
     # 変数の解析と命名規則チェック
-    lst_cp = scan_naming_value(lst_cp, op['naming_check'])
+    lst_dic = scan_naming_value(lst_cp, op['naming_check'])
+    lst_cp = lst_dic['lst']
+    value_naming = lst_dic['value_naming']
 
-	# 整形後の上部に表示するメッセージを作成する
+	  # 整形後の上部に表示するメッセージを作成する
     lst_cp = trim_top_messages(
-		lst_cp, 
-		op['style_check'], 
-		op['import_check'],
-		op['naming_check'],
-		def_blank_num,
-		class_blank_num,
-		s_warn_count, # 行辺りの文字数設定
-	)
+      lst_cp, 
+      op['style_check'], 
+      op['import_check'],
+      op['naming_check'],
+      def_blank_num,
+      class_blank_num,
+      s_warn_count, # 行辺りの文字数設定
+	  )
 
     # タブ文字設定の場合は半角X個をタブ文字に変換
     lst_cp = replace_blank_to_tab(lst_cp, op['style_check']['indent']['type'], op['style_check']['indent']['tab_num'])
@@ -117,7 +122,7 @@ while True:
       lst.append(line)
   else:
     break
-with open('rule.json') as json_data:
+with open('../../../rule.json') as json_data:
   op = json.load(json_data)
   # bodyを文字列として送る(POST通信を想定)
   event['body'] = json.dumps({

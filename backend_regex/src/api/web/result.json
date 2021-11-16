@@ -1,0 +1,23 @@
+{
+    "repo_id": "xxxxx",
+    "date": "xxxx-xx-xx",
+    "file_num": 12,
+    "trim_num": 122,
+    "code":[{
+        "path": "web/make_pdf.py",
+        "trim_num": 3,
+        "blank_method": 1,
+        "blank_class": 1,
+        "blank_value": 1,
+        "len_max_count": 0,
+        "naming_method": 0,
+        "naming_class": 0,
+        "naming_value": 0,
+        "naming_sort": "OK",
+        "naming_group": "整形済",
+        "line_margin_global": 0,
+        "line_margin_method": 0
+    },{
+     
+    }]
+}
