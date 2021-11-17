@@ -8,12 +8,15 @@ from reportlab.pdfbase.ttfonts import TTFont
 
 # ルールに関するPDFを output.pdf として出力 (PDF_plane.pdfをベース)
 def create_pdf(rule: dict):
+    snake_path = "input\img\snake_case.png"
+    capword_path = "input\img\CapWords形式.png"
     rule_array =[["予約語や変数間の空白","input\img\空白・スペースのチェック.png","classや関数、演算子前後を空白で整形する機能です。"],
     ["インデントのスペース数", "input\img\\tabインデント.png", "インデントであけるスペースの数を設定できます。"],
     ["一行あたりの文字数","input\img\一行文字.png"," 一行あたりの文字数を決めます。"],
     ["クラス・グローバル関数間の間隔","input\img\メソッドブロック間の間隔.png","クラス・グローバル関数ブロックの上下を2行空けるかを決めます。"],
     ["メソッドブロック間の間隔","input\img\クラス・グローバル関数の間隔.png", "メソッドブロックの上下を1行空けるかを決めます。"],
-    ["関数・クラスの命名規則","input\img\CapWords形式.png","変数の命名規則を決めます。チェック：CapWords, 未チェック：Snake"],
+    ["クラスの命名規則","input\img\CapWords形式.png","クラスの命名規則を決めます。チェック：CapWords, 未チェック：Snake"],
+    ["関数の命名規則","input\img\CapWords形式.png","関数の命名規則を決めます。チェック：CapWords, 未チェック：Snake"],
     ["変数の命名規則", "input\img\snake_case.png","変数の命名規則を決めます。チェック：CapWords, 未チェック：Snake"],
     ["グルーピング", "input\img\グルーピング.png","インポートを種類によって、振り分けを行う機能です。"],
     ["アルファベット順並び替え", "input\img\アルファベット順.png", "アルファベット順に並び替える機能です。"],
@@ -25,7 +28,10 @@ def create_pdf(rule: dict):
     if rule["style_check"]["blank_format"]['action']:
         rule_array[0].append("チェック :  ON")
         adapted_rule.append(rule_array[0])
-    rule_array[1].append(f"スペース数 : {rule['style_check']['indent']['num']}")
+    if rule["style_check"]["indent"]["type"] == " ":
+        rule_array[1].append(f"スペース数 : {rule['style_check']['indent']['num']}")
+    elif rule["style_check"]["indent"]["type"] == "\t":
+        rule_array[1].append(f"タブ数 : {rule['style_check']['indent']['tab_num']}")
     adapted_rule.append(rule_array[1]) #indent
     rule_array[2].append(f"1行あたりの文字 : {rule['style_check']['count_word']['length']}文字 ")
     adapted_rule.append(rule_array[2]) #count_word
@@ -37,24 +43,35 @@ def create_pdf(rule: dict):
         adapted_rule.append(rule_array[4]) #method
     if rule['naming_check']['class_case']['snake']:
         rule_array[5].append("未チェック : snake_case")
+        rule_array[5][1] = snake_path
     else:
         rule_array[5].append("チェック済 : CapWords")
+        rule_array[5][1] = capword_path
     adapted_rule.append(rule_array[5]) #class and method _case
 
-    if rule['naming_check']['value_case']['snake']:
+    if rule['naming_check']['class_case']['snake']:
         rule_array[6].append("未チェック : snake_case")
+        rule_array[6][1] = snake_path
     else:
         rule_array[6].append("チェック済 : CapWords")
-    adapted_rule.append(rule_array[6]) #variable_case
+        rule_array[6][1] = capword_path
+    adapted_rule.append(rule_array[6]) #class and method _case
+
+    if rule['naming_check']['value_case']['snake']:
+        rule_array[7].append("未チェック : snake_case")
+        rule_array[7][1] = snake_path
+    else:
+        rule_array[7].append("チェック済 : CapWords")
+        rule_array[7][1] = capword_path
+    adapted_rule.append(rule_array[7]) #variable_case
 
     if rule['import_check']['grouping']:
-        rule_array[7].append("チェック :  ON")
-        adapted_rule.append(rule_array[7]) #grouping
-
+        rule_array[8].append("チェック :  ON")
+        adapted_rule.append(rule_array[8]) #grouping
 
     if rule['import_check']['sorting']:
-        rule_array[8].append("チェック :  ON")
-        adapted_rule.append(rule_array[8]) #sorting
+        rule_array[9].append("チェック :  ON")
+        adapted_rule.append(rule_array[9]) #sorting
     adapted_rule
 
 
@@ -148,6 +165,3 @@ def create_pdf(rule: dict):
 
     with open(output_file, "wb") as fp:
        output.write(fp)
-
-
-
