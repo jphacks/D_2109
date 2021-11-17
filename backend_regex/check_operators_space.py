@@ -7,7 +7,7 @@ REJEX_CLASS_NAME = "class([ |\t]*)(\\w+)([ |\t]*)(\\((.*)\\))*([ |\t]*):"
 # 行ごとに実行 : 指定した演算子
 
 
-def check_operators_space(line: str):
+def check_operators_space(line: str, mod_ope_num: int):
     if not (re.findall(REJEX_METHOD_NAME, line)
         or re.findall(REJEX_METHOD_NAME_BACK, line)
         or re.findall(REJEX_CLASS_NAME, line)):
@@ -18,5 +18,6 @@ def check_operators_space(line: str):
                     '([a-zA-Z0-9]*)([\s]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([\s]*)([a-zA-Z0-9]*)',
                     '\\1 \\3 \\5',
                     line)
-    return line
+                mod_ope_num = mud_ope_num + 1
+    return line, mod_ope_num
 
