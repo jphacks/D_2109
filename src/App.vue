@@ -301,7 +301,11 @@ export default {
             response_python += element;
           });
           this.output_python = response_python;
-          this.ChangePage({ page: "code_gen_complete_page" });
+          new Promise(function (resolve) {
+            window.setTimeout(resolve, 1000);
+          }).then(() => {
+            this.ChangePage({ page: "code_gen_complete_page" });
+          });
         })
         .catch((error) => {
           for (let key of Object.keys(error)) {
@@ -309,7 +313,11 @@ export default {
             console.log(error[key]);
           }
           this.output_python = "入力されたソースコードにエラーがあります。";
-          this.ChangePage({ page: "code_gen_complete_page" });
+          new Promise(function (resolve) {
+            window.setTimeout(resolve, 1000);
+          }).then(() => {
+            this.ChangePage({ page: "code_gen_complete_page" });
+          });
         });
     },
     PythonFileDownload() {
