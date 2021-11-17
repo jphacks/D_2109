@@ -43,11 +43,11 @@
 #### 3. 修正後のコードをハイライト表示してプレビューすることができる
 コードを修正するツールは競合サービスで数多く存在しますが、どこを修正したのかを表示してくれるようなサービスはありません。
 そこで『 <img style="width:10px" src="./public/favicon.png"> trim 』は修正したプログラムの概要を上部に表示して、該当箇所にはコメントアウトで修正したことを表示する機能を持ちます。
-<img src="https://github.com/jphacks/D_2109/wiki/images/code_gen_complete2.png" />
+<img src="https://github.com/jphacks/D_2109/wiki/images/code_gen_complete.png" />
 
 #### 4. 修正後のコードをダウンロードすることができる。
 上記で示した通り『 <img style="width:10px" src="./public/favicon.png"> trim 』は修正済みのプログラムと修正前のプログラムを一眼で比較できるUIを持っています。また、さらに修正後のプログラムをダウンロードすることもできるため、エンジニア本人がローカルで開発することも可能になるのです。
-<img src="https://github.com/jphacks/D_2109/wiki/images/code_gen_complete2.png" />
+<img src="https://github.com/jphacks/D_2109/wiki/images/code_dl.png" />
 
 ### 解決出来ること
 『 <img style="width:10px" src="./public/favicon.png"> trim 』は全てのエンジニアが持つコーディングの個性やクセをストレスなく修正することができます。
@@ -254,10 +254,6 @@
         a=3
     IndentationError: unexpected indent
     ```
-
-* 独自で開発したものの内容をこちらに記載してください
-* 特に力を入れた部分をファイルリンク、またはcommit_idを記載してください。
-
 
 # 使用方法
 使用方法については[Wiki](https://github.com/jphacks/D_2109/wiki)をご覧ください。
