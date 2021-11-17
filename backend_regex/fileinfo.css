@@ -1,0 +1,21 @@
+.md-img-left,
+.md-img-right
+  clear: both
+.md-img-left + p img,
+.md-img-right + p img
+  width: 300px
+  margin-bottom: 20px
+  @media screen and (max-width: $break-point + 300px)
+    position: relative
+    width: auto !important
+    margin-left: 0 !important
+    float: none !important
+    width: 100% !important
+.md-img-left + p img
+  float: left
+  margin-left: -100px
+  margin-right: 30px
+.md-img-right + p img
+  float: right
+  margin-right: -100px
+  margin-left: 30px
