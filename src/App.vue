@@ -151,7 +151,7 @@ export default {
           title_bg_path: require("./assets/stickynote_blue.svg"),
           descriptions: [
             {
-              image_path: require("./assets/methods_height.svg"),
+              image_path: require("./assets/def_height.svg"),
               title: "クラス・グローバル関数間の間隔（上下の空白行）",
               text: "PEP8に基づき、クラス・グローバル関数ブロックの上下空白行が2行になるように調整します。<br>上下に空白行を生成することでコードが見やすくなります。",
             },
@@ -166,7 +166,7 @@ export default {
           title_bg_path: require("./assets/stickynote_blue.svg"),
           descriptions: [
             {
-              image_path: require("./assets/def_height.svg"),
+              image_path: require("./assets/methods_height.svg"),
               title: "クラス内のメソッドブロック間の間隔（上下の空白行）",
               text: "PEP8に基づき、クラス内のメソッドブロックの上下空白行が1行になるように調整します。<br>上下に空白行を生成することでコードが見やすくなります。",
             },
