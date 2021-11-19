@@ -15,6 +15,7 @@
       @changePage="ChangePage($event)"
       @fileSelect="PythonFileSelect($event)"
       @OpenInstructions="OpenInstructions()"
+      @RuleFileSelectModal="RuleFileSelectModal()"
     />
     <direct-code-edit
       v-if="disp_flag.direct_code_edit_page"
@@ -361,6 +362,9 @@ export default {
       });
       this.rule_flag = true;
       this.ChangePage({ page: "trim_select_page" });
+    },
+    RuleFileSelectModal(){
+      this.disp_flag.file_code_select_modal = true;
     },
     ChangePage(target) {
       console.log(target);

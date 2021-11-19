@@ -213,8 +213,8 @@
           </div>
           <div class="input-container">
             <toggle-switch
-              :status="rule_json.naming_check.class_case.snake"
-              @changeStatus="ChangeCheckBox('naming_check.class_case.snake')"
+              :status="rule_json.naming_check.class_case.CapWords"
+              @changeStatus="ChangeCheckBox('naming_check.class_case.CapWords')"
             />
           </div>
         </div>
@@ -232,8 +232,8 @@
           </div>
           <div class="input-container">
             <toggle-switch
-              :status="rule_json.naming_check.method_case.snake"
-              @changeStatus="ChangeCheckBox('naming_check.method_case.snake')"
+              :status="rule_json.naming_check.method_case.CapWords"
+              @changeStatus="ChangeCheckBox('naming_check.method_case.CapWords')"
             />
           </div>
         </div>
@@ -251,8 +251,8 @@
           </div>
           <div class="input-container">
             <toggle-switch
-              :status="rule_json.naming_check.value_case.snake"
-              @changeStatus="ChangeCheckBox('naming_check.value_case.snake')"
+              :status="rule_json.naming_check.value_case.CapWords"
+              @changeStatus="ChangeCheckBox('naming_check.value_case.CapWords')"
             />
           </div>
         </div>
@@ -442,12 +442,12 @@ export default {
       this.$emit("ruleGen", { rule: this.rule_json });
     },
     JsonValidation() {
-      this.rule_json.naming_check.class_case.CapWords =
-        !this.rule_json.naming_check.class_case.snake;
-      this.rule_json.naming_check.method_case.CapWords =
-        !this.rule_json.naming_check.method_case.snake;
-      this.rule_json.naming_check.value_case.CapWords =
-        !this.rule_json.naming_check.value_case.snake;
+      this.rule_json.naming_check.class_case.snake =
+        !this.rule_json.naming_check.class_case.CapWords;
+      this.rule_json.naming_check.method_case.snake =
+        !this.rule_json.naming_check.method_case.CapWords;
+      this.rule_json.naming_check.value_case.snake =
+        !this.rule_json.naming_check.value_case.CapWords;
     },
   },
 };

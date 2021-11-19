@@ -4,9 +4,9 @@
       @changePage="ChildChangePage($event)"
       @OpenInstructions="OpenInstructions()"
     />
-    <div class="back-btn-container" @click="ChangePage('trim_select_page')">
+    <div class="back-btn-container" @click="RuleFileSelectModal()">
       <img class="back-btn-image" src="../assets/left_arrow_white.svg" alt="" />
-      <span>ルールファイルの選択へ</span>
+      <span>ルールの適用へ</span>
     </div>
     <div class="title-container">
       <img class="daruma_icon" src="../assets/daruma_icon.svg" alt="" />
@@ -57,6 +57,9 @@ export default {
   created() {},
   computed: {},
   methods: {
+    RuleFileSelectModal(){
+      this.$emit("RuleFileSelectModal");
+    },
     FileSelect(target) {
       target.preventDefault();
       let files = target.target.files;
