@@ -110,16 +110,15 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 
 
 ### Trim API
-
-
-
+以下の関数を提供します。
+- rule.jsonからルールを可視化したtrim-rule.pdfを生成
+- プロジェクト(.zip)を整形し、整形結果を示すtrim-result.pdfを生成
+APIエンドポイントは[こちら](#エンドポイント)
 
 
 ### 解決出来ること
 『 <img style="width:10px" src="./public/favicon.png"> trim 』は全てのエンジニアが持つコーディングの個性やクセをストレスなく修正することができます。
 さらにチーム開発におけるコーディング規約を『暗黙的』なものから『明示的な』なものへと変化させ、チームメンバーにストレスを与えることなく、コードの個性を整えることができます。
-
-
 
 
 ### 今後の展望
@@ -158,7 +157,17 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 <img src="https://github.com/jphacks/D_2109/wiki/images/trim_drawio.png" />
 
 
-### APIエンドポイント
+### エンドポイント
+
+#### Trim on Browser
+Webトップページ
+- https://d1cg4t8u2gajxa.cloudfront.net
+
+#### Trim Auto Notification
+Git Hub Webhookに設定するリンク
+- 
+
+#### Trim API
 trim-rule.pdfを作成し、署名付きリンクを返す
 - https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule
   - Content-Type: “applicatin/json”
