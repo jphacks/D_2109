@@ -9,8 +9,8 @@
 
 ## 目次
 - [製品概要](#製品概要)
-  - [背景](#背景)
-  - [製品説明](#製品説明)
+  - [背景](#背景(製品開発のきっかけ、課題等）)
+  - [製品説明](#製品説明（具体的な製品の説明）)
   - [Trim on Browser](#Trim on Browser)
   - [Trim Auto Notification](#Trim Auto Notification)
 
