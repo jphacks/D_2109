@@ -14,8 +14,14 @@
   - [Trim on Browser](#Trim-on-Browser)
   - [Trim Auto Notification](#Trim-Auto-Notification)
   - [Trim API](#Trim-API)
-
-
+  - [解決出来ること](#解決出来ること)
+  - [今後の展望](#今後の展望)
+  - [注力したこと](#注力したこと)
+-  [開発技術](#開発技術)
+  - [フレームワーク・ライブラリ・モジュール](#フレームワーク・ライブラリ・モジュール)
+  - [技術構成](#技術構成)
+  - [独自技術](#独自技術)
+  - [使用方法](#使用方法)
 
 ## 製品概要
 <span style="font-weight:bold">ディベロッパー × Tech</span>
@@ -116,7 +122,7 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 
 また、現段階では修正することができる言語は Python のみですが、C++ やJavaScript といった言語・Vue.jsなどのフレームワークにも対応させることを考えています。
 
-### 注力したこと（こだわり等）
+### 注力したこと
 - わかりやすいUIの追求
     - 『 <img style="width:10px" src="./public/favicon.png"> trim 』は初心者からベテランまでの全てのエンジニアをターゲットとした感覚的にわかるUIを実装しました。
 - コードのシンタックスハイライト
@@ -135,8 +141,13 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
         - markdown-it-vue
 
 - バックエンド
-    - Python
- 
+    - lambda on AWS 
+    - runtime
+       - Python3.7
+    - ライブラリ・モジュール
+       - report-lab
+       - PyPDF2
+       - git/ssh (osレベルで実行)
  
  ### 技術構成
  <img src="https://github.com/jphacks/D_2109/wiki/images/trim_drawio.png" />
