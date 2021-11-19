@@ -11,16 +11,16 @@
 - [製品概要](#製品概要)
   - [背景](#背景)
   - [製品説明](#製品説明)
-  - [Trim on Browser](#Trim-on-Browser)
-  - [Trim Auto Notification](#Trim-Auto-Notification)
-  - [Trim API](#Trim-API)
+  - [Trim on Browser](#TrimonBrowser)
+  - [Trim Auto Notification](#TrimAutoNotification)
+  - [Trim API](#TrimAPI)
   - [解決出来ること](#解決出来ること)
   - [今後の展望](#今後の展望)
   - [注力したこと](#注力したこと)
 -  [開発技術](#開発技術)
-  - [フレームワーク/ライブラリ/モジュール](#フレームワーク/ライブラリ/モジュール)
-  - [技術構成(Trim_on_Browser)](#技術構成(Trim_on_Browser))
-  - [技術構成(Trim_Auto_Notification)](#技術構成(Trim_Auto_Notification))
+  - [フレームワーク・ライブラリ・モジュール](#フレームワークライブラリモジュール)
+  - [技術構成(Trim on Browser)](#技術構成TrimonBrowser)
+  - [技術構成(Trim Auto Notification)](#技術構成TrimAutoNotification)
   - [APIエンドポイント](#APIエンドポイント)
   - [独自技術](#独自技術)
   - [使用方法](#使用方法)
@@ -53,7 +53,7 @@
 Trimは、使用率が最も高く汎用性のある**Python**言語をフォーマットします。
 
 
-### Trim-on-Browser
+### Trim on Browser
 #### 1. **フォーマットルール**の作成は初心者向けなわかりやすいGUIを提供
 様々なルールが視覚的に分かりやすくなっており、簡単にカスタマイズする事ができます。
 例えば、**CapWords** や **Snake** といった命名規則やimportのソーティング・グルーピングなどがあります。
@@ -80,7 +80,7 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 
 
 
-### Trim-Auto-Notification
+### Trim Auto Notification
 #### 1. プロジェクト全体に渡って整形処理が可能
 「GitHub Webhookの設定」・「rule.jsonをプロジェクトルートに置く」・「Git Remote Push」この3操作により、プロジェクト全体に渡っての整形を提供します。
 - rule.jsonはTrim on Browserのルール作成からGUIベースで簡単に作成できます。
@@ -106,7 +106,7 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 - 整形結果のPDFにより、**自分のコーディング状況を客観視**できます。2のルールのPDFと照らし合わせながら、効率的にきれいなコードの書き方を覚えましょう。
 
 
-### Trim-API
+### Trim API
 
 
 
@@ -134,7 +134,7 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 
 ## 開発技術
 
-### フレームワーク/ライブラリ/モジュール
+### フレームワーク・ライブラリ・モジュール
 - フロントエンド
     - フレームワーク
         - Vue.js
@@ -151,10 +151,10 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
        - PyPDF2
        - git/ssh (osレベルで実行)
  
-### 技術構成(Trim_on_Browser)
+### 技術構成(Trim on Browser)
 <img src="https://github.com/jphacks/D_2109/wiki/images/trim_drawio.png" />
 
-### 技術構成(Trim_Auto_Notification)
+### 技術構成(Trim Auto Notification)
 
 
 ### APIエンドポイント
