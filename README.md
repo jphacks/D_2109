@@ -95,7 +95,7 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 <img src="https://github.com/jphacks/D_2109/wiki/images/trim_download.png" />
 
 
-#### 3. コーディングルールを視覚的に提示(rule.pdf)
+#### 3. コーディングルールを視覚的に提示(trim-rule.pdf)
 現在設定しているチームのコーディングルール(rule.json)を画像イメージで分かりやすく説明します。
 - 新たにチームに参加するメンバーにルールPDFを配布する事で、簡単にルールを共有する事が可能です。
 <img src="https://github.com/jphacks/D_2109/wiki/images/trim-pdf-rule.png" />
