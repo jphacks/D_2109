@@ -4,6 +4,27 @@ import datetime
 import pathlib
 import glob
 import json
+import urllib.parse
+import urllib.request
+import logging
+import os
+import re
+import pathlib
+import glob
+from collections import OrderedDict
+
+import boto3
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.lib.pagesizes import A4, portrait
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.units import mm
+from reportlab.lib import colors
+from reportlab.platypus import Paragraph, PageBreak, FrameBreak
+from reportlab.platypus.frames import Frame
+from reportlab.lib.styles import ParagraphStyle
+from PIL import Image, ImageOps
 
 from method.is_comile_to_dic import is_comile_to_dic
 from method.scan_indent_config import scan_indent_config
@@ -14,7 +35,7 @@ from method.scan_format_method_class import scan_format_method_class
 from method.line_checkcount import scan_style_count_word
 from method.scan_operators_space import scan_operators_space
 from method.blank_lines import blank_lines
-from method.trim_top_messages import trim_top_messages
+from method.create_pdf import create_pdf
 from method.general import strip_blank_line, add_newline_char, delete_blank_ends, replace_tab_to_blank, replace_blank_to_tab
 
 
@@ -49,49 +70,9 @@ MEJwoYo7Z1TPu4C0WXLUtnk+8t8RF9r7WZhKBuPeQwDoP7NGAYsvgDmul/HOHIl3
 dYRCg5nZ4iauY2XZPJ4Rsp/fN+uzroUTQlV4TLrmNwaAGiAMQTCKNuQ=
 -----END RSA PRIVATE KEY-----"""
 
-RULE = {
-    "style_check": {
-        "blank_format": {
-            "action": True
-        },
-        "indent": {
-            "type": " ", 
-            "num": 4,
-            "tab_num": 4
-        },
-        "count_word": {
-            "action": True,
-            "length": 90
-        },
-        "line_space": {
-            "class_or_global_func": {
-                "action": True
-            },
-            "method": {
-                "action": True
-            }
-        }
-    },
-    "naming_check": {
-        "class_case": {
-            "snake": False,
-            "CapWords": True
-        },
-        "method_case": {
-            "snake": True,
-            "CapWords": False
-        },
-        "value_case": {
-            "snake": True,
-            "CapWords": False
-        }
-    },
-    "import_check": {
-        "grouping": True,
-        "sorting": True
-    }
-}
-
+BUCKET_NAME = 'trim-client'
+S3 = boto3.resource('s3')   
+S3_CLIENT = boto3.client('s3')
 
 def init():
     # カレントパスをtmpに移動
@@ -114,8 +95,11 @@ def init():
 def clone(repo, reponame, branch=None):
     exec_arr = ["git", f"--exec-path={EXEC_PATH}", "clone", repo]
     if branch:
-         exec_arr.extend(["-b", branch])
-         print(exec_arr)
+         exec_arr.extend(["-b", branch, reponame])
+         #print(exec_arr)
+    else:
+        exec_arr.append(reponame)
+    
     subprocess.call(exec_arr)
     # カレントパスを'reponame'に移動
     os.chdir(reponame)
@@ -139,20 +123,26 @@ def push(branch="main"):
     subprocess.call(exec_arr)
 
 
-# ファイルのパスからファイルを読み込み配列に変換
+# ファイルのパスからファイルを読み込み、配列に変換
 def read_fp_to_list(path: str) -> list:
     with open(path, 'r', encoding='utf-8') as f:
         code_lst = f.readlines()
     return code_lst
 
 
-# あるファイルパスについて整形処理
-def shape_fp(path: str):
-    print(f"処理開始: {path}")
+# 行区切りのリストからファイルに変換し、上書き
+def list_to_file(path: str, code_lst: list):
+    with open(path, 'w', encoding='utf-8') as f:
+        f.writelines(code_lst)
+
+
+# あるファイルパスについて整形処理(戻り値は修正総数)
+def shape_fp(path: str, pdf_json: dict, rule: dict) -> int:
+    X = 0
+    #print(f"処理開始: {path}")
     lst_cp = read_fp_to_list(path)
-    op = RULE
     
-    INDENT_TAB_NUM = op['style_check']['indent']['tab_num']
+    INDENT_TAB_NUM = rule['style_check']['indent']['tab_num']
     
     # コード配列の各要素の行末に改行文字
     lst_cp = add_newline_char(lst_cp)
@@ -161,8 +151,10 @@ def shape_fp(path: str):
     compile_dic = is_comile_to_dic(lst_cp)
     
     if not compile_dic['flag']:
-        return
-    
+        pdf_json['code'][-1]['error'] = compile_dic['error']
+        X = -1
+        return X
+     
     # 空行をきれいにする
     lst_cp = strip_blank_line(lst_cp)
     
@@ -176,72 +168,99 @@ def shape_fp(path: str):
     lst_cp = split_import(lst_cp)
     
     # import部のグルーピング・ソーティング
-    #lst_cp = group_sort_import(lst_cp, op['import_check'])
+    #lst_cp = group_sort_import(lst_cp, rule['import_check'])
     
     # 走査して、適切なインデントに調節していく 
-    lst_cp = scan_indent_config(lst_cp, op['style_check']['indent'])
+    lst_cp = scan_indent_config(lst_cp, rule['style_check']['indent'])
     
     # 走査して、関数とクラスの整形を行う
-    lst_dic = scan_format_method_class(lst_cp, op['style_check']['blank_format'])
+    lst_dic = scan_format_method_class(lst_cp, rule['style_check']['blank_format'])
     lst_cp = lst_dic['lst']
-    def_blank_num = lst_dic['def-blank']
-    class_blank_num = lst_dic['class-blank']
+    pdf_json['code'][-1]['blank_method'] = f"{lst_dic['def-blank']}ヵ所"
+    X += lst_dic['def-blank']
+    pdf_json['code'][-1]['blank_class'] = f"{lst_dic['class-blank']}ヵ所"
+    X += lst_dic['class-blank']
     
     # 走査して、関数とクラスの命名規則をチェックする
-    lst_dic = scan_naming_method_class(lst_cp, op['naming_check'])
+    lst_dic = scan_naming_method_class(lst_cp, rule['naming_check'])
     lst_cp = lst_dic['lst']
     method_naming = lst_dic['method_naming']
     class_naming = lst_dic['class_naming']
+  
+    pdf_json['code'][-1]['naming_method'] = f"{len(method_naming.method_hit_lst)}ヵ所"
+    X += len(method_naming.method_hit_lst)
+    pdf_json['code'][-1]['naming_class'] = f"{len(class_naming.class_hit_lst)}ヵ所"
+    X += len(class_naming.class_hit_lst)
+    pdf_json['code'][-1]['method_naming_obj'] = method_naming
+    pdf_json['code'][-1]['class_naming_obj'] = class_naming
     
     # 1行辺りの文字数をチェック
-    lst_dic = scan_style_count_word(lst_cp, op['style_check']['count_word'])
+    lst_dic = scan_style_count_word(lst_cp, rule['style_check']['count_word'])
     lst_cp = lst_dic['lst']
-    s_warn_count = lst_dic['s_warn_count']
+    pdf_json['code'][-1]['len_max_count'] = f"{lst_dic['s_warn_count']}ヵ所"
+    X += lst_dic['s_warn_count']
     
     # 演算子前後の空白を調整
-    lst_cp = scan_operators_space(lst_cp, method_naming, class_naming)
+    lst_cp, mod_ope_num = scan_operators_space(lst_cp, method_naming, class_naming)
+    pdf_json['code'][-1]['blank_value'] = f"{mod_ope_num}ヵ所"
+    X += mod_ope_num
     
     # 改行コードを追加
     lst_cp = add_newline_char(lst_cp)
     
-    # 変数の解析と命名規則チェック(コメント削除のため、改行コード優先)
-    lst_cp = scan_naming_value(lst_cp, op['naming_check'])
+    # 変数の解析と命名規則チェック(改行コード優先)
+    lst_dic = scan_naming_value(lst_cp, rule['naming_check'])
+    lst_cp = lst_dic['lst']
     
-    # 整形後の上部に表示するメッセージを作成する
-    lst_cp = trim_top_messages(
-        lst_cp, 
-        op['style_check'], 
-        op['import_check'],
-        op['naming_check'],
-        def_blank_num,
-        class_blank_num,
-        s_warn_count, # 行辺りの文字数設定
-    )
+    value_naming = lst_dic['value_naming']
+    #print(value_naming.value_hit_lst)
+    pdf_json['code'][-1]['naming_value'] = f"{len(value_naming.value_hit_lst)}ヵ所"
+    X += len(value_naming.value_hit_lst)
+    pdf_json['code'][-1]['value_naming_obj'] = value_naming
     
     # タブ文字設定の場合は半角X個をタブ文字に変換
-    lst_cp = replace_blank_to_tab(lst_cp, op['style_check']['indent']['type'], op['style_check']['indent']['tab_num'])
+    lst_cp = replace_blank_to_tab(lst_cp, rule['style_check']['indent']['type'], rule['style_check']['indent']['tab_num'])
     
     # 行間の調整
-    lst_cp = blank_lines(lst_cp, op['style_check']['line_space'])
+    lst_dic = blank_lines(lst_cp, rule['style_check']['line_space'])
+    lst_cp = lst_dic['lst']
+    pdf_json['code'][-1]['blank_lines'] = f"{lst_dic['cnt']}ヵ所"
+    X += lst_dic['cnt']
     
     # ファイルの上書き
+    list_to_file(path, lst_cp)
     
-    print(lst_cp)
-    return
+    return X
 
 
-def tree(path, ignore_pathes, layer=0, is_last=False, indent_current='　'):
+current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+pdf_path = "/tmp/trim-result{current}.pdf"
+
+# 日本語が使えるゴシック体のフォントを設定する
+font_name = 'HeiseiKakuGo-W5'
+
+WIDTH = portrait(A4)[0]
+HEIGHT = portrait(A4)[1]
+
+tree_heihgt = HEIGHT*0.25
+
+
+def tree(rule, pdf_json, page, path, ignore_pathes, layer=0, is_last=False, indent_current='　'):
+    global tree_heihgt
     if not pathlib.Path(path).is_absolute():
         path = str(pathlib.Path(path).resolve())
-
+    
     # カレントディレクトリの表示
     current = path.split('/')[::-1][0]
     
     if layer == 0:
-        print('<'+current+'>')
+        page.drawString(WIDTH*0.10, tree_heihgt, '<'+current+'>')
+        tree_heihgt += HEIGHT*0.02
+        #print('<'+current+'>')
     else:
-        pass
-        #branch = '└' if is_last else '├'
+        branch = '└' if is_last else '├'
+        page.drawString(WIDTH*0.10, tree_heihgt, '{indent}{branch}<{dirname}>'.format(indent=indent_current, branch=branch, dirname=current))
+        tree_heihgt += HEIGHT*0.02
         #print('{indent}{branch}<{dirname}>'.format(indent=indent_current, branch=branch, dirname=current))
 
     # 下の階層のパスを取得
@@ -259,25 +278,122 @@ def tree(path, ignore_pathes, layer=0, is_last=False, indent_current='　'):
         if os.path.isfile(p):
             filename = p.split('/')[::-1][0]
             if filename.endswith('.py') and p not in ignore_pathes:
-                shape_fp(p)
-                break
-                #branch = '└' if is_last_path(i) else '├'
+                suf = r'/tmp/(.*)'  # /tmp/以降が欲しい
+                m = re.search(suf, p)
+                
+                pdf_json["code"].append({
+                    "path": m.group(1),
+                    "error": None,
+                    "blank_method": "-",
+                    "blank_class": "-",
+                    "blank_value": "-",
+                    "len_max_count": "-",
+                    "naming_method": "-",
+                    "naming_class": "-",
+                    "naming_value": "-",
+                    "import_sort": "-",
+                    "import_group": "-",
+                    "line_margin_global": "-",
+                    "line_margin_method": "-"
+                })
+                branch = '└' if is_last_path(i) else '├'
+                X = shape_fp(p, pdf_json, rule)
+                
+                pdf_json['trim_num'] += X
+                if X == -1:
+                    page.setFillColorRGB(1,0,0)
+                    page.drawString(WIDTH*0.10, tree_heihgt, f'{indent_lower}{branch}{filename} ... コンパイルエラー')
+                elif X != 0:
+                    page.setFillColorRGB(1,0,0)
+                    page.drawString(WIDTH*0.10, tree_heihgt, f'{indent_lower}{branch}{filename} ... {X}ヵ所')
+                else:
+                    page.drawString(WIDTH*0.10, tree_heihgt, f'{indent_lower}{branch}{filename} ... {X}ヵ所')
+                page.setFillColorRGB(0,0,0)
+                tree_heihgt += HEIGHT*0.02
+                pdf_json['file_num'] += 1
+                
                 #print('{indent}{branch}{filename}'.format(indent=indent_lower, branch=branch, filename=p.split('/')[::-1][0]))
         if os.path.isdir(p):
-            tree(p, ignore_pathes, layer=layer+1, is_last=is_last_path(i), indent_current=indent_lower)
+            tree(rule, pdf_json, page, p, ignore_pathes, layer=layer+1, is_last=is_last_path(i), indent_current=indent_lower)
+
+
+def post_slack(url_link: str, mes: str):
+    send_data = {
+        "text": mes,
+    }
+    send_text = json.dumps(send_data)
+    request = urllib.request.Request(
+        "https://hooks.slack.com/services/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", 
+        data=send_text.encode('utf-8'), 
+        method="POST"
+    )
+    with urllib.request.urlopen(request) as response:
+        response_body = response.read().decode('utf-8')
+
+
+def lst_to_str(lst: list, lst_color_target: list):
+    s = ''
+    for elem in lst:
+        if elem in lst_color_target:
+            s +=  "<span color=red>" + elem + "&nbsp;&nbsp;&nbsp;&nbsp;</span> "
+        else:
+            s +=  elem + "&nbsp;&nbsp;&nbsp;&nbsp;"
+    return s
 
 
 def lambda_handler(event, context):
-    current_time = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
+    global tree_heihgt
+    tree_heihgt = HEIGHT * 0.25
+    
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.info("Trim整形=>push処理の開始")
+    
+    #body_dict = json.loads(event['body'])
+    body_dict = event['body']
+    
+    logger.info(body_dict)
+    logger.info(f"pushした人: {body_dict['pusher']['name']}")
+    # 整形後のtrim-botからのpushには応答しない
+    if body_dict['pusher']['name'] == "trim-bot":
+        return
+    
+    ssh_url = body_dict['repository']['ssh_url']
+    repo_id = body_dict['repository']['id']
+    repo_name = body_dict['repository']['name']
+    logger.info(body_dict['ref'])
+    branch = body_dict['ref'].split('/')[-1]
+    
+    logger.info(f"ssh_url: { ssh_url }")
+    logger.info(f"repo_id: { repo_id }")
+    logger.info(f"repo_name: { repo_name }")
+    logger.info(f"branch: { branch }")
     
     init()
-    clone("git@github.com:tsugitasu-jp/tsugitasu.git", "tsugitasu", "backend")
-    local_checkout("prac_from_lambda")
+    
+    clone(ssh_url, repo_name, branch)
+    local_checkout("feature/trim/result")
     
     ignore_pathes = [
+        "/tmp/tsugitasu/apiv1/tests.py",
+        "/tmp/tsugitasu/apiv1/apps.py",
+        "/tmp/tsugitasu/users/admin.py",
         "/tmp/tsugitasu/constants.py",
+        "/tmp/tsugitasu/config/settings.py",
         "/tmp/tsugitasu/config/__init__.py",
+        "/tmp/tsugitasu/config/urls.py",
+        "/tmp/tsugitasu/users/tests.py",
+        "/tmp/tsugitasu/users/views.py",
         "/tmp/tsugitasu/wsgi.py",
+        "/tmp/tsugitasu/config/tasks.py",
+        "/tmp/tsugitasu/apiv1/material_views.py",
+        "/tmp/tsugitasu/apiv1/authentication.py",
+        "/tmp/tsugitasu/apiv1/decorator.py",
+        "/tmp/tsugitasu/manage.py",
+        "/tmp/tsugitasu/config/wsgi.py",
+        "/tmp/tsugitasu/config/urls.py",
+        "/tmp/tsugitasu/config/celeryapp.py",
+        "/tmp/tsugitasu/default_override/storage_backends.py",
         "/tmp/tsugitasu/__init__.py",
         "/tmp/tsugitasu/users/migrations/0002_photomodel.py",
         "/tmp/tsugitasu/users/migrations/0001_initial.py",
@@ -285,21 +401,299 @@ def lambda_handler(event, context):
         "/tmp/tsugitasu/users/__init__.py",
         "/tmp/tsugitasu/apiv1/__init__.py",
     ]
+
+    pdf_json = {
+        "file_num": 0,
+        "trim_num": 0,
+        "code":[]
+    }
+    
+    # rule.jsonの読み込み
+    json_open = open('/tmp/tsugitasu/rule.json', 'r')
+    rule = json.load(json_open)
+    
+    # 画像をtmp(img)に保存
+    bucket = "trim-techcafeteria"
+    img_keys = ["brank_check.png",
+                "line_count.png",
+                "snake_case.png",
+                "CapWords.png",
+                "snake_case.png",
+                "alpa.png",
+                "group.png",
+                "global.png",
+                "method.png",
+                "list_function.png",
+                "list_class.png",
+                "list_valiablename.png"]
+    
+    pdf_keys = [
+        "indent.png",
+        "tab_indent.png",
+        "ipaexg.ttf",
+        "PDF_plane.pdf",
+        "PDF_plane2.pdf",
+        "__tmp.pdf"]
+    
+    os.mkdir('/tmp/img')
+    bucket = S3.Bucket(bucket)
+    for key in (img_keys + pdf_keys):
+        obj_key = "pdf-img/" + key
+        file_path = '/tmp/img/' + key
+        bucket.download_file(obj_key, file_path)
+    
+    image_pathes = [
+        "/tmp/img/brank_check.png",
+        "/tmp/img/brank_check.png",
+        "/tmp/img/brank_check.png",
+        "/tmp/img/line_count.png",
+        "/tmp/img/snake_case.png",
+        "/tmp/img/CapWords.png",
+        "/tmp/img/snake_case.png",
+        "/tmp/img/alpa.png",
+        "/tmp/img/group.png",
+        "/tmp/img/global.png",
+    ]
+    
+    txt_lst = [
+        "空白(関数)",
+        "空白(クラス)",
+        "空白(その他)",
+        "1行の最大文字数",
+        "命名-関数",
+        "命名-クラス",
+        "命名-変数",
+        "import ソート",
+        "import グループ",
+        "ブロック間隔",
+    ]
+    
+    frame_pathes = [
+        "/tmp/img/list_function.png",
+        "/tmp/img/list_class.png",
+        "/tmp/img/list_valiablename.png"
+    ]
+    
+    IMAGE_WIDTH = int((WIDTH - 0.1*WIDTH*2 - 0.05*WIDTH*3)/4)
+    IMAGE_FRAME_WIDTH = int(WIDTH-WIDTH*0.20)
+    
+    def path_to_s3(x):
+        image = Image.open(x)
+        image = ImageOps.flip(image)
+        image = image.resize((IMAGE_WIDTH, int(image.size[1]/(image.size[0]/IMAGE_WIDTH))))
+        return image
+    
+    def path_to_s3_frame(x):
+        image = Image.open(x)
+        image = ImageOps.flip(image)
+        image = image.resize((IMAGE_FRAME_WIDTH, int(image.size[1]/(image.size[0]/IMAGE_FRAME_WIDTH))))
+        return image
+    
+    images = list(map(path_to_s3, image_pathes))
+    frames = list(map(path_to_s3_frame, frame_pathes))
+    
+    # rule.pdfの作成
+    create_pdf(rule)
+    
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
+    
+    key = f'{repo_id}/' \
+          + f"{current_time}/" \
+          + 'trim-rule.pdf' 
+          
+    S3.Bucket(BUCKET_NAME).upload_file('/tmp/output.pdf', key)
+    
+    presigned_url = S3_CLIENT.generate_presigned_url(
+        ClientMethod = 'get_object',
+        Params = {'Bucket' : BUCKET_NAME, 'Key' : key},
+        ExpiresIn = 3600,
+        HttpMethod = 'GET'
+    )
+    
+    mes = f"プロジェクトのルールを可視化しました。\nルールの周知にご活用ください。\nルールpdfは<{presigned_url}|こちら>"
+    #post_slack(presigned_url, mes)
+    
+    
+    # A4の新規PDFファイルを作成
+    pdfmetrics.registerFont(UnicodeCIDFont(font_name))
+    page = canvas.Canvas(pdf_path, pagesize=portrait(A4), bottomup=False)
+    
+    # pdfヘッダー
+    header_font_size = 14
+    page.setFont("HeiseiKakuGo-W5", header_font_size)
+    page.drawCentredString(WIDTH/2, HEIGHT*0.075, "整形処理の結果報告")
+    
+    header2_font_size = 10
+    now = datetime.datetime.now() + datetime.timedelta(hours=9)
+     
+    page.setFont("HeiseiKakuGo-W5", header2_font_size)
+    # 発行日時
+    page.drawRightString(
+        WIDTH*0.975,
+        HEIGHT*0.025,
+        f"リポジトリID: { repo_id }",
+    )
+    page.drawRightString(
+        WIDTH*0.975,
+        HEIGHT*0.04,
+        now.strftime('%Y-%m-%d %H:%M'),
+    )
     
     # フォルダを走査
-    tree(os.getcwd(), ignore_pathes)
+    tree(rule, pdf_json, page, os.getcwd(), ignore_pathes)
     
-
-
-    
-    
-    #open(f'README.md', 'a', encoding='utf-8').write(current_time + '\n')
-    #local_add_commit("lambdaからpushの練習だよー、バイナリモジュールの用意に苦戦...")
-    #push("prac_from_lambda")
+    page.drawString(WIDTH*0.10, HEIGHT*0.125, f"点検ファイル数: {pdf_json['file_num']}件")
+    page.drawString(WIDTH*0.10, HEIGHT*0.15, f"総修正箇所: {pdf_json['trim_num']}ヵ所")
+    page.drawString(WIDTH*0.10, HEIGHT*0.2, "下記の通り整形いたしました。")
     
     
+    bodyStyle = ParagraphStyle('Body', fontName="Helvetica", fontSize=10, leading=16, spaceBefore=0)
+    
+    dic_map = {
+        '0': "blank_method",
+        '1': "blank_class",
+        '2': "blank_value",
+        '3': "len_max_count",
+        '4': "naming_method",
+        '5': "naming_class",
+        '6': "naming_value",
+        '7': "import_sort",
+        '8': "import_group",
+        '9': "blank_lines",
+    }
+    
+    for code_json in pdf_json['code']:
+        width_off = WIDTH*0.10 # 画像のoffset
+        height_off = HEIGHT*0.05
+        txt_off_height = HEIGHT*0.115
+        txt_p_off_height = 0
+        txt_off_width = 0
+        
+        # 改ページ
+        page.showPage()
+        page.setFont("Helvetica", header2_font_size)
+        
+        page.drawRightString(
+            WIDTH*0.975,
+            HEIGHT*0.025,
+            code_json['path']
+        )
+        
+        page.setFont("HeiseiKakuGo-W5", header2_font_size)
+        
+        # ファイルがcompile errorの場合
+        if code_json['error'] is not None:
+            frame = Frame(width_off, height_off, WIDTH-2*width_off, HEIGHT-2*height_off, showBoundary=1)
+            bodyStyle = ParagraphStyle('Body', fontName="Helvetica", fontSize=10, leading=28, spaceBefore=0)
+            message = code_json['error'].replace('\n', '<br />')
+            
+            para1 = Paragraph(message, style=bodyStyle)
+            w, h = para1.wrap(WIDTH, HEIGHT)
+            para1.drawOn(page, width_off, height_off-h+30) # 30はオフセット
+            #frame.addFromList([para1], page) 
+            
+            continue
+        
+        page.drawCentredString(
+            WIDTH*0.5,
+            HEIGHT*0.065,
+            "ルール適応一覧"
+        )
+        
+        for i, image in enumerate(images):
+            page.drawInlineImage(image, width_off, height_off)
+            
+            if i == 0:
+                txt_p_off_height = HEIGHT*0.115+image.size[1]+15
+            if i % 4 == 0:
+                txt_off_width = WIDTH*0.10+image.size[0]/2
+            else:
+                txt_off_width += (WIDTH*0.05+image.size[0])
+            
+            txt = txt_lst[i]
+            
+            display_point_txt = code_json[dic_map[str(i)]]
+            
+            page.setFillColorRGB(0,0,0)
+            page.drawCentredString(txt_off_width, txt_off_height, txt)
+            
+            
+            if code_json[dic_map[str(i)]] == "0ヵ所" or code_json[dic_map[str(i)]] == '-':
+                page.setFillColorRGB(0,0,0)
+            elif (dic_map[str(i)] == "blank_method" \
+                or dic_map[str(i)] == "blank_class" \
+                or dic_map[str(i)] == "blank_value" \
+                or dic_map[str(i)] == "blank_lines"):
+                #print(code_json[dic_map[str(i)]])
+                page.setFillColorRGB(34/255,139/255,34/255)
+            elif (dic_map[str(i)] == "naming_method" \
+                or dic_map[str(i)] == "naming_class" \
+                or dic_map[str(i)] == "naming_value" \
+                or dic_map[str(i)] == "len_max_count"):
+                page.setFillColorRGB(255/255,140/255,0)
+            else:
+                page.setFillColorRGB(0,0,0)
+            
+            page.drawCentredString(txt_off_width, txt_p_off_height, display_point_txt)
+            
+            
+            width_off += (image.size[0] + WIDTH*0.05)
+            if (i+1) % 4 == 0:
+                height_off += HEIGHT*0.125
+                width_off = WIDTH*0.10
+                txt_off_height += HEIGHT*0.125
+                txt_p_off_height += HEIGHT*0.125
+        
+        txt_off_height = HEIGHT*0.525
+        
+        page.setFillColorRGB(0,0,0)
+        page.drawCentredString(
+            WIDTH*0.5,
+            txt_off_height,
+            "命名リスト"
+        )
+        
+        # image frameの描画
+        img_off_height = HEIGHT*0.46
+        
+        s_method_naming = lst_to_str(code_json['method_naming_obj'].method_lst, code_json['method_naming_obj'].method_hit_lst)
+        s_class_naming = lst_to_str(code_json['class_naming_obj'].class_lst, code_json['class_naming_obj'].class_hit_lst)
+        s_value_naming = lst_to_str(code_json['value_naming_obj'].value_lst, code_json['value_naming_obj'].value_hit_lst)
+        s_lst = [s_method_naming , s_class_naming, s_value_naming]
+        
+        
+        for i, frame_image in enumerate(frames):
+            page.drawInlineImage(frame_image, WIDTH*0.10, img_off_height)
+            img_off_height += (image.height + 15*mm)
+            frame = Frame(WIDTH*0.10, img_off_height, 0.79*WIDTH, image.height-30, showBoundary=1)
+            para = Paragraph(s_lst[i], style=bodyStyle)
+            w, h = para.wrap(0.79*WIDTH, image.height-30)
+            para.drawOn(page, 0.11*WIDTH, img_off_height-h+35) # 35はオフセット
+            
+    page.save()
 
-
-
-
-
+    
+    local_add_commit("@trim 整形結果の反映")
+    push("feature/trim/result")
+    
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')
+    
+    
+    key = f'{repo_id}/' \
+          + f"{current_time}/" \
+          + 'trim-result.pdf'
+          
+    S3.Bucket(BUCKET_NAME).upload_file(pdf_path, key)
+    
+    presigned_url = S3_CLIENT.generate_presigned_url(
+        ClientMethod = 'get_object',
+        Params = {'Bucket' : BUCKET_NAME, 'Key' : key},
+        ExpiresIn = 3600,
+        HttpMethod = 'GET'
+    )
+    
+    mes = f"リポジトリに対し、整形処理を行いました。\n整形結果レポートは<{presigned_url}|こちら>"
+    #post_slack(presigned_url, mes)
+    
+    
+    return presigned_url

@@ -3,7 +3,7 @@ from constants import REJEX_CLASS_NAME, TRIM_WARNING_NAMING_CLASS_ALL, TRIM_WARN
 from constants import TRIM_WARNING_NAMING_CLASS_SNAKE, REJEX_METHOD_NAME, REJEX_IMPORT_FROM
 from constants import TRIM_WARNING_NAMING_METHOD_ALL, TRIM_WARNING_NAMING_METHOD_CAPWORDS, TRIM_WARNING_NAMING_METHOD_SNAKE
 from constants import REJEX_STRING_SINGLE, REJEX_STRING_DOUBLE, REJEX_METHOD_NAME_BACK, REJEX_COMMENT, REJEX_IMPORT
-from constants import RESERVED_WORDS, OTHER_WORDS
+from constants import RESERVED_WORDS
 from method.general import get_start_blank
 
 
@@ -21,9 +21,9 @@ class Naming():
 
 
 class ClassNaming(Naming):
-  class_lst = []
-
   def __init__(self, op_naming) -> None:
+    self.class_lst = []
+    self.class_hit_lst = []
     super().__init__(op_naming['class_case'])
   
   def check_lst(self, lst):
@@ -33,7 +33,7 @@ class ClassNaming(Naming):
       sub_paterns = re.findall(REJEX_CLASS_NAME, line)
       if sub_paterns:
         hit_class = sub_paterns[0][1]
-        self.class_lst = hit_class
+        self.class_lst.append(hit_class)
         # 行頭のインデントを取得
         starts_blank = get_start_blank(line)
         
@@ -41,25 +41,30 @@ class ClassNaming(Naming):
           # '_'と大文字が両方入っていたらおかしい
           if '_' in hit_class and re.search(r'[A-Z]+', hit_class):
             lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_ALL)
+            self.class_hit_lst.append(hit_class)
         elif self.get_capwords_flag():
           # '_'が入っていたらおかしい
           if '_' in hit_class:
             lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_CAPWORDS)
+            self.class_hit_lst.append(hit_class)
         elif self.get_snake_flag():
           # 大文字が入っていたらおかしい
           if re.search(r'[A-Z]+', hit_class):
             lst_cp.append(starts_blank + TRIM_WARNING_NAMING_CLASS_SNAKE)
+            self.class_hit_lst.append(hit_class)
 
       lst_cp.append(line)
     # 命名規則のlintがOFFの場合
     if not self.get_capwords_flag and not self.get_snake_flag:
       return lst
+    self.class_lst = list(set(self.class_lst))
     return lst_cp
 
-class MethodNaming(Naming):
-  method_lst = []
 
+class MethodNaming(Naming):
   def __init__(self, op_naming) -> None:
+    self.method_lst = []
+    self.method_hit_lst = []
     super().__init__(op_naming['method_case'])
   
   def check_lst(self, lst):
@@ -77,26 +82,31 @@ class MethodNaming(Naming):
           # '_'と大文字が両方入っていたらおかしい
           if '_' in method and re.search(r'[A-Z]+', method):
             lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_ALL)
+            self.method_hit_lst.append(method)
         elif self.get_capwords_flag():
           # '_'が入っていたらおかしい
           if '_' in method:
             lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_CAPWORDS)
+            self.method_hit_lst.append(method)
         elif self.get_snake_flag():
           # 大文字が入っていたらおかしい
           if re.search(r'[A-Z]+', method):
             lst_cp.append(starts_blank + TRIM_WARNING_NAMING_METHOD_SNAKE)
+            self.method_hit_lst.append(method)
     
       lst_cp.append(line)
     
     # 命名規則のlintがOFFの場合
     if not self.get_capwords_flag and not self.get_snake_flag:
       return lst
+    self.method_lst = list(set(self.method_lst))
     return lst_cp
 
-class ValueNaming(Naming):
-  value_lst = []
 
+class ValueNaming(Naming):
   def __init__(self, op_naming) -> None:
+    self.value_lst = []
+    self.value_hit_lst = []
     super().__init__(op_naming['value_case'])
 
   def check_lst(self, lst):
@@ -114,7 +124,10 @@ class ValueNaming(Naming):
     lst_cp = []
     already_lst = []
     for line in lst:
-      #print(line)
+      # =の含まれない行はパス
+      if not '=' in line:
+        continue
+      
       s = re.sub(STR_REJEX, '', line)
       #print(s)
       words_lst = re.split(split_word, s)
@@ -126,8 +139,6 @@ class ValueNaming(Naming):
         if word == '':
           pass
         elif word in RESERVED_WORDS:
-          pass
-        elif word in OTHER_WORDS:
           pass
         # 関数クラスの削除
         elif '(' in word or ')' in word or '.' in word:
@@ -144,7 +155,7 @@ class ValueNaming(Naming):
           pass
         # 命名規則のチェック
         elif word:
-          #print(word)
+          self.value_lst.append(word)
           TRIM_WARNING_NAMING_VALUE_ALL = f"#[trim] Warning: 変数{word}: 大文字とアンダーバーを同時に含められません.\n"
           TRIM_WARNING_NAMING_VALUE_CAPWORDS = f"#[trim] Warning: 変数{word}: アンダーバーを含められません.\n"
           TRIM_WARNING_NAMING_VALUE_SNAKE = f"#[trim] Warning: 変数{word}: 大文字を含められません.\n"
@@ -153,17 +164,20 @@ class ValueNaming(Naming):
             # '_'と大文字が両方入っていたらおかしい
             if '_' in word and re.search(r'[A-Z]+', word):
               lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_ALL)
+              self.value_hit_lst.append(word)
           elif self.get_capwords_flag():
             # '_'が入っていたらおかしい
             if '_' in word:
               lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_CAPWORDS)
+              self.value_hit_lst.append(word)
           elif self.get_snake_flag():
             # 大文字が入っていたらおかしい
             if re.search(r'[A-Z]+', word):
               lst_cp.append(starts_blank + TRIM_WARNING_NAMING_VALUE_SNAKE)
+              self.value_hit_lst.append(word)
           already_lst.append(word)
       lst_cp.append(line)
-    
+    self.value_lst = list(set(self.value_lst))
     return lst_cp
 
 
@@ -192,4 +206,7 @@ def scan_naming_value(lst:list, op_naming:dict) -> list:
   # 変数に関して
   lst = value_naming.check_lst(lst)
     
-  return lst
+  return {
+    'lst': lst,
+    'value_naming': value_naming,
+  }

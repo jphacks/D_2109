@@ -6,7 +6,7 @@ from constants import REJEX_METHOD_NAME, REJEX_METHOD_NAME_BACK, REJEX_CLASS_NAM
 
 
 # 前後の空白を調整(1行分)
-def check_operators_space(line: str, method_naming: MethodNaming, class_naming: ClassNaming) -> str:
+def check_operators_space(line: str, method_naming: MethodNaming, class_naming: ClassNaming, mod_ope_num: int) -> str:
     #print(f"met:{method_naming.method_lst}")
     #print(class_naming.class_lst)
     strip_str = line.strip()
@@ -56,14 +56,16 @@ def check_operators_space(line: str, method_naming: MethodNaming, class_naming: 
                     '([a-zA-Z0-9]*)([\s]*)(<>|<=|>=|is not|not in|-=|==|\\+=|!=|=|\\+|-|\\*|/|%|<|>|and|or|not|in|is)([\s]*)([a-zA-Z0-9]*)',
                     '\\1 \\3 \\5',
                     line)
+                mod_ope_num += 1 
         # lineの末尾を確認
 
-    return line
-
+    return line, mod_ope_num
 
 # 前後の空白を調整(走査)
 def scan_operators_space(lst: list, method_naming, class_naming) -> list:
   lst_cp = []
+  mod_ope_num = 0 #修正箇所数
   for line in lst:
-    lst_cp.append(check_operators_space(line, method_naming, class_naming))
-  return lst_cp
+    line, mod_ope_num = check_operators_space(line, method_naming, class_naming, mod_ope_num)
+    lst_cp.append(line)
+  return lst_cp, mod_ope_num
