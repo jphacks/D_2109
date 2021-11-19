@@ -85,17 +85,20 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 - rule.jsonはTrim on Browserのルール作成からGUIベースで簡単に作成できます。
 - GitHubのリポジトリがプライベートの場合、Trim Botアカウントを入れて頂く事でTrimサービスからのリポジトリアクセスを可能にします。(承認制)
 - .trimignoreファイルより、整形対象から外すpythonファイルを指定できます。
+<img src="https://github.com/jphacks/D_2109/wiki/images/images/trim-pdf-all.png" />
 
 
 #### 2. Slackのチームチャンネルからコーディングルールや整形結果のレポートをダウンロードできる
 「Slack Webhookの設定」により、1の整形処理の後にPDFリンクをSlackに転送します。
 - PDFデータそのものではなく、リンクを通知します。(Slackのデータ容量を消費しません)
 - PDFリンクは署名付きリンクを用いており、推測困難で安全です。
+<img src="https://github.com/jphacks/D_2109/wiki/images/images/trim_download.png" />
 
 
 #### 3. コーディングルールを視覚的に提示(rule.pdf)
 現在設定しているチームのコーディングルール(rule.json)を画像イメージで分かりやすく説明します。
 - 新たにチームに参加するメンバーにルールPDFを配布する事で、簡単にルールを共有する事が可能です。
+<img src="https://github.com/jphacks/D_2109/wiki/images/images/trim-pdf-rule.png" />
 
 
 #### 4. 整形結果を視覚的に提示(trim-result.pdf)
@@ -103,6 +106,7 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 - 自動修正した箇所が緑色で、警告が出ている箇所がオレンジ色で表示されます
 - 関数・クラス・変数の命名リストが表示され、チームで命名をチェックする事が可能です。警告が出ている箇所は赤字になっています。
 - 整形結果のPDFにより、**自分のコーディング状況を客観視**できます。2のルールのPDFと照らし合わせながら、効率的にきれいなコードの書き方を覚えましょう。
+<img src="https://github.com/jphacks/D_2109/wiki/images/images/trim-pdf-reslut.png" />
 
 
 ### Trim API
