@@ -13,7 +13,7 @@
   - [製品説明](#製品説明)
   - [Trim on Browser](#Trim-on-Browser)
   - [Trim Auto Notification](#Trim-Auto-Notification)
-  - [Trim-API](#Trim-API)
+  - [Trim API](#Trim-API)
 
 
 
@@ -73,18 +73,19 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 
 
 ### Trim-Auto-Notification
+#### 1. プロジェクト全体に渡って整形処理が可能
+「GitHub WebPushの設定」・「rule.jsonをプロジェクトルートに置く」・「Git Remote Push」この3操作により、プロジェクト全体に渡っての整形を提供します。
+- rule.jsonはTrim on Browserのルール作成からGUIベースで簡単に作成できます。
+- GitHubのリポジトリがプライベートの場合、Trim Botアカウントを入れて頂く事でTrimサービスからのリポジトリアクセスを可能にします。(承認制)
+- .trimignoreファイルより、ignoreするpythonファイルを設定できます。
+
+
+#### 2.
+
+
+
 
 ### Trim-API
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -93,6 +94,12 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 ### 解決出来ること
 『 <img style="width:10px" src="./public/favicon.png"> trim 』は全てのエンジニアが持つコーディングの個性やクセをストレスなく修正することができます。
 さらにチーム開発におけるコーディング規約を『暗黙的』なものから『明示的な』なものへと変化させ、チームメンバーにストレスを与えることなく、コードの個性を整えることができます。
+
+
+
+
+
+
 
 ### 今後の展望
 今後は 『VSCode』 の拡張機能としてのリリースを考えています。『 <img style="width:10px" src="./public/favicon.png"> trim 』では命名規則などの『暗黙的なルール』をJSON形式のファイルとして保存をしています。これは VSCode などの他サービスに転用しやすくすることを目的として開発しています。
