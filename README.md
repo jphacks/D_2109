@@ -18,8 +18,10 @@
   - [今後の展望](#今後の展望)
   - [注力したこと](#注力したこと)
 -  [開発技術](#開発技術)
-  - [フレームワーク・ライブラリ・モジュール](#フレームワーク・ライブラリ・モジュール)
-  - [技術構成](#技術構成)
+  - [フレームワーク/ライブラリ/モジュール](#フレームワーク/ライブラリ/モジュール)
+  - [技術構成(Trim_on_Browser)](#技術構成(Trim_on_Browser))
+  - [技術構成(Trim_Auto_Notification)](#技術構成(Trim_Auto_Notification))
+  - [APIエンドポイント](#APIエンドポイント)
   - [独自技術](#独自技術)
   - [使用方法](#使用方法)
 
@@ -132,7 +134,7 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 
 ## 開発技術
 
-### フレームワーク・ライブラリ・モジュール
+### フレームワーク/ライブラリ/モジュール
 - フロントエンド
     - フレームワーク
         - Vue.js
@@ -149,8 +151,15 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
        - PyPDF2
        - git/ssh (osレベルで実行)
  
- ### 技術構成
- <img src="https://github.com/jphacks/D_2109/wiki/images/trim_drawio.png" />
+### 技術構成(Trim_on_Browser)
+<img src="https://github.com/jphacks/D_2109/wiki/images/trim_drawio.png" />
+
+### 技術構成(Trim_Auto_Notification)
+
+
+### APIエンドポイント
+
+
 
 ### 独自技術
 #### ハッカソンで開発した独自機能・技術
