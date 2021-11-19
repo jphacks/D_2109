@@ -19,8 +19,7 @@
   - [注力したこと](#注力したこと)
 -  [開発技術](#開発技術)
   - [フレームワーク・ライブラリ・モジュール](#フレームワークライブラリモジュール)
-  - [技術構成(Trim on Browser)](#技術構成Trim-on-Browser)
-  - [技術構成(Trim Auto Notification)](#技術構成Trim-Auto-Notification)
+  - [技術構成](#技術構成)
   - [APIエンドポイント](#APIエンドポイント)
   - [独自技術](#独自技術)
   - [使用方法](#使用方法)
@@ -151,10 +150,8 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
        - PyPDF2
        - git/ssh (osレベルで実行)
  
-### 技術構成(Trim on Browser)
+### 技術構成
 <img src="https://github.com/jphacks/D_2109/wiki/images/trim_drawio.png" />
-
-### 技術構成(Trim Auto Notification)
 
 
 ### APIエンドポイント
