@@ -11,8 +11,9 @@
 - [製品概要](#製品概要)
   - [背景](#背景)
   - [製品説明](#製品説明)
-  - [Trim on Browser](#Trim on Browser)
-  - [Trim Auto Notification](#Trim Auto Notification)
+  - [Trim on Browser](#Trim-on-Browser)
+  - [Trim Auto Notification](#Trim-Auto-Notification)
+  - [Trim-API](#Trim-API)
 
 
 
@@ -44,7 +45,7 @@
 Trimは、使用率が最も高く汎用性のある**Python**言語をフォーマットします。
 
 
-### Trim on Browser
+### Trim-on-Browser
 #### 1. **フォーマットルール**の作成は初心者向けなわかりやすいGUIを提供
 様々なルールが視覚的に分かりやすくなっており、簡単にカスタマイズする事ができます。
 例えば、**CapWords** や **Snake** といった命名規則やimportのソーティング・グルーピングなどがあります。
@@ -71,9 +72,9 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 
 
 
-### Trim Auto Notification
+### Trim-Auto-Notification
 
-
+### Trim-API
 
 
 
