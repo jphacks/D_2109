@@ -159,33 +159,25 @@ Pythonのスタンダードな規約であるPEP8に準拠したデフォルト�
 
 
 ### APIエンドポイント
-
-- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule
 trim-rule.pdfを作成し、署名付きリンクを返す
-
+- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule
   - Content-Type: “applicatin/json”
   - data: json(rule.json)
 
-
-- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule_binary
 trim-rule.pdfを作成し、pdfのバイナリを返す
-
+- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule_binary
   - Content-Type: “applicatin/json”
   - data: json(rule.json)
 
-
-- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/format
 プロジェクトの整形を行う。trim-result.pdf/trim-rule.pdfを含めた整形後フォルダの署名付きリンクを返す
-
+- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/format
   - Content-Type: “applicatin/zip”
   - data: binary
 
-
-- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/format_binary
 プロジェクトの整形を行う。trim-result.pdf/trim-rule.pdfを含めた整形後フォルダをzipで圧縮し、バイナリとして返す
-
-- Content-Type: “applicatin/zip”
-- data: binary
+- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/format_binary
+  - Content-Type: “applicatin/zip”
+  - data: binary
 
 
 ### 独自技術
