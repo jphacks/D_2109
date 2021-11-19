@@ -165,7 +165,7 @@ Webトップページ
 
 #### Trim Auto Notification
 Git Hub Webhookに設定するリンク
-- 
+- https://
 
 #### Trim API
 trim-rule.pdfを作成し、署名付きリンクを返す
