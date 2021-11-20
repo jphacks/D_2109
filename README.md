@@ -20,7 +20,7 @@
 -  [開発技術](#開発技術)
   - [フレームワーク・ライブラリ・モジュール](#フレームワークライブラリモジュール)
   - [技術構成](#技術構成)
-  - [APIエンドポイント](#APIエンドポイント)
+  - [エンドポイント](#エンドポイント)
   - [独自技術](#独自技術)
   - [使用方法](#使用方法)
 
@@ -168,25 +168,26 @@ Git Hub Webhookに設定するリンク
 - https://
 
 #### Trim API
-trim-rule.pdfを作成し、署名付きリンクを返す
-- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule
-  - Content-Type: “applicatin/json”
-  - data: json(rule.json)
+[POST] https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule
+- 概要: trim-rule.pdfを作成し、署名付きリンクを返す
+- Content-Type: “applicatin/json”
+- data: json(rule.json)
 
-trim-rule.pdfを作成し、pdfのバイナリを返す
-- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule_binary
-  - Content-Type: “applicatin/json”
-  - data: json(rule.json)
 
-プロジェクトの整形を行う。trim-result.pdf/trim-rule.pdfを含めた整形後フォルダの署名付きリンクを返す
-- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/format
-  - Content-Type: “applicatin/zip”
-  - data: binary
+[POST] https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule_binary
+- 概要: trim-rule.pdfを作成し、pdfのバイナリを返す
+- Content-Type: “applicatin/json”
+- data: json(rule.json)
 
-プロジェクトの整形を行う。trim-result.pdf/trim-rule.pdfを含めた整形後フォルダをzipで圧縮し、バイナリとして返す
-- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/format_binary
-  - Content-Type: “applicatin/zip”
-  - data: binary
+[POST] https://d1cg4t8u2gajxa.cloudfront.net/api-v1/format
+- 概要: プロジェクトの整形を行う。trim-result.pdf/trim-rule.pdfを含めた整形後フォルダの署名付きリンクを返す
+- Content-Type: “applicatin/zip”
+- data: binary
+
+[POST] https://d1cg4t8u2gajxa.cloudfront.net/api-v1/format_binary
+- 概要: プロジェクトの整形を行う。trim-result.pdf/trim-rule.pdfを含めた整形後フォルダをzipで圧縮し、バイナリとして返す
+- Content-Type: “applicatin/zip”
+- data: binary
 
 
 ### 独自技術
