@@ -165,7 +165,7 @@ Webトップページ
 
 #### Trim Auto Notification
 Git Hub Webhookに設定するリンク
-- https://
+- https://d1cg4t8u2gajxa.cloudfront.net/api-v1/trim-project
 
 #### Trim API
 [POST] https://d1cg4t8u2gajxa.cloudfront.net/api-v1/display_rule
